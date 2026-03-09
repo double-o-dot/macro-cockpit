@@ -1,0 +1,52 @@
+{
+  "updated_at": "2026-03-09",
+  "source_pdfs": [
+    "20260309_cachewood.pdf",
+    "20260309_oil.pdf",
+    "20260309_rklb.pdf",
+    "20260309_시타델럽너.pdf",
+    "20260309_쿠르드족.pdf"
+  ],
+  "implications": [
+    {
+      "id": 1,
+      "level": "danger",
+      "title": "최대 리스크 = 유가",
+      "summary": "GS 리포트 기준 호르무즈 해협 17mb/d 공급 충격(러시아 2022년의 17배). 다음 주 해결 징후 없으면 $100 돌파 → 모든 낙관 시나리오 무효화",
+      "affected": ["ACE", "PLTR", "KBWB", "XLF"],
+      "action": "호르무즈 해협 상황 매일 모니터링. 유가 $100 돌파 시 ACE/PLTR 비중 축소 검토, 에너지 헤지(XLE) 고려"
+    },
+    {
+      "id": 2,
+      "level": "caution",
+      "title": "3/20 옵션 만기 = 변곡점",
+      "summary": "5조 달러 사상 최대 옵션 만기 후 수급 제약 해소 → 4월 반등 기대. 시타델 럽너, 2월 약세 전망 철회",
+      "affected": ["ACE", "PLTR", "KBWB"],
+      "action": "3/20 옵션 만기 전까지 신규 매수 자제. 4월 진입 타이밍 탐색"
+    },
+    {
+      "id": 3,
+      "level": "bullish",
+      "title": "PLTR 방산 AI 독점 강화",
+      "summary": "Anthropic이 국방부 AI 사용 거부(20페이지 금지 조항). PLTR의 방산 AI 독점적 지위 더 공고해짐. Anthropic vs 펜타곤 충돌로 경쟁 제한",
+      "affected": ["PLTR"],
+      "action": "PLTR 홀딩 유지. 방산 AI 시장 독점 포지션 재확인"
+    },
+    {
+      "id": 4,
+      "level": "info",
+      "title": "SKT 앤트로픽 지분 가치 업사이드",
+      "summary": "Chamath: Anthropic 시가총액 1.5조 달러 평가. SKT의 앤트로픽 지분 가치 재평가 가능성. 다만 순가치 창출은 Google이 유리하다는 평가도",
+      "affected": ["SKT"],
+      "action": "SKT 보유 유지. 앤트로픽 IPO 일정 추적"
+    },
+    {
+      "id": 5,
+      "level": "favorable",
+      "title": "RKLB 워치리스트 추가",
+      "summary": "GP마진 35%+로 경쟁사 대비 압도적. DCF 가중평균 $81.50(현재 $69 대비 15% 저평가). $65 이하 조정 시 탐색 매수 기회",
+      "affected": ["RKLB"],
+      "action": "$65 이하 가격 알림 설정 완료. 뉴트론 첫 발사 일정 추적"
+    }
+  ]
+}

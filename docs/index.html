@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Macro Cockpit</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='14' fill='%23D97757'/></svg>">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
+        colors: {
+          cream:  { 50:'#FDFCFA', 100:'#F9F7F3', 200:'#F5F0E8', 300:'#E8E0D4', 400:'#D4CCC0' },
+          warm:   { 600:'#5C554D', 700:'#4A453E', 800:'#2A2520', 900:'#1B1B18' },
+          accent: { light:'#FAEDE6', DEFAULT:'#D97757', dark:'#B85E42' },
+          border: '#E5DED5',
+        }
+      }
+    }
+  }
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+  <style>
+    * { scrollbar-width: thin; scrollbar-color: #D4CCC0 transparent; }
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #D4CCC0; border-radius: 3px; }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; animation: fadeUp .3s ease; }
+    @keyframes fadeUp { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+    @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+    .skeleton {
+      background: linear-gradient(90deg, #E8E0D4 25%, #F5F0E8 50%, #E8E0D4 75%);
+      background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 12px;
+    }
+    .nav-link { transition: all .15s ease; }
+    .nav-link:hover { background: rgba(255,255,255,.08); }
+    .nav-link.active { background: rgba(255,255,255,.12); border-left: 3px solid #D97757; }
+    .card { transition: box-shadow .2s ease; }
+    .card:hover { box-shadow: 0 2px 12px rgba(0,0,0,.06); }
+    /* Mobile bottom nav */
+    @media (max-width: 768px) {
+      aside.sidebar-desktop { display: none !important; }
+      main { margin-left: 0 !important; }
+      main .px-8 { padding-left: 1rem; padding-right: 1rem; }
+      main header .px-8 { padding-left: 1rem; padding-right: 1rem; }
+      .grid-cols-5 { grid-template-columns: repeat(2, 1fr); }
+      .grid-cols-3 { grid-template-columns: repeat(2, 1fr); }
+      .col-span-3 { grid-column: span 2; }
+      .col-span-2 { grid-column: span 2; }
+      .bottom-nav { display: flex !important; }
+      body { padding-bottom: 64px; }
+    }
+    @media (min-width: 769px) {
+      .bottom-nav { display: none !important; }
+    }
+    .bottom-nav a { transition: color .15s; }
+    .bottom-nav a.active { color: #D97757; }
+    .bottom-nav a.active svg { stroke: #D97757; }
+    /* PIN screen */
+    .pin-dot { width: 12px; height: 12px; border-radius: 50%; border: 2px solid #D4CCC0; transition: all .15s; }
+    .pin-dot.filled { background: #D97757; border-color: #D97757; }
+    .pin-key { width: 72px; height: 72px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      font-size: 24px; font-weight: 500; cursor: pointer; transition: all .1s;
+      background: white; border: 1px solid #E5DED5; color: #2A2520; user-select: none; }
+    .pin-key:active { background: #F5F0E8; transform: scale(0.95); }
+    .pin-key.fn { background: transparent; border: none; font-size: 14px; color: #5C554D; }
+  </style>
+</head>
+
+<body class="bg-cream-200 font-sans text-warm-900 antialiased">
+
+<!-- ==================== PIN LOCK SCREEN ==================== -->
+<div id="pin-screen" class="fixed inset-0 z-[100] bg-cream-200 flex flex-col items-center justify-center">
+  <div class="flex items-center gap-2.5 mb-8">
+    <div class="w-10 h-10 rounded-full bg-accent flex items-center justify-center">
+      <span class="text-white text-lg font-bold">M</span>
+    </div>
+    <span class="text-xl font-semibold tracking-tight">Macro Cockpit</span>
+  </div>
+  <p id="pin-msg" class="text-sm text-warm-600 mb-6">PIN을 입력하세요</p>
+  <div class="flex gap-3 mb-8" id="pin-dots">
+    <div class="pin-dot"></div><div class="pin-dot"></div>
+    <div class="pin-dot"></div><div class="pin-dot"></div>
+  </div>
+  <div class="grid grid-cols-3 gap-3" id="pin-pad">
+    <div class="pin-key" data-v="1">1</div>
+    <div class="pin-key" data-v="2">2</div>
+    <div class="pin-key" data-v="3">3</div>
+    <div class="pin-key" data-v="4">4</div>
+    <div class="pin-key" data-v="5">5</div>
+    <div class="pin-key" data-v="6">6</div>
+    <div class="pin-key" data-v="7">7</div>
+    <div class="pin-key" data-v="8">8</div>
+    <div class="pin-key" data-v="9">9</div>
+    <div class="pin-key fn" data-v="clear">Clear</div>
+    <div class="pin-key" data-v="0">0</div>
+    <div class="pin-key fn" data-v="back">&larr;</div>
+  </div>
+  <p id="pin-setup-hint" class="text-xs text-warm-600 mt-6 hidden">첫 접속: 사용할 PIN 4자리를 설정하세요</p>
+</div>
+
+<script>
+(function() {
+  const STORAGE_KEY = 'mc_pin_hash';
+  let pin = '';
+  let isSetup = !localStorage.getItem(STORAGE_KEY);
+  let setupFirst = '';
+  const dots = document.querySelectorAll('#pin-dots .pin-dot');
+  const msg = document.getElementById('pin-msg');
+  const hint = document.getElementById('pin-setup-hint');
+
+  if (isSetup) {
+    msg.textContent = 'PIN 4자리를 설정하세요';
+    hint.classList.remove('hidden');
+  }
+
+  async function hashPin(p) {
+    const enc = new TextEncoder().encode(p + '_macro_cockpit');
+    const buf = await crypto.subtle.digest('SHA-256', enc);
+    return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+  }
+
+  function updateDots() {
+    dots.forEach((d, i) => d.classList.toggle('filled', i < pin.length));
+  }
+
+  function shake() {
+    const container = document.getElementById('pin-dots');
+    container.style.animation = 'none';
+    container.offsetHeight;
+    container.style.animation = 'shake .4s ease';
+  }
+
+  async function checkPin() {
+    const h = await hashPin(pin);
+    if (isSetup) {
+      if (!setupFirst) {
+        setupFirst = pin;
+        pin = '';
+        updateDots();
+        msg.textContent = 'PIN을 다시 입력하세요';
+        return;
+      }
+      if (pin === setupFirst) {
+        localStorage.setItem(STORAGE_KEY, h);
+        // Also remember auth for 7 days
+        localStorage.setItem('mc_auth_ts', Date.now().toString());
+        document.getElementById('pin-screen').style.display = 'none';
+      } else {
+        setupFirst = '';
+        pin = '';
+        updateDots();
+        shake();
+        msg.textContent = 'PIN이 일치하지 않습니다. 다시 설정하세요';
+      }
+      return;
+    }
+    if (h === localStorage.getItem(STORAGE_KEY)) {
+      localStorage.setItem('mc_auth_ts', Date.now().toString());
+      document.getElementById('pin-screen').style.display = 'none';
+    } else {
+      pin = '';
+      updateDots();
+      shake();
+      msg.textContent = '잘못된 PIN입니다';
+      setTimeout(() => { msg.textContent = 'PIN을 입력하세요'; }, 1500);
+    }
+  }
+
+  document.getElementById('pin-pad').addEventListener('click', e => {
+    const key = e.target.closest('.pin-key');
+    if (!key) return;
+    const v = key.dataset.v;
+    if (v === 'clear') { pin = ''; updateDots(); return; }
+    if (v === 'back') { pin = pin.slice(0, -1); updateDots(); return; }
+    if (pin.length >= 4) return;
+    pin += v;
+    updateDots();
+    if (pin.length === 4) setTimeout(checkPin, 200);
+  });
+
+  // Auto-unlock if authenticated within 7 days
+  const ts = parseInt(localStorage.getItem('mc_auth_ts') || '0');
+  const sevenDays = 7 * 24 * 60 * 60 * 1000;
+  if (!isSetup && Date.now() - ts < sevenDays) {
+    document.getElementById('pin-screen').style.display = 'none';
+  }
+})();
+// shake animation
+const style = document.createElement('style');
+style.textContent = '@keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-8px)} 75%{transform:translateX(8px)} }';
+document.head.appendChild(style);
+</script>
+
+<!-- ==================== SIDEBAR (Desktop) ==================== -->
+<aside class="sidebar-desktop fixed left-0 top-0 h-screen w-56 bg-warm-900 flex flex-col z-50">
+  <div class="px-5 py-6 border-b border-white/10">
+    <div class="flex items-center gap-2.5">
+      <div class="w-7 h-7 rounded-full bg-accent flex items-center justify-center">
+        <span class="text-white text-xs font-bold">M</span>
+      </div>
+      <span class="text-white font-semibold tracking-tight">Macro Cockpit</span>
+    </div>
+  </div>
+  <nav class="flex-1 px-3 py-4 space-y-0.5" id="sidebar-nav">
+    <a class="nav-link active flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-cream-300 cursor-pointer" data-tab="overview">
+      <svg class="w-4 h-4 opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      Overview
+    </a>
+    <a class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-cream-400 cursor-pointer" data-tab="portfolio">
+      <svg class="w-4 h-4 opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
+      Portfolio
+    </a>
+    <a class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-cream-400 cursor-pointer" data-tab="review">
+      <svg class="w-4 h-4 opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6m6 0h6m-6 0V9a2 2 0 012-2h2a2 2 0 012 2v10m6 0v-4a2 2 0 00-2-2h-2a2 2 0 00-2 2v4"/></svg>
+      Trade Review
+    </a>
+    <a class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-cream-400 cursor-pointer" data-tab="signal">
+      <svg class="w-4 h-4 opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+      Macro Signal
+    </a>
+    <a class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-cream-400 cursor-pointer" data-tab="digest">
+      <svg class="w-4 h-4 opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+      PDF Insights
+    </a>
+  </nav>
+  <div class="px-5 py-4 border-t border-white/10 text-cream-400/40 text-xs" id="build-info">v2.0 static</div>
+</aside>
+
+<!-- ==================== BOTTOM NAV (Mobile) ==================== -->
+<nav class="bottom-nav fixed bottom-0 left-0 right-0 z-50 bg-warm-900 border-t border-white/10 justify-around items-center h-16 px-2" id="bottom-nav">
+  <a class="flex flex-col items-center gap-0.5 py-2 px-3 text-cream-400 text-[10px] active" data-tab="overview">
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+    Overview
+  </a>
+  <a class="flex flex-col items-center gap-0.5 py-2 px-3 text-cream-400 text-[10px]" data-tab="portfolio">
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
+    Portfolio
+  </a>
+  <a class="flex flex-col items-center gap-0.5 py-2 px-3 text-cream-400 text-[10px]" data-tab="signal">
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+    Signal
+  </a>
+  <a class="flex flex-col items-center gap-0.5 py-2 px-3 text-cream-400 text-[10px]" data-tab="digest">
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+    Insights
+  </a>
+</nav>
+
+<!-- ==================== MAIN CONTENT ==================== -->
+<main class="ml-56 min-h-screen">
+  <header class="sticky top-0 z-40 bg-cream-200/80 backdrop-blur-md border-b border-border px-8 py-4 flex items-center justify-between">
+    <div>
+      <h1 id="page-title" class="text-lg font-semibold">Overview</h1>
+      <p id="page-subtitle" class="text-xs text-warm-600 mt-0.5">Investment Dashboard</p>
+    </div>
+    <div class="flex items-center gap-2">
+      <span id="updated-at" class="text-xs text-warm-600 hidden md:inline"></span>
+    </div>
+  </header>
+
+  <div class="px-8 py-6">
+    <!-- Overview Tab -->
+    <div id="overview" class="tab-panel active">
+      <div id="overview-content">
+        <div class="grid grid-cols-4 gap-4 mb-6">
+          <div class="skeleton h-24"></div><div class="skeleton h-24"></div>
+          <div class="skeleton h-24"></div><div class="skeleton h-24"></div>
+        </div>
+        <div class="grid grid-cols-2 gap-5 mb-6">
+          <div class="skeleton h-64"></div><div class="skeleton h-64"></div>
+        </div>
+        <div class="skeleton h-48"></div>
+      </div>
+    </div>
+
+    <!-- Portfolio Tab -->
+    <div id="portfolio" class="tab-panel">
+      <div id="portfolio-content">
+        <div class="grid grid-cols-3 gap-4 mb-6">
+          <div class="skeleton h-24"></div><div class="skeleton h-24"></div><div class="skeleton h-24"></div>
+        </div>
+        <div class="skeleton h-80"></div>
+      </div>
+    </div>
+
+    <!-- Review Tab -->
+    <div id="review" class="tab-panel">
+      <div id="review-content">
+        <div class="grid grid-cols-5 gap-4 mb-6">
+          <div class="skeleton h-24"></div><div class="skeleton h-24"></div>
+          <div class="skeleton h-24"></div><div class="skeleton h-24"></div><div class="skeleton h-24"></div>
+        </div>
+        <div class="skeleton h-80"></div>
+      </div>
+    </div>
+
+    <!-- Signal Tab -->
+    <div id="signal" class="tab-panel">
+      <div id="signal-content">
+        <div class="grid grid-cols-2 gap-5 mb-6">
+          <div class="skeleton h-64"></div><div class="skeleton h-64"></div>
+        </div>
+        <div class="skeleton h-48"></div>
+      </div>
+    </div>
+
+    <!-- Digest Tab -->
+    <div id="digest" class="tab-panel">
+      <div id="implications-content" class="mb-6">
+        <div class="skeleton h-48"></div>
+      </div>
+      <div id="digest-content">
+        <div class="grid grid-cols-2 gap-4">
+          <div class="skeleton h-44"></div><div class="skeleton h-44"></div>
+          <div class="skeleton h-44"></div><div class="skeleton h-44"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>
+// ========== State ==========
+const S = { tab: 'overview', cache: {}, loading: {}, prices: {} };
+
+// ========== Tab Switching ==========
+const TABS = {
+  overview:  { title: 'Overview',      sub: 'Investment Dashboard' },
+  portfolio: { title: 'Portfolio',     sub: 'Holdings & Cash Balance' },
+  review:    { title: 'Trade Review',  sub: 'Realized P&L Analysis' },
+  signal:    { title: 'Macro Signal',  sub: 'Market Indicators & Alerts' },
+  digest:    { title: 'PDF Insights',  sub: 'Community Report Analysis' },
+};
+
+// Desktop sidebar
+document.querySelectorAll('#sidebar-nav .nav-link').forEach(el => {
+  el.addEventListener('click', () => switchTab(el.dataset.tab));
+});
+// Mobile bottom nav
+document.querySelectorAll('#bottom-nav a').forEach(el => {
+  el.addEventListener('click', () => switchTab(el.dataset.tab));
+});
+
+function switchTab(tab) {
+  S.tab = tab;
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById(tab).classList.add('active');
+  // Desktop nav
+  document.querySelectorAll('.nav-link').forEach(n => {
+    n.classList.toggle('active', n.dataset.tab === tab);
+    n.classList.toggle('text-cream-300', n.dataset.tab === tab);
+    n.classList.toggle('text-cream-400', n.dataset.tab !== tab);
+  });
+  // Mobile nav
+  document.querySelectorAll('#bottom-nav a').forEach(n => {
+    n.classList.toggle('active', n.dataset.tab === tab);
+  });
+  document.getElementById('page-title').textContent = TABS[tab].title;
+  document.getElementById('page-subtitle').textContent = TABS[tab].sub;
+  loadTab(tab);
+}
+
+// ========== Data Fetching (Static JSON) ==========
+async function fetchAPI(endpoint) {
+  if (S.cache[endpoint]) return S.cache[endpoint];
+  S.loading[endpoint] = true;
+  try {
+    const res = await fetch(`./data/${endpoint}.json`);
+    if (!res.ok) return { status: 'empty' };
+    const data = await res.json();
+    if (data.status === 'ok') S.cache[endpoint] = data;
+    return data;
+  } catch (e) {
+    return { status: 'error', message: e.message };
+  } finally {
+    S.loading[endpoint] = false;
+  }
+}
+
+async function loadTab(tab) {
+  if (tab === 'overview') return loadOverview();
+  if (tab === 'portfolio') {
+    return fetchAPI('portfolio').then(d => {
+      renderPortfolio(d);
+      if (!Object.keys(S.prices).length) fetchAPI('prices').then(pr => applyPrices(pr));
+    });
+  }
+  if (tab === 'review') return fetchAPI('review').then(d => renderReview(d));
+  if (tab === 'signal') return fetchAPI('signal').then(d => renderSignal(d));
+  if (tab === 'digest') {
+    fetchAPI('implications').then(d => renderImplications(d));
+    return fetchAPI('digest').then(d => renderDigest(d));
+  }
+}
+
+async function loadOverview() {
+  const [p, r, d] = await Promise.all([
+    fetchAPI('portfolio'), fetchAPI('review'), fetchAPI('digest')
+  ]);
+  renderOverview(p, r, d);
+  fetchAPI('signal').then(s => renderOverviewSignals(s));
+  fetchAPI('prices').then(pr => applyPrices(pr));
+
+  // Show build time
+  fetchAPI('_meta').then(m => {
+    if (m.built_at) document.getElementById('updated-at').textContent = 'Updated: ' + m.built_at;
+  });
+}
+
+// ========== Utilities ==========
+function fmt(n, cur) {
+  if (n == null) return '-';
+  if (cur === 'USD') return '$' + n.toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2});
+  return n.toLocaleString('ko-KR') + '원';
+}
+function fmtPct(n) {
+  if (n == null) return '-';
+  const sign = n > 0 ? '+' : '';
+  return sign + n.toFixed(1) + '%';
+}
+function pctColor(n) {
+  if (n > 0) return 'text-emerald-600';
+  if (n < 0) return 'text-red-500';
+  return 'text-warm-600';
+}
+function sigStyle(level) {
+  const m = {
+    danger:    'bg-red-50 border-red-200 text-red-800',
+    caution:   'bg-amber-50 border-amber-200 text-amber-800',
+    calm:      'bg-emerald-50 border-emerald-200 text-emerald-800',
+    bullish:   'bg-emerald-50 border-emerald-200 text-emerald-800',
+    bearish:   'bg-red-50 border-red-200 text-red-800',
+    favorable: 'bg-teal-50 border-teal-200 text-teal-800',
+    neutral:   'bg-cream-100 border-cream-300 text-warm-700',
+    info:      'bg-blue-50 border-blue-200 text-blue-800',
+  };
+  return m[level] || m.neutral;
+}
+function sigBadge(level) {
+  const m = {
+    danger:'bg-red-100 text-red-700', caution:'bg-amber-100 text-amber-700',
+    calm:'bg-emerald-100 text-emerald-700', bullish:'bg-emerald-100 text-emerald-700',
+    bearish:'bg-red-100 text-red-700', favorable:'bg-teal-100 text-teal-700',
+    neutral:'bg-cream-300 text-warm-700', info:'bg-blue-100 text-blue-700',
+  };
+  return m[level] || m.neutral;
+}
+function sigIcon(level) {
+  const m = {
+    danger:'!!!', caution:'!', calm:'OK', bullish:'UP', bearish:'DN',
+    favorable:'+', neutral:'-', info:'i',
+  };
+  return m[level] || '?';
+}
+
+function kpiCard(label, value, sub, accent=false) {
+  return `<div class="card bg-white rounded-2xl border border-border p-5">
+    <div class="text-xs font-medium text-warm-600 mb-2">${label}</div>
+    <div class="text-2xl font-bold ${accent ? 'text-accent' : ''}">${value}</div>
+    ${sub ? `<div class="text-xs text-warm-600 mt-1.5">${sub}</div>` : ''}
+  </div>`;
+}
+
+function emptyState(msg) {
+  return `<div class="flex flex-col items-center justify-center py-16 text-warm-600">
+    <svg class="w-12 h-12 mb-3 opacity-30" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"/></svg>
+    <p class="text-sm">${msg}</p>
+  </div>`;
+}
+
+function errorState(msg) {
+  return `<div class="bg-red-50 border border-red-200 rounded-2xl p-6 text-center">
+    <p class="text-red-700 text-sm">${msg}</p>
+  </div>`;
+}
+
+// ========== OVERVIEW ==========
+function renderOverview(p, r, d) {
+  const el = document.getElementById('overview-content');
+  if (p.status === 'error') { el.innerHTML = errorState(p.message); return; }
+  if (p.status === 'empty') { el.innerHTML = emptyState('Portfolio 데이터가 없습니다.'); return; }
+
+  const stats = r.status === 'ok' ? r.data.stats : {};
+  const holdings = p.holdings || [];
+  const krwH = holdings.filter(h => h.currency === 'KRW');
+  const usdH = holdings.filter(h => h.currency === 'USD');
+
+  let html = `<div class="grid grid-cols-5 gap-4 mb-6">`;
+  html += `<div id="total-value-kpi" class="card bg-white rounded-2xl border border-border p-5">
+    <div class="text-xs font-medium text-warm-600 mb-2">총 평가금액</div>
+    <div class="text-warm-600 text-sm">Loading...</div>
+  </div>`;
+  html += kpiCard('보유 종목', holdings.length, `KRW ${krwH.length} / USD ${usdH.length}`, true);
+  html += kpiCard('매매 승률', stats.win_rate != null ? stats.win_rate + '%' : '-',
+    stats.total_closed ? `${stats.wins}W / ${stats.losses}L / ${stats.even || 0}E` : '');
+  html += kpiCard('실현손익 (KRW)', stats.total_pnl_krw != null ? (stats.total_pnl_krw >= 0 ? '+' : '') + stats.total_pnl_krw.toLocaleString() + '원' : '-',
+    stats.avg_hold_days ? `평균 보유 ${stats.avg_hold_days}일` : '');
+  html += `<div id="vix-kpi" class="card bg-white rounded-2xl border border-border p-5">
+    <div class="text-xs font-medium text-warm-600 mb-2">VIX (변동성)</div>
+    <div class="text-warm-600 text-sm">Loading...</div>
+  </div>`;
+  html += `</div>`;
+
+  html += `<div class="grid grid-cols-5 gap-5 mb-6">`;
+  html += `<div class="col-span-3 card bg-white rounded-2xl border border-border p-5">
+    <div class="text-sm font-semibold mb-4">Holdings</div>
+    <div class="space-y-2.5">`;
+  holdings.forEach(h => {
+    const cp = S.prices[h.code];
+    const hasPrice = cp != null;
+    const curPrice = hasPrice ? (h.currency==='USD' ? '$'+cp.toFixed(2) : cp.toLocaleString()+'원') : '';
+    const pnlPct = hasPrice ? ((cp - h.avg_price) / h.avg_price * 100) : null;
+    const pnlClass = pnlPct > 0 ? 'text-emerald-600' : pnlPct < 0 ? 'text-red-500' : 'text-warm-600';
+    html += `<div class="flex items-center justify-between py-1.5">
+      <div class="flex items-center gap-3">
+        <div class="w-8 h-8 rounded-lg bg-cream-200 flex items-center justify-center text-xs font-bold text-warm-700">${h.ticker.substring(0,2)}</div>
+        <div>
+          <div class="text-sm font-medium">${h.ticker}</div>
+          <div class="text-xs text-warm-600">${h.name}</div>
+        </div>
+      </div>
+      <div class="text-right">
+        <div class="text-sm font-medium">${h.quantity}주 ${hasPrice ? `<span class="${pnlClass} text-xs ml-1">${fmtPct(pnlPct)}</span>` : ''}</div>
+        <div class="text-xs text-warm-600">${hasPrice ? curPrice : 'avg '+(h.currency==='USD'?'$'+h.avg_price.toFixed(2):h.avg_price.toLocaleString()+'원')}</div>
+      </div>
+    </div>`;
+  });
+  html += `</div></div>`;
+
+  html += `<div id="overview-signals" class="col-span-2 card bg-white rounded-2xl border border-border p-5">
+    <div class="text-sm font-semibold mb-4">Signals</div>
+    <div class="space-y-3">
+      <div class="skeleton h-10"></div><div class="skeleton h-10"></div>
+      <div class="skeleton h-10"></div><div class="skeleton h-10"></div>
+    </div>
+  </div>`;
+  html += `</div>`;
+
+  if (d.status === 'ok' && d.data && d.data.length) {
+    html += `<div class="card bg-white rounded-2xl border border-border p-5 mb-6">
+      <div class="text-sm font-semibold mb-4">Top PDF Insights</div>
+      <div class="grid grid-cols-3 gap-4">`;
+    d.data.slice(0, 3).forEach(pdf => {
+      html += `<div class="border border-border rounded-xl p-4 hover:border-accent/50 transition-colors">
+        <div class="flex items-center gap-2 mb-2">
+          <span class="text-xs font-bold text-accent">${pdf.usefulness}/10</span>
+          <span class="text-xs text-warm-600 truncate">${pdf.filename}</span>
+        </div>
+        <p class="text-xs text-warm-700 line-clamp-2">${pdf.summary || pdf.one_line_summary || ''}</p>
+      </div>`;
+    });
+    html += `</div></div>`;
+  }
+
+  html += `<div class="card bg-white rounded-2xl border border-border p-5">
+    <div class="text-sm font-semibold mb-3">Cash Balance</div>
+    <div class="flex gap-8">
+      <div><span class="text-xs text-warm-600">KRW</span><div class="text-lg font-semibold">${(p.cash.krw||0).toLocaleString()}원</div></div>
+      <div><span class="text-xs text-warm-600">USD</span><div class="text-lg font-semibold">$${(p.cash.usd||0).toLocaleString('en-US',{minimumFractionDigits:2})}</div></div>
+    </div>
+  </div>`;
+
+  el.innerHTML = html;
+}
+
+function renderOverviewSignals(s) {
+  const vixEl = document.getElementById('vix-kpi');
+  if (s.status === 'ok' && s.signals) {
+    const vix = s.signals.find(x => x.indicator === 'VIX');
+    if (vix && vixEl) {
+      const color = vix.level === 'danger' ? 'text-red-500' : vix.level === 'caution' ? 'text-amber-500' : 'text-emerald-500';
+      vixEl.innerHTML = `<div class="text-xs font-medium text-warm-600 mb-2">VIX (변동성)</div>
+        <div class="text-2xl font-bold ${color}">${vix.value.toFixed(1)}</div>
+        <div class="text-xs text-warm-600 mt-1.5">${vix.level === 'danger' ? '극심한 공포' : vix.level === 'caution' ? '불안정' : '안정적'}</div>`;
+    }
+  }
+  const panel = document.getElementById('overview-signals');
+  if (!panel) return;
+  if (s.status !== 'ok' || !s.signals) {
+    panel.innerHTML = `<div class="text-sm font-semibold mb-4">Signals</div><div class="text-xs text-warm-600">데이터 없음</div>`;
+    return;
+  }
+  let html = `<div class="text-sm font-semibold mb-4">Signals</div><div class="space-y-2">`;
+  s.signals.forEach(sig => {
+    html += `<div class="flex items-start gap-2.5 p-2.5 rounded-lg border ${sigStyle(sig.level)}">
+      <span class="text-[10px] font-bold px-1.5 py-0.5 rounded ${sigBadge(sig.level)}">${sigIcon(sig.level)}</span>
+      <div class="text-xs leading-relaxed flex-1">${sig.message}</div>
+    </div>`;
+  });
+  html += `</div>`;
+  panel.innerHTML = html;
+}
+
+// ========== PORTFOLIO ==========
+function renderPortfolio(d) {
+  const el = document.getElementById('portfolio-content');
+  if (d.status !== 'ok') { el.innerHTML = d.status === 'empty' ? emptyState('Portfolio 데이터가 없습니다.') : errorState(d.message); return; }
+
+  const h = d.holdings || [];
+  const c = d.cash || {};
+
+  let html = `<div class="grid grid-cols-3 gap-4 mb-6">`;
+  html += kpiCard('KRW 현금', (c.krw||0).toLocaleString() + '원', '');
+  html += kpiCard('USD 현금', '$' + (c.usd||0).toLocaleString('en-US',{minimumFractionDigits:2}), '');
+  html += kpiCard('거래 건수', `KRW ${d.tx_counts?.krw||0} / USD ${d.tx_counts?.usd||0}`,
+    d.meta ? `${d.meta.period_start} ~ ${d.meta.period_end}` : '');
+  html += `</div>`;
+
+  html += `<div class="grid grid-cols-3 gap-5">`;
+  html += `<div class="col-span-2 card bg-white rounded-2xl border border-border overflow-hidden">
+    <div class="px-5 pt-5 pb-3 text-sm font-semibold">보유 종목</div>
+    <div class="overflow-x-auto">
+    <table class="w-full text-sm">
+      <thead><tr class="border-b border-border text-xs text-warm-600 uppercase tracking-wider">
+        <th class="px-5 py-2.5 text-left font-medium">종목</th>
+        <th class="px-5 py-2.5 text-right font-medium">수량</th>
+        <th class="px-5 py-2.5 text-right font-medium">평단가</th>
+        <th class="px-5 py-2.5 text-right font-medium">현재가</th>
+        <th class="px-5 py-2.5 text-right font-medium">평가금액</th>
+        <th class="px-5 py-2.5 text-right font-medium">수익률</th>
+      </tr></thead>
+      <tbody>`;
+  let totalKRW = 0, totalUSD = 0, costKRW = 0, costUSD = 0;
+  h.forEach((s, i) => {
+    const cp = S.prices[s.code];
+    const hasPrice = cp != null;
+    const curValue = hasPrice ? s.quantity * cp : s.est_value;
+    const pnlPct = hasPrice ? ((cp - s.avg_price) / s.avg_price * 100) : null;
+    if (s.currency === 'USD') { totalUSD += curValue; costUSD += s.est_value; }
+    else { totalKRW += curValue; costKRW += s.est_value; }
+    html += `<tr class="${i % 2 ? 'bg-cream-50' : ''}">
+      <td class="px-5 py-3">
+        <div class="font-medium">${s.ticker}</div>
+        <div class="text-xs text-warm-600">${s.name}</div>
+      </td>
+      <td class="px-5 py-3 text-right">${s.quantity}</td>
+      <td class="px-5 py-3 text-right text-warm-600">${s.currency==='USD'?'$'+s.avg_price.toFixed(2):s.avg_price.toLocaleString()+'원'}</td>
+      <td class="px-5 py-3 text-right font-medium">${hasPrice ? (s.currency==='USD'?'$'+cp.toFixed(2):cp.toLocaleString()+'원') : '<span class="text-warm-600 text-xs">-</span>'}</td>
+      <td class="px-5 py-3 text-right font-medium">${s.currency==='USD'?'$'+curValue.toFixed(2):curValue.toLocaleString()+'원'}</td>
+      <td class="px-5 py-3 text-right font-medium ${pnlPct!=null?pctColor(pnlPct):''}">${pnlPct!=null?fmtPct(pnlPct):'-'}</td>
+    </tr>`;
+  });
+  html += `<tr class="border-t-2 border-border bg-cream-100 font-semibold">
+    <td class="px-5 py-3">합계</td><td></td><td></td><td></td>
+    <td class="px-5 py-3 text-right">${totalKRW > 0 ? totalKRW.toLocaleString()+'원' : ''}${totalKRW>0&&totalUSD>0?' / ':''}${totalUSD > 0 ? '$'+totalUSD.toFixed(2) : ''}</td>
+    <td class="px-5 py-3 text-right ${pctColor(((totalKRW-costKRW)/costKRW)*100)}">${costKRW>0?fmtPct(((totalKRW-costKRW)/costKRW)*100):''}</td>
+  </tr>`;
+  html += `</tbody></table></div></div>`;
+
+  html += `<div class="card bg-white rounded-2xl border border-border p-5">
+    <div class="text-sm font-semibold mb-4">Allocation</div>
+    <canvas id="alloc-chart" height="240"></canvas>
+  </div>`;
+  html += `</div>`;
+
+  el.innerHTML = html;
+
+  const ctx = document.getElementById('alloc-chart');
+  if (ctx) {
+    const colors = ['#D97757','#E8A87C','#85CDCA','#C38D9E','#6C8EBF','#E27D60','#41B3A3'];
+    new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: h.map(x => x.ticker),
+        datasets: [{ data: h.map(x => x.est_value), backgroundColor: colors, borderWidth: 0 }]
+      },
+      options: {
+        cutout: '65%',
+        plugins: {
+          legend: { position: 'bottom', labels: { padding: 12, usePointStyle: true, pointStyle: 'circle', font: { size: 11, family: 'Inter' } } }
+        }
+      }
+    });
+  }
+}
+
+// ========== TRADE REVIEW ==========
+function renderReview(d) {
+  const el = document.getElementById('review-content');
+  if (d.status !== 'ok') { el.innerHTML = d.status === 'empty' ? emptyState('거래 데이터가 없습니다.') : errorState(d.message); return; }
+
+  const { stats, closed_trades, open_positions } = d.data;
+
+  let html = `<div class="grid grid-cols-5 gap-4 mb-6">`;
+  html += kpiCard('총 매매', stats.total_closed + '건', '');
+  html += kpiCard('승률', stats.win_rate + '%', `${stats.wins}W / ${stats.losses}L`, true);
+  html += kpiCard('손익 (KRW)', (stats.total_pnl_krw >= 0 ? '+' : '') + stats.total_pnl_krw.toLocaleString() + '원', '');
+  html += kpiCard('손익 (USD)', (stats.total_pnl_usd >= 0 ? '+$' : '-$') + Math.abs(stats.total_pnl_usd).toFixed(2), '');
+  html += kpiCard('평균 보유', stats.avg_hold_days + '일', stats.patterns ? Object.entries(stats.patterns).map(([k,v])=>`${k}:${v}`).join(' ') : '');
+  html += `</div>`;
+
+  if (closed_trades && closed_trades.length) {
+    html += `<div class="card bg-white rounded-2xl border border-border overflow-hidden mb-6">
+      <div class="px-5 pt-5 pb-3 text-sm font-semibold">Closed Trades</div>
+      <div class="overflow-x-auto">
+      <table class="w-full text-sm">
+        <thead><tr class="border-b border-border text-xs text-warm-600 uppercase tracking-wider">
+          <th class="px-5 py-2.5 text-left font-medium">종목</th>
+          <th class="px-5 py-2.5 text-left font-medium">기간</th>
+          <th class="px-5 py-2.5 text-right font-medium">수량</th>
+          <th class="px-5 py-2.5 text-right font-medium">손익</th>
+          <th class="px-5 py-2.5 text-right font-medium">수익률</th>
+          <th class="px-5 py-2.5 text-left font-medium">패턴</th>
+        </tr></thead>
+        <tbody>`;
+    closed_trades.forEach((t, i) => {
+      const pnlStr = t.currency === 'USD' ? (t.pnl>=0?'+$':'-$')+Math.abs(t.pnl).toFixed(2) : (t.pnl>=0?'+':'')+t.pnl.toLocaleString()+'원';
+      html += `<tr class="${i%2?'bg-cream-50':''}">
+        <td class="px-5 py-3"><span class="font-medium">${t.ticker || t.clean_name || t.name}</span></td>
+        <td class="px-5 py-3 text-xs text-warm-600">${t.buy_date}~${t.sell_date} (${t.hold_days}d)</td>
+        <td class="px-5 py-3 text-right">${t.quantity}</td>
+        <td class="px-5 py-3 text-right font-medium ${pctColor(t.pnl)}">${pnlStr}</td>
+        <td class="px-5 py-3 text-right ${pctColor(t.pnl_pct)}">${fmtPct(t.pnl_pct)}</td>
+        <td class="px-5 py-3"><span class="text-xs px-2 py-0.5 rounded-full bg-cream-200 text-warm-700">${t.pattern}</span></td>
+      </tr>`;
+    });
+    html += `</tbody></table></div></div>`;
+  }
+
+  if (open_positions && open_positions.length) {
+    html += `<div class="card bg-white rounded-2xl border border-border overflow-hidden">
+      <div class="px-5 pt-5 pb-3 text-sm font-semibold">Open Positions</div>
+      <table class="w-full text-sm">
+        <thead><tr class="border-b border-border text-xs text-warm-600 uppercase tracking-wider">
+          <th class="px-5 py-2.5 text-left font-medium">종목</th>
+          <th class="px-5 py-2.5 text-right font-medium">수량</th>
+          <th class="px-5 py-2.5 text-right font-medium">평단가</th>
+          <th class="px-5 py-2.5 text-left font-medium">매수 기간</th>
+          <th class="px-5 py-2.5 text-left font-medium">패턴</th>
+        </tr></thead>
+        <tbody>`;
+    open_positions.forEach((p, i) => {
+      html += `<tr class="${i%2?'bg-cream-50':''}">
+        <td class="px-5 py-3"><span class="font-medium">${p.ticker || p.clean_name || p.name}</span>
+          <span class="text-xs text-warm-600 ml-1">${p.clean_name || ''}</span></td>
+        <td class="px-5 py-3 text-right">${p.quantity}주</td>
+        <td class="px-5 py-3 text-right">${p.currency==='USD'?'$'+p.avg_price.toFixed(2):p.avg_price.toLocaleString()+'원'}</td>
+        <td class="px-5 py-3 text-xs text-warm-600">${p.first_buy}~${p.last_buy}</td>
+        <td class="px-5 py-3"><span class="text-xs px-2 py-0.5 rounded-full ${p.pattern==='dca'?'bg-accent/10 text-accent':'bg-cream-200 text-warm-700'}">${p.pattern}</span></td>
+      </tr>`;
+    });
+    html += `</tbody></table></div>`;
+  }
+
+  el.innerHTML = html;
+}
+
+// ========== MACRO SIGNAL ==========
+function renderSignal(d) {
+  const el = document.getElementById('signal-content');
+  if (d.status !== 'ok') { el.innerHTML = d.status === 'empty' ? emptyState('매크로 데이터를 불러올 수 없습니다.') : errorState(d.message); return; }
+
+  const cats = { index:'Market Index', volatility:'Volatility', rate:'Interest Rate', currency:'Currency', commodity:'Commodity' };
+  let html = '';
+
+  html += `<div class="grid grid-cols-2 gap-5 mb-6">`;
+  Object.entries(cats).forEach(([key, label]) => {
+    const items = (d.macro_data||[]).filter(x => x.category === key && x.price != null);
+    if (!items.length) return;
+    html += `<div class="card bg-white rounded-2xl border border-border overflow-hidden">
+      <div class="px-5 pt-4 pb-2 text-sm font-semibold">${label}</div>
+      <table class="w-full text-sm">
+        <thead><tr class="border-b border-border text-[10px] text-warm-600 uppercase tracking-wider">
+          <th class="px-5 py-2 text-left font-medium">지표</th>
+          <th class="px-5 py-2 text-right font-medium">현재가</th>
+          <th class="px-5 py-2 text-right font-medium">1D</th>
+          <th class="px-5 py-2 text-right font-medium">1W</th>
+          <th class="px-5 py-2 text-right font-medium">1M</th>
+          <th class="px-5 py-2 text-center font-medium">SMA</th>
+        </tr></thead>
+        <tbody>`;
+    items.forEach((m, i) => {
+      html += `<tr class="${i%2?'bg-cream-50':''}">
+        <td class="px-5 py-2.5 text-xs font-medium">${m.name}</td>
+        <td class="px-5 py-2.5 text-right text-xs">${m.price.toLocaleString('en-US',{maximumFractionDigits:2})}</td>
+        <td class="px-5 py-2.5 text-right text-xs ${pctColor(m.chg_1d)}">${fmtPct(m.chg_1d)}</td>
+        <td class="px-5 py-2.5 text-right text-xs ${pctColor(m.chg_1w)}">${fmtPct(m.chg_1w)}</td>
+        <td class="px-5 py-2.5 text-right text-xs ${pctColor(m.chg_1m)}">${fmtPct(m.chg_1m)}</td>
+        <td class="px-5 py-2.5 text-center">${m.above_sma20
+          ? '<span class="text-emerald-500 text-xs font-bold">&#9650;</span>'
+          : '<span class="text-red-400 text-xs font-bold">&#9660;</span>'}</td>
+      </tr>`;
+    });
+    html += `</tbody></table></div>`;
+  });
+  html += `</div>`;
+
+  if (d.signals && d.signals.length) {
+    html += `<div class="card bg-white rounded-2xl border border-border p-5">
+      <div class="text-sm font-semibold mb-4">Signal Alerts</div>
+      <div class="grid grid-cols-2 gap-3">`;
+    d.signals.forEach(sig => {
+      html += `<div class="border-l-4 rounded-lg p-4 ${sigStyle(sig.level)}">
+        <div class="flex items-center gap-2 mb-1.5">
+          <span class="text-[10px] font-bold px-1.5 py-0.5 rounded ${sigBadge(sig.level)}">${sigIcon(sig.level)}</span>
+          <span class="text-xs font-semibold">${sig.indicator}</span>
+        </div>
+        <p class="text-xs leading-relaxed">${sig.message}</p>
+      </div>`;
+    });
+    html += `</div></div>`;
+  }
+
+  el.innerHTML = html;
+}
+
+// ========== IMPLICATIONS ==========
+function renderImplications(d) {
+  const el = document.getElementById('implications-content');
+  if (d.status !== 'ok' || !d.data) { el.innerHTML = ''; return; }
+
+  const impl = d.data;
+  const items = impl.implications || [];
+  if (!items.length) { el.innerHTML = ''; return; }
+
+  let html = `<div class="card bg-white rounded-2xl border border-border p-5 mb-1">
+    <div class="flex items-center justify-between mb-4">
+      <div class="flex items-center gap-2">
+        <div class="w-6 h-6 rounded-lg bg-accent/10 flex items-center justify-center">
+          <svg class="w-3.5 h-3.5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        </div>
+        <span class="text-sm font-semibold">Portfolio Implications</span>
+      </div>
+      <span class="text-xs text-warm-600">${impl.updated_at} | ${impl.source_pdfs?.length || 0} PDFs</span>
+    </div>
+    <div class="space-y-3">`;
+
+  items.forEach(item => {
+    const style = sigStyle(item.level);
+    const badge = sigBadge(item.level);
+    const icon = sigIcon(item.level);
+    const affected = (item.affected || []).map(t =>
+      `<span class="text-[10px] px-1.5 py-0.5 rounded bg-accent/10 text-accent font-medium">${t}</span>`
+    ).join('');
+
+    html += `<div class="rounded-xl border p-4 ${style}">
+      <div class="flex items-start gap-3">
+        <span class="text-[10px] font-bold px-1.5 py-0.5 rounded mt-0.5 shrink-0 ${badge}">${icon}</span>
+        <div class="flex-1 min-w-0">
+          <div class="flex items-center gap-2 mb-1 flex-wrap">
+            <span class="text-sm font-semibold">${item.title}</span>
+            <div class="flex gap-1">${affected}</div>
+          </div>
+          <p class="text-xs leading-relaxed mb-2">${item.summary}</p>
+          <p class="text-[11px] opacity-80"><span class="font-medium">Action:</span> ${item.action}</p>
+        </div>
+      </div>
+    </div>`;
+  });
+
+  html += `</div></div>`;
+  el.innerHTML = html;
+}
+
+// ========== PDF INSIGHTS ==========
+function renderDigest(d) {
+  const el = document.getElementById('digest-content');
+  if (d.status !== 'ok') { el.innerHTML = d.status === 'empty' ? emptyState('PDF 분석 데이터가 없습니다.') : errorState(d.message); return; }
+
+  const items = d.data || [];
+  let html = `<div class="flex items-center justify-between mb-5">
+    <div class="text-sm text-warm-600">${items.length}개 PDF 분석 완료</div>
+  </div>`;
+
+  html += `<div class="grid grid-cols-2 gap-4">`;
+  items.forEach(pdf => {
+    const score = pdf.usefulness || 0;
+    const barW = score * 10;
+    const barColor = score >= 8 ? 'bg-accent' : score >= 6 ? 'bg-amber-400' : 'bg-cream-400';
+    const themes = (pdf.themes || []).slice(0, 3);
+    const tickers = (pdf.key_tickers || []).slice(0, 5);
+
+    html += `<div class="card bg-white rounded-2xl border border-border p-5 flex flex-col">
+      <div class="flex items-center justify-between mb-3">
+        <span class="text-xs text-warm-600 truncate flex-1">${pdf.filename}</span>
+        <span class="text-sm font-bold ${score >= 8 ? 'text-accent' : score >= 6 ? 'text-amber-600' : 'text-warm-600'} ml-2">${score}/10</span>
+      </div>
+      <div class="w-full bg-cream-200 rounded-full h-1 mb-3">
+        <div class="${barColor} h-1 rounded-full" style="width:${barW}%"></div>
+      </div>
+      <p class="text-xs text-warm-700 leading-relaxed mb-3 flex-1 line-clamp-3">${pdf.summary || pdf.one_line_summary || ''}</p>`;
+
+    if (tickers.length) {
+      html += `<div class="flex flex-wrap gap-1 mb-2">`;
+      tickers.forEach(t => {
+        html += `<span class="text-[10px] px-1.5 py-0.5 rounded bg-accent/10 text-accent font-medium">${t}</span>`;
+      });
+      html += `</div>`;
+    }
+    if (themes.length) {
+      html += `<div class="flex flex-wrap gap-1">`;
+      themes.forEach(t => {
+        html += `<span class="text-[10px] px-1.5 py-0.5 rounded bg-cream-200 text-warm-600">${t}</span>`;
+      });
+      html += `</div>`;
+    }
+
+    if (pdf.action_suggestion) {
+      html += `<div class="mt-3 pt-3 border-t border-border">
+        <p class="text-[11px] text-warm-600"><span class="text-accent font-medium">Action:</span> ${pdf.action_suggestion}</p>
+      </div>`;
+    }
+
+    html += `</div>`;
+  });
+  html += `</div>`;
+
+  el.innerHTML = html;
+}
+
+// ========== Price Integration ==========
+function applyPrices(pr) {
+  if (pr.status !== 'ok' || !pr.prices) return;
+  S.prices = pr.prices;
+
+  const p = S.cache.portfolio;
+  if (p && p.status === 'ok') {
+    const holdings = p.holdings || [];
+    const cash = p.cash || {};
+    let totalUSD = 0;
+    holdings.forEach(h => {
+      const cp = S.prices[h.code];
+      const val = cp != null ? h.quantity * cp : h.est_value;
+      if (h.currency === 'USD') totalUSD += val;
+    });
+    let totalKRW = 0;
+    holdings.forEach(h => {
+      if (h.currency === 'KRW') {
+        const cp = S.prices[h.code];
+        totalKRW += cp != null ? h.quantity * cp : h.est_value;
+      }
+    });
+    totalKRW += (cash.krw || 0);
+    totalUSD += (cash.usd || 0);
+
+    const kpi = document.getElementById('total-value-kpi');
+    if (kpi) {
+      kpi.innerHTML = `<div class="text-xs font-medium text-warm-600 mb-2">총 평가금액</div>
+        <div class="text-xl font-bold text-accent">$${totalUSD.toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:0})}</div>
+        <div class="text-xs text-warm-600 mt-1.5">KRW ${totalKRW.toLocaleString()}원</div>`;
+    }
+
+    renderOverview(p, S.cache.review || {}, S.cache.digest || {});
+  }
+
+  if (S.tab === 'portfolio' && S.cache.portfolio) renderPortfolio(S.cache.portfolio);
+}
+
+// ========== Init ==========
+document.addEventListener('DOMContentLoaded', () => loadOverview());
+</script>
+</body>
+</html>

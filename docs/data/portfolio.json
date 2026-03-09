@@ -1,0 +1,82 @@
+{
+  "status": "ok",
+  "holdings": [
+    {
+      "code": "A0008E0",
+      "ticker": "ACE ETF",
+      "name": "ACE 미국장기국채선물",
+      "quantity": 150,
+      "avg_price": 13680,
+      "est_value": 2052000,
+      "currency": "KRW"
+    },
+    {
+      "code": "A017670",
+      "ticker": "SKT",
+      "name": "SK텔레콤",
+      "quantity": 19,
+      "avg_price": 73900,
+      "est_value": 1404100,
+      "currency": "KRW"
+    },
+    {
+      "code": "US92189F7915",
+      "ticker": "VGSH",
+      "name": "뱅가드 초단기금리",
+      "quantity": 2,
+      "avg_price": 148.08,
+      "est_value": 296.16,
+      "currency": "USD"
+    },
+    {
+      "code": "US69608A1088",
+      "ticker": "PLTR",
+      "name": "팔란티어",
+      "quantity": 14,
+      "avg_price": 135.03,
+      "est_value": 1890.42,
+      "currency": "USD"
+    },
+    {
+      "code": "US46138E6288",
+      "ticker": "KBWB",
+      "name": "인베스코 금융주 ETF",
+      "quantity": 9,
+      "avg_price": 83.78,
+      "est_value": 754.02,
+      "currency": "USD"
+    },
+    {
+      "code": "CA85207K1075",
+      "ticker": "PSLV",
+      "name": "스프롯 실물 은",
+      "quantity": 35,
+      "avg_price": 28.42,
+      "est_value": 994.7,
+      "currency": "USD"
+    },
+    {
+      "code": "US81369Y6059",
+      "ticker": "XLF",
+      "name": "금융 셀렉트 ETF",
+      "quantity": 1,
+      "avg_price": 51.65,
+      "est_value": 51.65,
+      "currency": "USD"
+    }
+  ],
+  "cash": {
+    "krw": 4609237,
+    "usd": 7455.28,
+    "krw_equiv": 10916766
+  },
+  "meta": {
+    "account": "123-01-012589",
+    "period_start": "2026-02-08",
+    "period_end": "2026-03-07"
+  },
+  "tx_counts": {
+    "krw": 26,
+    "usd": 64
+  }
+}
