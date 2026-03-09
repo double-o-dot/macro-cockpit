@@ -122,6 +122,9 @@ def build_prices():
     if not code_to_yf:
         return {"status": "ok", "prices": {}}
 
+    # Add USDKRW exchange rate
+    code_to_yf["__FX__"] = "USDKRW=X"
+
     tickers = list(set(code_to_yf.values()))
     df = yf.download(tickers, period="5d", group_by="ticker", progress=False)
 

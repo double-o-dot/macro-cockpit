@@ -5,11 +5,11 @@
       "symbol": "^VIX",
       "name": "VIX (변동성)",
       "category": "volatility",
-      "price": 29.49,
-      "chg_1d": 24.17,
-      "chg_1w": 37.55,
-      "chg_1m": 69.87,
-      "sma20": 20.52,
+      "price": 34.71,
+      "chg_1d": 17.7,
+      "chg_1w": 47.26,
+      "chg_1m": 99.94,
+      "sma20": 21.23,
       "above_sma20": true
     },
     {
@@ -38,66 +38,66 @@
       "symbol": "DX-Y.NYB",
       "name": "달러 인덱스(DXY)",
       "category": "currency",
-      "price": 99.64,
-      "chg_1d": 0.66,
-      "chg_1w": 0.6,
-      "chg_1m": 2.91,
-      "sma20": 97.88,
+      "price": 99.25,
+      "chg_1d": 0.27,
+      "chg_1w": 0.21,
+      "chg_1m": 2.51,
+      "sma20": 97.86,
       "above_sma20": true
     },
     {
       "symbol": "USDKRW=X",
       "name": "USD/KRW 환율",
       "category": "currency",
-      "price": 1495.99,
-      "chg_1d": 1.11,
-      "chg_1w": 3.01,
-      "chg_1m": 2.3,
-      "sma20": 1450.08,
+      "price": 1494.28,
+      "chg_1d": 1.0,
+      "chg_1w": 2.89,
+      "chg_1m": 2.18,
+      "sma20": 1449.99,
       "above_sma20": true
     },
     {
       "symbol": "GC=F",
       "name": "금(Gold)",
       "category": "commodity",
-      "price": 5097.3,
-      "chg_1d": -0.95,
-      "chg_1w": -0.2,
-      "chg_1m": 0.92,
-      "sma20": 5089.06,
+      "price": 5118.1,
+      "chg_1d": -0.54,
+      "chg_1w": 0.21,
+      "chg_1m": 1.33,
+      "sma20": 5090.1,
       "above_sma20": true
     },
     {
       "symbol": "SI=F",
       "name": "은(Silver)",
       "category": "commodity",
-      "price": 83.14,
-      "chg_1d": -0.81,
-      "chg_1w": 0.26,
-      "chg_1m": 1.31,
-      "sma20": 82.87,
+      "price": 83.9,
+      "chg_1d": 0.11,
+      "chg_1w": 1.18,
+      "chg_1m": 2.24,
+      "sma20": 82.9,
       "above_sma20": true
     },
     {
       "symbol": "CL=F",
       "name": "WTI 원유",
       "category": "commodity",
-      "price": 115.84,
-      "chg_1d": 27.44,
-      "chg_1w": 55.36,
-      "chg_1m": 79.99,
-      "sma20": 70.84,
+      "price": 102.25,
+      "chg_1d": 12.49,
+      "chg_1w": 37.14,
+      "chg_1m": 58.87,
+      "sma20": 70.16,
       "above_sma20": true
     },
     {
       "symbol": "BZ=F",
       "name": "브렌트 원유",
       "category": "commodity",
-      "price": 116.0,
-      "chg_1d": 25.15,
-      "chg_1w": 42.51,
-      "chg_1m": 68.02,
-      "sma20": 75.73,
+      "price": 106.48,
+      "chg_1d": 14.88,
+      "chg_1w": 30.81,
+      "chg_1m": 54.23,
+      "sma20": 75.26,
       "above_sma20": true
     },
     {
@@ -126,44 +126,44 @@
       "symbol": "^KS11",
       "name": "KOSPI",
       "category": "index",
-      "price": 5172.88,
-      "chg_1d": -7.38,
-      "chg_1w": -10.69,
-      "chg_1m": -2.36,
-      "sma20": 5655.73,
+      "price": 5251.87,
+      "chg_1d": -5.96,
+      "chg_1w": -9.32,
+      "chg_1m": -0.87,
+      "sma20": 5660.37,
       "above_sma20": false
     }
   ],
   "signals": [
     {
       "indicator": "VIX",
-      "level": "caution",
-      "value": 29.49,
-      "message": "VIX 29.5 - 불안정. 분할매수 가능, 큰 포지션 주의"
+      "level": "danger",
+      "value": 34.71,
+      "message": "VIX 34.7 - 극심한 공포. 신규 매수 자제, 현금 확보 우선"
     },
     {
       "indicator": "USD/KRW",
       "level": "caution",
-      "value": 1495.99,
-      "message": "환율 1496원 (주간 +3.0%) - 고환율 구간. 해외주식 추가 매수 환율 부담"
+      "value": 1494.28,
+      "message": "환율 1494원 (주간 +2.9%) - 고환율 구간. 해외주식 추가 매수 환율 부담"
     },
     {
       "indicator": "Silver",
       "level": "bullish",
-      "value": 83.14,
-      "message": "은 $83.14 (월간 +1.3%) SMA20 위 - 상승 추세 [PSLV 35주 보유 중]"
+      "value": 83.9,
+      "message": "은 $83.90 (월간 +2.2%) SMA20 위 - 상승 추세 [PSLV 35주 보유 중]"
     },
     {
       "indicator": "Gold",
       "level": "bullish",
-      "value": 5097.3,
-      "message": "금 $5097.30 (월간 +0.9%) SMA20 위 [GDXJ 2주 보유 중]"
+      "value": 5118.1,
+      "message": "금 $5118.10 (월간 +1.3%) SMA20 위 [GDXJ 2주 보유 중]"
     },
     {
       "indicator": "Oil (Murban proxy)",
       "level": "info",
-      "value": 116.0,
-      "message": "브렌트 $116.00 / WTI $115.84 (스프레드 $0.16, 월간 +68.0%)"
+      "value": 106.48,
+      "message": "브렌트 $106.48 / WTI $102.25 (스프레드 $4.23, 월간 +54.2%)"
     },
     {
       "indicator": "US 10Y",
@@ -174,8 +174,8 @@
     {
       "indicator": "KOSPI",
       "level": "bearish",
-      "value": 5172.88,
-      "message": "KOSPI 5173 (월간 -2.4%) SMA20 아래 - 약세 [ACE ETF 150주 보유 중]"
+      "value": 5251.87,
+      "message": "KOSPI 5252 (월간 -0.9%) SMA20 아래 - 약세 [ACE ETF 150주 보유 중]"
     },
     {
       "indicator": "NASDAQ",

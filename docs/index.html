@@ -366,7 +366,8 @@ function renderOverview(p,r,d) {
       </div>
       <div class="text-right shrink-0">
         <div class="text-sm font-semibold whitespace-nowrap">${val}</div>
-        ${pnl!=null?`<div class="text-xs font-medium ${pctCls(pnl)} whitespace-nowrap">${fmtPct(pnl)}</div>`:`<div class="text-[10px] text-warm-300">-</div>`}
+        ${pnl!=null?`<div class="text-xs font-medium ${pctCls(pnl)} whitespace-nowrap">${fmtPct(pnl)}</div>`
+          :`<div class="text-[10px] text-warm-300">평단가 기준</div>`}
       </div>
     </div>`;
   });
@@ -397,6 +398,7 @@ function renderOverview(p,r,d) {
 }
 
 function computeHeroValue(holdings,cash) {
+  const fx=S.prices['__FX__']||1450; // USD/KRW fallback
   let usd=0,krw=0;
   (holdings||[]).forEach(s=>{
     const cp=S.prices[s.code];
@@ -404,10 +406,15 @@ function computeHeroValue(holdings,cash) {
     if(s.currency==='USD')usd+=v; else krw+=v;
   });
   usd+=(cash?.usd||0); krw+=(cash?.krw||0);
+  const totalKRW=krw+usd*fx;
   const hv=document.getElementById('hero-value');
   const hs=document.getElementById('hero-sub');
-  if(hv){hv.textContent='$'+usd.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});}
-  if(hs){hs.textContent='KRW '+krw.toLocaleString()+'원';}
+  if(hv){
+    if(totalKRW>=100000000) hv.textContent=(totalKRW/100000000).toFixed(2)+'억원';
+    else if(totalKRW>=10000) hv.textContent=Math.round(totalKRW/10000).toLocaleString()+'만원';
+    else hv.textContent=totalKRW.toLocaleString()+'원';
+  }
+  if(hs){hs.textContent=`$${usd.toLocaleString('en-US',{maximumFractionDigits:0})} + ${krw.toLocaleString()}원 · 환율 ${fx.toFixed(0)}원`;}
 }
 
 function renderOverviewSignals(s) {
@@ -485,7 +492,8 @@ function renderPortfolio(d) {
       </div>
       <div class="flex justify-between mt-3 pt-3 border-t border-warm-100 text-[11px] text-warm-400">
         <span>평단가 ${s.currency==='USD'?'$'+s.avg_price.toFixed(2):s.avg_price.toLocaleString()+'원'}</span>
-        <span>현재가 ${has?(s.currency==='USD'?'$'+cp.toFixed(2):cp.toLocaleString()+'원'):'-'}</span>
+        ${has?`<span>현재가 ${s.currency==='USD'?'$'+cp.toFixed(2):cp.toLocaleString()+'원'}</span>`
+          :`<span class="text-warm-300">시세 미제공</span>`}
       </div>
     </div>`;
   });
