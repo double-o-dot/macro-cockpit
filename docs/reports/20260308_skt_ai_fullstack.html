@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SKT - AI 풀스택 전략이 여는 기업가치 재평가의 시간</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background: #F5F0EB;
+    color: #2D2D2D;
+    padding: 20px;
+  }
+
+  .container {
+    max-width: 720px;
+    margin: 0 auto;
+  }
+
+  /* Header */
+  .header {
+    background: linear-gradient(135deg, #1B2A4A 0%, #2C4A7C 50%, #3B7DD8 200%);
+    color: white;
+    padding: 40px 30px;
+    border-radius: 16px;
+    margin-bottom: 16px;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 140px; height: 140px;
+    background: rgba(59,125,216,0.25);
+    border-radius: 50%;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    bottom: -20px; left: 30%;
+    width: 80px; height: 80px;
+    background: rgba(59,125,216,0.12);
+    border-radius: 50%;
+  }
+  .header .tag {
+    display: inline-block;
+    background: #3B7DD8;
+    color: white;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 20px;
+    margin-bottom: 12px;
+    letter-spacing: 1px;
+  }
+  .header h1 {
+    font-size: 26px;
+    font-weight: 900;
+    line-height: 1.3;
+    margin-bottom: 8px;
+  }
+  .header .subtitle {
+    font-size: 14px;
+    opacity: 0.7;
+    font-weight: 300;
+  }
+
+  /* Big Quote */
+  .big-quote {
+    background: linear-gradient(135deg, #2C4A7C, #3B7DD8);
+    color: white;
+    padding: 28px 30px;
+    border-radius: 16px;
+    margin-bottom: 16px;
+    text-align: center;
+  }
+  .big-quote p {
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 1.4;
+  }
+  .big-quote .attr {
+    font-size: 12px;
+    opacity: 0.7;
+    margin-top: 8px;
+  }
+
+  /* Card */
+  .card {
+    background: white;
+    border-radius: 16px;
+    padding: 28px;
+    margin-bottom: 16px;
+    border: 1px solid #E5DED5;
+  }
+  .card h2 {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .card h2 .num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px; height: 28px;
+    background: #1B2A4A;
+    color: white;
+    border-radius: 50%;
+    font-size: 13px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  /* Stat grid */
+  .stat-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  @media (max-width: 480px) {
+    .stat-grid { grid-template-columns: 1fr; }
+  }
+  .stat-box {
+    padding: 16px;
+    border-radius: 12px;
+    background: #f7f4f0;
+  }
+  .stat-box .s-label {
+    font-size: 11px;
+    font-weight: 500;
+    color: #888;
+    margin-bottom: 4px;
+  }
+  .stat-box .s-value {
+    font-size: 22px;
+    font-weight: 900;
+    color: #1a1a1a;
+  }
+  .stat-box .s-desc {
+    font-size: 11px;
+    color: #999;
+    margin-top: 2px;
+  }
+  .stat-box.accent {
+    background: linear-gradient(135deg, #1B2A4A, #2C4A7C);
+    color: white;
+  }
+  .stat-box.accent .s-label { color: rgba(255,255,255,0.6); }
+  .stat-box.accent .s-value { color: #5BA3F5; }
+  .stat-box.accent .s-desc { color: rgba(255,255,255,0.5); }
+
+  /* Quote block */
+  .quote-block {
+    background: #faf7f3;
+    border-left: 4px solid #D97757;
+    padding: 18px 20px;
+    margin: 14px 0;
+    border-radius: 0 12px 12px 0;
+  }
+  .quote-block p {
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.6;
+    font-style: italic;
+  }
+  .quote-block .q-attr {
+    font-size: 11px;
+    color: #999;
+    margin-top: 6px;
+    font-style: normal;
+  }
+
+  /* Bullet list */
+  .bullet-list {
+    list-style: none;
+    padding: 0;
+  }
+  .bullet-list li {
+    position: relative;
+    padding-left: 18px;
+    margin-bottom: 10px;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  .bullet-list li::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 8px;
+    width: 8px; height: 8px;
+    background: #3B7DD8;
+    border-radius: 50%;
+  }
+
+  /* Timeline */
+  .timeline {
+    position: relative;
+    padding-left: 24px;
+  }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 8px; top: 4px; bottom: 4px;
+    width: 2px;
+    background: #3B7DD8;
+  }
+  .tl-item {
+    position: relative;
+    margin-bottom: 16px;
+    padding-left: 16px;
+  }
+  .tl-item::before {
+    content: '';
+    position: absolute;
+    left: -20px; top: 6px;
+    width: 10px; height: 10px;
+    background: #3B7DD8;
+    border-radius: 50%;
+    border: 2px solid white;
+  }
+  .tl-date {
+    font-size: 11px;
+    font-weight: 700;
+    color: #3B7DD8;
+  }
+  .tl-text {
+    font-size: 13px;
+    line-height: 1.5;
+    margin-top: 2px;
+  }
+
+  /* Layer diagram */
+  .layer-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin: 14px 0;
+  }
+  .layer-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 500;
+    gap: 10px;
+  }
+  .layer-item .l-num {
+    width: 24px; height: 24px;
+    background: white;
+    color: #1a1a1a;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .layer-4 { background: #1B2A4A; color: white; }
+  .layer-3 { background: #2C4A7C; color: white; }
+  .layer-2 { background: #3B7DD8; color: white; }
+  .layer-1 { background: #5BA3F5; color: white; }
+
+  /* SOTP table */
+  .sotp-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 14px 0;
+    font-size: 13px;
+  }
+  .sotp-table th {
+    background: #1B2A4A;
+    color: white;
+    padding: 10px 12px;
+    text-align: left;
+    font-weight: 600;
+  }
+  .sotp-table th:first-child { border-radius: 8px 0 0 0; }
+  .sotp-table th:last-child { border-radius: 0 8px 0 0; }
+  .sotp-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid #f0ebe5;
+  }
+  .sotp-table tr:nth-child(even) td { background: #faf7f3; }
+  .sotp-table .highlight-row td { background: #e8f0fc; font-weight: 600; }
+  .sotp-table .total-row td {
+    background: #1B2A4A;
+    color: white;
+    font-weight: 700;
+    border-bottom: none;
+  }
+  .sotp-table .total-row td:first-child { border-radius: 0 0 0 8px; }
+  .sotp-table .total-row td:last-child { border-radius: 0 0 8px 0; }
+
+  /* Sector analysis (Bull/Bear) */
+  .analysis-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 14px;
+  }
+  @media (max-width: 480px) {
+    .analysis-grid { grid-template-columns: 1fr; }
+  }
+  .analysis-box {
+    padding: 16px;
+    border-radius: 12px;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+  .analysis-box .a-label {
+    font-weight: 700;
+    font-size: 12px;
+    margin-bottom: 8px;
+    display: block;
+  }
+  .analysis-box.bull {
+    background: #e8f0fc;
+    border: 1px solid #b8d4f0;
+  }
+  .analysis-box.bull .a-label { color: #2C4A7C; }
+  .analysis-box.bear {
+    background: #fef5f5;
+    border: 1px solid #f0d0d0;
+  }
+  .analysis-box.bear .a-label { color: #c0392b; }
+
+  /* Scenario box */
+  .scenario-box {
+    background: linear-gradient(135deg, #1B2A4A 0%, #2C3E6A 100%);
+    color: white;
+    border-radius: 16px;
+    padding: 28px;
+    margin-bottom: 16px;
+  }
+  .scenario-box h2 {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .scenario-box h2 .num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px; height: 28px;
+    background: #3B7DD8;
+    color: white;
+    border-radius: 50%;
+    font-size: 13px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .s-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  @media (max-width: 480px) {
+    .s-grid { grid-template-columns: 1fr; }
+  }
+  .s-item {
+    background: rgba(255,255,255,0.08);
+    padding: 14px;
+    border-radius: 10px;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+  .s-item .s-title {
+    font-weight: 700;
+    font-size: 12px;
+    color: #5BA3F5;
+    margin-bottom: 4px;
+  }
+
+  /* Action box */
+  .action-box {
+    background: linear-gradient(135deg, #3B7DD8, #2C4A7C);
+    color: white;
+    padding: 24px 28px;
+    border-radius: 16px;
+    margin-bottom: 16px;
+  }
+  .action-box h2 {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+  .action-box .action-items {
+    list-style: none;
+    padding: 0;
+  }
+  .action-box .action-items li {
+    position: relative;
+    padding-left: 18px;
+    margin-bottom: 8px;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  .action-box .action-items li::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 8px;
+    width: 8px; height: 8px;
+    background: #fff;
+    border-radius: 50%;
+  }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    padding: 20px;
+    font-size: 11px;
+    color: #999;
+  }
+
+  .body-text {
+    font-size: 14px;
+    line-height: 1.7;
+    color: #444;
+    margin-bottom: 14px;
+  }
+
+  .divider {
+    height: 1px;
+    background: #E5DED5;
+    margin: 14px 0;
+  }
+
+  .highlight-text {
+    color: #3B7DD8;
+    font-weight: 700;
+  }
+
+  .stat-grid-3 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+  }
+  @media (max-width: 480px) {
+    .stat-grid-3 { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- Header -->
+  <div class="header">
+    <span class="tag">SKT / AI INFRASTRUCTURE</span>
+    <h1>SKT - AI 풀스택 전략이 여는<br>기업가치 재평가의 시간</h1>
+    <div class="subtitle">투자 분석 리포트 | SOTP 밸류에이션 | 2026.03.08</div>
+  </div>
+
+  <!-- Big Quote -->
+  <div class="big-quote">
+    <p>"통신 본업 + AI 인프라 + 앤트로픽 지분"<br>3중 가치의 합이 시장 가격을 넘어서는 순간</p>
+    <div class="attr">SOTP 목표가 100,000원 | 현재가 80,800원 대비 +23.7% 상승여력</div>
+  </div>
+
+  <!-- 1. Executive Summary -->
+  <div class="card">
+    <h2><span class="num">1</span> 핵심 요약 (Executive Summary)</h2>
+    <p class="body-text">
+      SK텔레콤은 국내 1위 이동통신사라는 안정적 캐시카우 위에, <strong>AI/AIDC 인프라 투자</strong>와
+      <strong>앤트로픽(Anthropic) 지분 보유</strong>라는 두 가지 성장 엔진을 장착하고 있다.
+      시장은 아직 통신사로만 평가하지만, AI 풀스택 전략이 본격화되면 기업가치의 근본적 재평가가 불가피하다.
+    </p>
+    <p class="body-text">
+      SOTP(Sum-of-the-Parts) 밸류에이션 기준 적정가치는 <strong class="highlight-text">100,000원</strong>으로,
+      현재 주가 80,800원 대비 <strong class="highlight-text">23.7%의 상승여력</strong>이 존재한다.
+      2026~27년 앤트로픽 IPO와 용산 AIDC 가동이 핵심 촉매가 될 전망이다.
+    </p>
+
+    <div class="stat-grid-3">
+      <div class="stat-box accent">
+        <div class="s-label">SOTP 목표가</div>
+        <div class="s-value">100,000원</div>
+        <div class="s-desc">통신 + AI + 앤트로픽 합산</div>
+      </div>
+      <div class="stat-box accent">
+        <div class="s-label">현재 주가</div>
+        <div class="s-value">80,800원</div>
+        <div class="s-desc">2026.03.08 종가 기준</div>
+      </div>
+      <div class="stat-box accent">
+        <div class="s-label">상승여력</div>
+        <div class="s-value">+23.7%</div>
+        <div class="s-desc">목표가 대비 괴리율</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Key Stats -->
+  <div class="card">
+    <h2><span class="num">2</span> 핵심 투자 지표</h2>
+    <div class="stat-grid">
+      <div class="stat-box">
+        <div class="s-label">시가총액</div>
+        <div class="s-value" style="font-size:18px;">약 38.9조 원</div>
+        <div class="s-desc">보통주 기준</div>
+      </div>
+      <div class="stat-box">
+        <div class="s-label">배당수익률</div>
+        <div class="s-value" style="font-size:18px;">약 4.3%</div>
+        <div class="s-desc">안정적 현금배당 지속</div>
+      </div>
+      <div class="stat-box">
+        <div class="s-label">앤트로픽 투자액</div>
+        <div class="s-value" style="font-size:18px;">약 1억 달러</div>
+        <div class="s-desc">2023년 투자 집행</div>
+      </div>
+      <div class="stat-box">
+        <div class="s-label">용산 AIDC 투자</div>
+        <div class="s-value" style="font-size:18px;">수천억 원</div>
+        <div class="s-desc">2026~27년 가동 목표</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. AI 풀스택 전략 분석 -->
+  <div class="card">
+    <h2><span class="num">3</span> AI 풀스택 전략 분석</h2>
+    <p class="body-text">
+      SKT의 AI 전략은 단순한 통신 서비스 고도화가 아니다. <strong>통신 인프라 &rarr; AI 서비스 &rarr; AIDC(AI 데이터센터) &rarr;
+      앤트로픽 지분</strong>으로 이어지는 수직통합형 풀스택 구조를 구축하고 있다. 이는 국내 통신사 중 유일무이한 포지셔닝이다.
+    </p>
+
+    <h3 style="font-size:14px; font-weight:700; margin: 16px 0 10px;">SKT AI 풀스택 Value Chain</h3>
+    <div class="layer-stack">
+      <div class="layer-item layer-4">
+        <span class="l-num">4</span> 앤트로픽 지분 - 글로벌 AI 모델 기업 직접 투자 (나스닥 IPO 기대)
+      </div>
+      <div class="layer-item layer-3">
+        <span class="l-num">3</span> AIDC 인프라 - 용산 AI 데이터센터 건설 (GPU 클러스터 운영)
+      </div>
+      <div class="layer-item layer-2">
+        <span class="l-num">2</span> AI 서비스 - 에이닷(A.), 기업용 AI 솔루션, AI 컨택센터
+      </div>
+      <div class="layer-item layer-1">
+        <span class="l-num">1</span> 통신 본업 - 5G/LTE 가입자 2,900만+, 안정적 ARPU 성장
+      </div>
+    </div>
+
+    <div class="quote-block">
+      <p>"AI 인프라 투자 사이클이 통신사 기업가치 재평가의 촉매가 되고 있다. SKT는 국내에서 이 흐름의 최대 수혜자다."</p>
+      <div class="q-attr">- 투자 분석 핵심 판단</div>
+    </div>
+
+    <ul class="bullet-list">
+      <li>국내 1위 이동통신 사업자로서 <strong>연간 EBITDA 5조 원 이상</strong>의 안정적 현금흐름 확보</li>
+      <li>AI 서비스 '에이닷'을 통한 B2C AI 서비스 직접 운영 (MAU 지속 성장)</li>
+      <li>기업용 AI 솔루션(AI 컨택센터, 클라우드 AI) 매출 본격화</li>
+      <li>앤트로픽 투자를 통한 <strong>최전선 AI 모델 기술 접근권</strong> 확보</li>
+    </ul>
+  </div>
+
+  <!-- 4. SOTP 밸류에이션 분석 -->
+  <div class="card">
+    <h2><span class="num">4</span> SOTP 밸류에이션 분석</h2>
+    <p class="body-text">
+      SKT의 기업가치를 정확히 평가하려면 통신 본업, AI/AIDC 사업, 앤트로픽 지분 등
+      각 사업부의 가치를 개별 산정한 후 합산하는 SOTP 방식이 필수적이다.
+      시장은 아직 통신사 멀티플만 적용하고 있어 상당한 가치 괴리가 존재한다.
+    </p>
+
+    <table class="sotp-table">
+      <thead>
+        <tr><th>사업부문</th><th>밸류에이션 방식</th><th>추정 가치</th><th>주당 환산</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>통신 본업 (MNO)</td><td>EV/EBITDA 5.5x</td><td>약 28조 원</td><td>~58,000원</td>
+        </tr>
+        <tr>
+          <td>AI/AIDC 사업</td><td>성장 프리미엄</td><td>약 5~7조 원</td><td>~12,000원</td>
+        </tr>
+        <tr class="highlight-row">
+          <td>앤트로픽 지분</td><td>최근 밸류 기준</td><td>약 8~15조 원</td><td>~20,000원</td>
+        </tr>
+        <tr>
+          <td>기타 (SK브로드밴드 등)</td><td>자산가치 기반</td><td>약 5조 원</td><td>~10,000원</td>
+        </tr>
+        <tr class="total-row">
+          <td>SOTP 합산</td><td>-</td><td>약 48조 원</td><td>~100,000원</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div style="margin-top: 14px; padding: 14px; background: #f7f4f0; border-radius: 10px; font-size: 13px; line-height: 1.6; color: #555;">
+      핵심: 통신 본업만으로도 58,000원 수준이 정당화되며, AI/AIDC와 앤트로픽 지분 가치가 추가되면 100,000원이 도출된다.
+      현재 주가 80,800원은 AI 사업과 앤트로픽 가치를 <strong>절반도 반영하지 못한 수준</strong>이다.
+    </div>
+  </div>
+
+  <!-- 5. 앤트로픽 IPO 시나리오 -->
+  <div class="scenario-box">
+    <h2><span class="num">5</span> 앤트로픽 IPO 시나리오 분석</h2>
+    <p style="font-size: 14px; line-height: 1.7; opacity: 0.85; margin-bottom: 16px;">
+      Chamath Palihapitiya는 Anthropic의 잠재적 시가총액을 <strong style="color: #5BA3F5;">1.5조 달러</strong>로 평가했다.
+      만약 앤트로픽이 나스닥에 상장할 경우, SKT가 보유한 지분의 평가 가치는 현재 장부가 대비 수십 배 상승이 가능하다.
+      이는 SKT 주가에 가장 폭발적인 상방 촉매가 될 수 있다.
+    </p>
+
+    <div class="s-grid">
+      <div class="s-item">
+        <div class="s-title">보수적 시나리오</div>
+        앤트로픽 시총 3,000억 달러 수준 IPO. SKT 지분가치 약 3~5조 원. 주당 +6,000~10,000원 기여.
+      </div>
+      <div class="s-item">
+        <div class="s-title">기본 시나리오</div>
+        앤트로픽 시총 6,000억~1조 달러. SKT 지분가치 약 8~15조 원. 주당 +15,000~30,000원 기여.
+      </div>
+      <div class="s-item">
+        <div class="s-title">Chamath 시나리오</div>
+        앤트로픽 시총 1.5조 달러 도달 시. SKT 지분가치 20조 원 이상 가능. 주가 재평가의 핵심 트리거.
+      </div>
+      <div class="s-item">
+        <div class="s-title">IPO 타이밍</div>
+        2026 하반기~2027년 상장 가능성. AI 시장 성장과 함께 기업가치 지속 상승 중. 시점이 다가올수록 주가에 선반영 시작.
+      </div>
+    </div>
+
+    <div style="margin-top: 16px; padding: 14px; background: rgba(255,255,255,0.08); border-radius: 10px; font-size: 13px; line-height: 1.6;">
+      Chamath Palihapitiya의 핵심 논리: "Anthropic은 OpenAI의 대항마가 아니라, AI 안전성이라는 차별화된 포지션으로
+      기업 시장을 지배할 가능성이 있다. 기업 고객이 가장 신뢰하는 AI 파트너가 된다면 1.5조 달러 시총은 정당화된다."
+    </div>
+  </div>
+
+  <!-- 6. 용산 AIDC 가동 -->
+  <div class="card">
+    <h2><span class="num">6</span> 용산 AIDC 가동 일정 및 기대효과</h2>
+    <p class="body-text">
+      SKT는 용산에 대규모 AI 데이터센터(AIDC)를 건설 중이며, 이는 국내 최대 규모의 GPU 클러스터를 갖춘 AI 전용 인프라가 될 전망이다.
+      AIDC 가동은 SKT의 AI 사업을 '서비스'에서 '인프라 플랫폼'으로 격상시키는 전환점이 된다.
+    </p>
+
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-date">2025 하반기</div>
+        <div class="tl-text">용산 AIDC 건설 본격 착수, GPU 서버 확보 계약 체결</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-date">2026 상반기</div>
+        <div class="tl-text">1차 인프라 구축 완료, 내부 AI 워크로드 이전 시작</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-date">2026 하반기</div>
+        <div class="tl-text"><strong>용산 AIDC 1단계 상업 가동</strong> - 기업 고객 대상 GPU-as-a-Service 시작</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-date">2027</div>
+        <div class="tl-text">AIDC 풀 가동, AI 인프라 매출 본격 반영. 연간 수천억 원 매출 기대</div>
+      </div>
+    </div>
+
+    <div class="stat-grid" style="margin-top: 14px;">
+      <div class="stat-box" style="border-left: 4px solid #3B7DD8;">
+        <div class="s-label">AIDC 기대 매출</div>
+        <div class="s-value" style="font-size:16px;">연 수천억 원</div>
+        <div class="s-desc">풀 가동 시점(2027~) 기준</div>
+      </div>
+      <div class="stat-box" style="border-left: 4px solid #3B7DD8;">
+        <div class="s-label">경쟁 우위</div>
+        <div class="s-value" style="font-size:16px;">통신+DC 시너지</div>
+        <div class="s-desc">네트워크 인프라와 DC의 결합</div>
+      </div>
+    </div>
+
+    <ul class="bullet-list" style="margin-top: 14px;">
+      <li>국내 기업 대상 <strong>GPU 클라우드(GPUaaS)</strong> 시장의 퍼스트 무버 지위 확보</li>
+      <li>통신망과 데이터센터의 물리적 결합으로 <strong>초저지연 AI 추론 서비스</strong> 가능</li>
+      <li>앤트로픽 모델을 AIDC에서 직접 호스팅하는 차별화 전략 가능성</li>
+      <li>AIDC 매출은 기존 통신 매출 대비 <strong>높은 마진율</strong>이 기대됨</li>
+    </ul>
+  </div>
+
+  <!-- 7. 투자 시사점 (Bull/Bear) -->
+  <div class="card">
+    <h2><span class="num">7</span> 투자 시사점</h2>
+    <div class="analysis-grid">
+      <div class="analysis-box bull">
+        <span class="a-label">Bull Case</span>
+        <strong>AI 풀스택 밸류 재평가</strong><br>
+        통신사 멀티플 &rarr; AI 인프라 플랫폼 멀티플로 전환 시 주가 대폭 리레이팅
+        <div class="divider"></div>
+        <strong>앤트로픽 IPO 촉매</strong><br>
+        나스닥 상장 시 지분가치 수조~수십조 원. Chamath의 1.5조 달러 시나리오 실현 가능
+        <div class="divider"></div>
+        <strong>안정적 배당 + 성장</strong><br>
+        4%대 배당수익률을 유지하면서 AI 성장 스토리까지 갖춘 희소한 종목
+        <div class="divider"></div>
+        <strong>용산 AIDC 가동</strong><br>
+        2026~27년 상업 가동 시 새로운 고마진 매출원 확보. 실적 가시성 상승
+      </div>
+      <div class="analysis-box bear">
+        <span class="a-label">Bear Case</span>
+        <strong>AI 투자 불확실성</strong><br>
+        AIDC 투자 대비 수익화 지연 가능. 대규모 CAPEX 부담이 단기 실적 압박 요인
+        <div class="divider"></div>
+        <strong>앤트로픽 리스크</strong><br>
+        IPO 지연, 밸류에이션 하향, 또는 AI 경쟁 심화로 기대가치 미달 가능성
+        <div class="divider"></div>
+        <strong>통신 본업 성장 한계</strong><br>
+        국내 이동통신 시장 포화. ARPU 성장 둔화와 5G 투자 회수 지연 우려
+        <div class="divider"></div>
+        <strong>글로벌 AI 경쟁 심화</strong><br>
+        국내 AIDC 시장에 네이버, KT 등 경쟁사 진입 가속. 점유율 경쟁 불가피
+      </div>
+    </div>
+  </div>
+
+  <!-- 8. Action -->
+  <div class="action-box">
+    <h2>Action Plan</h2>
+    <ul class="action-items">
+      <li><strong>보유 유지 (Hold)</strong> - 현재 보유 포지션 유지. AI 풀스택 전략의 가시적 성과 확인 시까지 인내</li>
+      <li><strong>앤트로픽 IPO 일정 추적</strong> - 나스닥 상장 관련 뉴스 및 밸류에이션 업데이트 지속 모니터링</li>
+      <li><strong>용산 AIDC 가동 시점 확인</strong> - 2026 하반기 1단계 상업 가동 여부가 핵심. 분기 실적 발표 시 AIDC 관련 코멘트 집중 체크</li>
+      <li><strong>80,800원 이하 추가 매수</strong> - 현 주가 이하에서의 추가 매수는 SOTP 기준 안전마진 확보. 분할 매수 접근 권장</li>
+      <li><strong>100,000원 도달 시 일부 익절</strong> - SOTP 목표가 도달 시 보유 물량의 30~50% 차익 실현 후 나머지는 앤트로픽 IPO까지 보유</li>
+    </ul>
+  </div>
+
+  <!-- Disclaimer + Footer -->
+  <div class="footer">
+    본 아티클은 공개 정보 및 투자 분석 자료를 기반으로 정리한 참고 자료이며, 투자 권유를 목적으로 하지 않습니다.<br>
+    투자 판단은 본인의 책임하에 이루어져야 합니다. 목표가 및 밸류에이션은 분석 시점 기준이며 실제와 다를 수 있습니다.<br><br>
+    Macro Cockpit | 2026.03.08 작성
+  </div>
+
+</div>
+</body>
+</html>

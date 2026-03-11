@@ -105,13 +105,13 @@
 
 <body class="font-sans text-warm-900 antialiased">
 
-<!-- ==================== PIN LOCK ==================== -->
-<div id="pin-screen" class="fixed inset-0 z-[100] bg-bg flex flex-col items-center justify-center px-6">
+<!-- ==================== PIN LOCK (Portfolio Only) ==================== -->
+<div id="pin-screen" class="fixed inset-0 z-[100] bg-bg flex flex-col items-center justify-center px-6" style="display:none;">
   <div class="flex items-center gap-2.5 mb-10">
     <div class="w-11 h-11 rounded-full bg-accent flex items-center justify-center">
       <span class="text-white text-lg font-bold">M</span>
     </div>
-    <span class="text-xl font-semibold tracking-tight">Macro Cockpit</span>
+    <span class="text-xl font-semibold tracking-tight">Portfolio Lock</span>
   </div>
   <p id="pin-msg" class="text-sm text-warm-500 mb-6">PIN을 입력하세요</p>
   <div class="flex gap-4 mb-10" id="pin-dots">
@@ -124,29 +124,79 @@
     <div class="pin-key" data-v="7">7</div><div class="pin-key" data-v="8">8</div><div class="pin-key" data-v="9">9</div>
     <div class="pin-key fn" data-v="clear">Clear</div><div class="pin-key" data-v="0">0</div><div class="pin-key fn" data-v="back">&larr;</div>
   </div>
-  <p id="pin-setup-hint" class="text-xs text-warm-400 mt-8 hidden">첫 접속: 사용할 PIN 4자리를 설정하세요</p>
+  <button onclick="closePinScreen()" class="mt-6 text-sm text-warm-400 hover:text-warm-600 transition-colors">취소</button>
+  <p id="pin-setup-hint" class="text-xs text-warm-400 mt-4 hidden">첫 접속: 사용할 PIN 4자리를 설정하세요</p>
 </div>
 
 <script>
-(function(){
-  const SK='mc_pin_hash'; let pin='',isSetup=!localStorage.getItem(SK),sf='';
-  const dots=document.querySelectorAll('#pin-dots .pin-dot'),msg=document.getElementById('pin-msg'),hint=document.getElementById('pin-setup-hint');
-  if(isSetup){msg.textContent='PIN 4자리를 설정하세요';hint.classList.remove('hidden');}
-  async function hp(p){const e=new TextEncoder().encode(p+'_mc');const b=await crypto.subtle.digest('SHA-256',e);return Array.from(new Uint8Array(b)).map(x=>x.toString(16).padStart(2,'0')).join('');}
-  function ud(){dots.forEach((d,i)=>d.classList.toggle('filled',i<pin.length));}
-  function shake(){const c=document.getElementById('pin-dots');c.style.animation='none';c.offsetHeight;c.style.animation='shake .4s ease';}
-  async function ck(){
-    const h=await hp(pin);
-    if(isSetup){if(!sf){sf=pin;pin='';ud();msg.textContent='PIN을 다시 입력하세요';return;}
-      if(pin===sf){localStorage.setItem(SK,h);localStorage.setItem('mc_ts',Date.now().toString());document.getElementById('pin-screen').style.display='none';}
-      else{sf='';pin='';ud();shake();msg.textContent='불일치. 다시 설정하세요';}return;}
-    if(h===localStorage.getItem(SK)){localStorage.setItem('mc_ts',Date.now().toString());document.getElementById('pin-screen').style.display='none';}
-    else{pin='';ud();shake();msg.textContent='잘못된 PIN';setTimeout(()=>{msg.textContent='PIN을 입력하세요';},1500);}
+// PIN system - Portfolio tab only
+const PIN = {
+  SK: 'mc_pin_hash',
+  pin: '',
+  sf: '',
+  unlocked: false,
+  isSetup: false,
+  init() {
+    this.isSetup = !localStorage.getItem(this.SK);
+    const ts = parseInt(localStorage.getItem('mc_pin_ts') || '0');
+    if (!this.isSetup && Date.now() - ts < 7 * 86400000) this.unlocked = true;
+  },
+  show() {
+    this.pin = ''; this.sf = '';
+    const screen = document.getElementById('pin-screen');
+    const msg = document.getElementById('pin-msg');
+    const hint = document.getElementById('pin-setup-hint');
+    screen.style.display = 'flex';
+    if (this.isSetup) { msg.textContent = 'Portfolio PIN 4자리를 설정하세요'; hint.classList.remove('hidden'); }
+    else { msg.textContent = 'Portfolio PIN을 입력하세요'; hint.classList.add('hidden'); }
+    this.updateDots();
+  },
+  updateDots() {
+    document.querySelectorAll('#pin-dots .pin-dot').forEach((d, i) => d.classList.toggle('filled', i < this.pin.length));
+  },
+  shake() {
+    const c = document.getElementById('pin-dots');
+    c.style.animation = 'none'; c.offsetHeight; c.style.animation = 'shake .4s ease';
+  },
+  async hash(p) {
+    const e = new TextEncoder().encode(p + '_mc');
+    const b = await crypto.subtle.digest('SHA-256', e);
+    return Array.from(new Uint8Array(b)).map(x => x.toString(16).padStart(2, '0')).join('');
+  },
+  async check() {
+    const h = await this.hash(this.pin);
+    const msg = document.getElementById('pin-msg');
+    if (this.isSetup) {
+      if (!this.sf) { this.sf = this.pin; this.pin = ''; this.updateDots(); msg.textContent = 'PIN을 다시 입력하세요'; return; }
+      if (this.pin === this.sf) {
+        localStorage.setItem(this.SK, h); localStorage.setItem('mc_pin_ts', Date.now().toString());
+        this.unlocked = true; this.isSetup = false;
+        document.getElementById('pin-screen').style.display = 'none';
+        switchTab('portfolio');
+      } else { this.sf = ''; this.pin = ''; this.updateDots(); this.shake(); msg.textContent = '불일치. 다시 설정하세요'; }
+      return;
+    }
+    if (h === localStorage.getItem(this.SK)) {
+      localStorage.setItem('mc_pin_ts', Date.now().toString());
+      this.unlocked = true;
+      document.getElementById('pin-screen').style.display = 'none';
+      switchTab('portfolio');
+    } else {
+      this.pin = ''; this.updateDots(); this.shake(); msg.textContent = '잘못된 PIN';
+      setTimeout(() => { msg.textContent = 'Portfolio PIN을 입력하세요'; }, 1500);
+    }
   }
-  document.getElementById('pin-pad').addEventListener('click',e=>{const k=e.target.closest('.pin-key');if(!k)return;const v=k.dataset.v;
-    if(v==='clear'){pin='';ud();return;}if(v==='back'){pin=pin.slice(0,-1);ud();return;}if(pin.length>=4)return;pin+=v;ud();if(pin.length===4)setTimeout(ck,200);});
-  const ts=parseInt(localStorage.getItem('mc_ts')||'0');if(!isSetup&&Date.now()-ts<7*86400000)document.getElementById('pin-screen').style.display='none';
-})();
+};
+PIN.init();
+function closePinScreen() { document.getElementById('pin-screen').style.display = 'none'; switchTab('overview'); }
+document.getElementById('pin-pad').addEventListener('click', e => {
+  const k = e.target.closest('.pin-key'); if (!k) return; const v = k.dataset.v;
+  if (v === 'clear') { PIN.pin = ''; PIN.updateDots(); return; }
+  if (v === 'back') { PIN.pin = PIN.pin.slice(0, -1); PIN.updateDots(); return; }
+  if (PIN.pin.length >= 4) return;
+  PIN.pin += v; PIN.updateDots();
+  if (PIN.pin.length === 4) setTimeout(() => PIN.check(), 200);
+});
 </script>
 
 <!-- ==================== DESKTOP SIDEBAR ==================== -->
@@ -236,6 +286,8 @@ document.querySelectorAll('#sidebar-nav .nav-link, #bottom-nav a').forEach(el=>{
   el.addEventListener('click',()=>switchTab(el.dataset.tab));
 });
 function switchTab(tab) {
+  // Portfolio tab requires PIN authentication
+  if (tab === 'portfolio' && !PIN.unlocked) { PIN.show(); return; }
   S.tab = tab;
   document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
   document.getElementById(tab)?.classList.add('active');
@@ -301,13 +353,47 @@ function errBox(msg){return `<div class="scard p-6 text-center"><p class="text-d
 // ============================================================
 function renderOverview(p,r,d) {
   const el=document.getElementById('overview-content');
+  let h='';
+
+  // If portfolio is locked, show public overview instead
+  if(!PIN.unlocked) {
+    // Show Top Insights + Signals only (no portfolio data)
+    if(d&&d.status==='ok'&&d.data&&d.data.length){
+      h+=`<div class="hero p-5 md:p-6 mb-5">
+        <svg class="absolute -top-6 -right-6 opacity-[.06]" width="140" height="140"><circle cx="70" cy="70" r="70" fill="white"/></svg>
+        <div class="relative z-10">
+          <div class="text-xs text-white/50 font-medium tracking-wide uppercase">Macro Cockpit</div>
+          <div class="text-2xl md:text-3xl font-extrabold mt-1 tracking-tight">Insights & Analysis</div>
+          <div class="text-sm text-white/50 mt-2">투자 인사이트를 공유합니다</div>
+        </div>
+      </div>`;
+      h+=`<div class="mb-5"><div class="text-sm font-semibold mb-3">Top Insights</div>
+        <div class="space-y-3 md:grid md:grid-cols-2 md:gap-4 md:space-y-0">`;
+      d.data.slice(0,6).forEach(pdf=>{
+        const themes=(pdf.themes||[]).slice(0,3);
+        h+=`<div class="scard-sm p-4">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="text-xs font-bold text-accent">${pdf.usefulness}/10</span>
+            <span class="text-[10px] text-warm-400 truncate">${pdf.filename}</span>
+          </div>
+          <p class="text-xs text-warm-600 leading-relaxed line-clamp-3 mb-2">${pdf.summary||''}</p>
+          ${themes.length?`<div class="flex flex-wrap gap-1">${themes.map(t=>`<span class="text-[10px] px-1.5 py-0.5 rounded-full bg-warm-100 text-warm-500">${t}</span>`).join('')}</div>`:''}
+        </div>`;
+      });
+      h+=`</div></div>`;
+    }
+    h+=`<div id="overview-signals" class="mb-5"><div class="skel h-32"></div></div>`;
+    el.innerHTML=h;
+    return;
+  }
+
   if(p.status==='error'){el.innerHTML=errBox(p.message);return;}
   if(p.status==='empty'){el.innerHTML=emptyBox('Portfolio 데이터 없음');return;}
 
   const stats=r.status==='ok'?r.data.stats:{};
   const holdings=p.holdings||[];
   const cash=p.cash||{};
-  let h='';
+  h='';
 
   // === HERO CARD ===
   h+=`<div class="hero p-5 md:p-6 mb-5">

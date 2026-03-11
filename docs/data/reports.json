@@ -2,13 +2,40 @@
   "status": "ok",
   "data": [
     {
+      "id": "20260311_jensen_huang",
+      "title": "젠슨 황: $7,000억은 시작일 뿐, 수조 달러가 더 필요하다",
+      "date": "2026-03-11",
+      "source": "",
+      "description": "NVIDIA CEO 젠슨 황의 AI 인프라 투자 전망. GTC 2026 프리뷰, Vera Rubin GPU 로드맵, HBM4 공급 경쟁, 투자 시사점 종합 분석.",
+      "file": "20260311_jensen_huang_ai_infra.html",
+      "tags": ["AI", "NVIDIA", "Infrastructure", "GTC 2026"]
+    },
+    {
       "id": "20260310_gloria_memo",
       "title": "Gloria Memo - 이란전쟁의 진짜 구조",
       "date": "2026-03-10",
-      "source": "Valley AI @gloria",
-      "description": "이 전쟁은 오로지 중국만 보고 하는 전쟁. 호르무즈 봉쇄 → 에너지 레버리지 → 4월 미중협상. 3/31 방중 타임라인, 섹터별 대응, KORU 교차분석.",
+      "source": "",
+      "description": "이 전쟁은 오로지 중국만 보고 하는 전쟁. 호르무즈 봉쇄 → 에너지 레버리지 → 4월 미중협상. 3/31 방중 타임라인, 섹터별 대응.",
       "file": "20260310_gloria_memo_infographic.html",
-      "tags": ["Geopolitics", "Energy", "KORU", "China"]
+      "tags": ["Geopolitics", "Energy", "China"]
+    },
+    {
+      "id": "20260309_hormuz_oil",
+      "title": "호르무즈 해협 봉쇄 - 역사적 원유 공급 충격 분석",
+      "date": "2026-03-09",
+      "source": "",
+      "description": "호르무즈 물동량 90% 감소, 공급 충격 17.1mb/d(러시아 충격의 17배). 유가 시나리오 분석과 포트폴리오 영향 평가.",
+      "file": "20260309_hormuz_oil_crisis.html",
+      "tags": ["Energy", "Oil", "Geopolitics", "Hormuz"]
+    },
+    {
+      "id": "20260308_skt_ai",
+      "title": "SKT - AI 풀스택 전략이 여는 기업가치 재평가의 시간",
+      "date": "2026-03-08",
+      "source": "",
+      "description": "국내 1위 이동통신 + AI/AIDC 인프라 + 앤트로픽 지분. SOTP 목표가 100,000원, 상승여력 23.7%. 앤트로픽 IPO 시나리오.",
+      "file": "20260308_skt_ai_fullstack.html",
+      "tags": ["AI", "SKT", "Anthropic", "Telecom"]
     }
   ]
 }
