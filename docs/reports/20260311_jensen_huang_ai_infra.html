@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jensen Huang - AI 인프라 $7,000억은 시작일 뿐</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background: #F5F0EB;
+    color: #2D2D2D;
+    padding: 20px;
+  }
+
+  .container {
+    max-width: 720px;
+    margin: 0 auto;
+  }
+
+  /* Header */
+  .header {
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d3a2d 50%, #76B900 200%);
+    color: white;
+    padding: 40px 30px;
+    border-radius: 16px;
+    margin-bottom: 16px;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 140px; height: 140px;
+    background: rgba(118,185,0,0.25);
+    border-radius: 50%;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    bottom: -20px; left: 30%;
+    width: 80px; height: 80px;
+    background: rgba(118,185,0,0.12);
+    border-radius: 50%;
+  }
+  .header .tag {
+    display: inline-block;
+    background: #76B900;
+    color: white;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 20px;
+    margin-bottom: 12px;
+    letter-spacing: 1px;
+  }
+  .header h1 {
+    font-size: 26px;
+    font-weight: 900;
+    line-height: 1.3;
+    margin-bottom: 8px;
+  }
+  .header .subtitle {
+    font-size: 14px;
+    opacity: 0.7;
+    font-weight: 300;
+  }
+
+  /* Big Quote */
+  .big-quote {
+    background: linear-gradient(135deg, #76B900, #5a9000);
+    color: white;
+    padding: 28px 30px;
+    border-radius: 16px;
+    margin-bottom: 16px;
+    text-align: center;
+  }
+  .big-quote p {
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 1.4;
+  }
+  .big-quote .attr {
+    font-size: 12px;
+    opacity: 0.7;
+    margin-top: 8px;
+  }
+
+  /* Card */
+  .card {
+    background: white;
+    border-radius: 16px;
+    padding: 28px;
+    margin-bottom: 16px;
+    border: 1px solid #E5DED5;
+  }
+  .card h2 {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .card h2 .num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px; height: 28px;
+    background: #1a1a1a;
+    color: white;
+    border-radius: 50%;
+    font-size: 13px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  /* Stat grid */
+  .stat-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  @media (max-width: 480px) {
+    .stat-grid { grid-template-columns: 1fr; }
+  }
+  .stat-box {
+    padding: 16px;
+    border-radius: 12px;
+    background: #f7f4f0;
+  }
+  .stat-box .s-label {
+    font-size: 11px;
+    font-weight: 500;
+    color: #888;
+    margin-bottom: 4px;
+  }
+  .stat-box .s-value {
+    font-size: 22px;
+    font-weight: 900;
+    color: #1a1a1a;
+  }
+  .stat-box .s-desc {
+    font-size: 11px;
+    color: #999;
+    margin-top: 2px;
+  }
+  .stat-box.nvidia {
+    background: linear-gradient(135deg, #1a1a1a, #2d3a2d);
+    color: white;
+  }
+  .stat-box.nvidia .s-label { color: rgba(255,255,255,0.6); }
+  .stat-box.nvidia .s-value { color: #76B900; }
+  .stat-box.nvidia .s-desc { color: rgba(255,255,255,0.5); }
+
+  /* Quote block */
+  .quote-block {
+    background: #faf7f3;
+    border-left: 4px solid #D97757;
+    padding: 18px 20px;
+    margin: 14px 0;
+    border-radius: 0 12px 12px 0;
+  }
+  .quote-block p {
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.6;
+    font-style: italic;
+  }
+  .quote-block .q-attr {
+    font-size: 11px;
+    color: #999;
+    margin-top: 6px;
+    font-style: normal;
+  }
+
+  /* Bullet list */
+  .bullet-list {
+    list-style: none;
+    padding: 0;
+  }
+  .bullet-list li {
+    position: relative;
+    padding-left: 18px;
+    margin-bottom: 10px;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  .bullet-list li::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 8px;
+    width: 8px; height: 8px;
+    background: #76B900;
+    border-radius: 50%;
+  }
+
+  /* Timeline */
+  .timeline {
+    position: relative;
+    padding-left: 24px;
+  }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 8px; top: 4px; bottom: 4px;
+    width: 2px;
+    background: #76B900;
+  }
+  .tl-item {
+    position: relative;
+    margin-bottom: 16px;
+    padding-left: 16px;
+  }
+  .tl-item::before {
+    content: '';
+    position: absolute;
+    left: -20px; top: 6px;
+    width: 10px; height: 10px;
+    background: #76B900;
+    border-radius: 50%;
+    border: 2px solid white;
+  }
+  .tl-date {
+    font-size: 11px;
+    font-weight: 700;
+    color: #76B900;
+  }
+  .tl-text {
+    font-size: 13px;
+    line-height: 1.5;
+    margin-top: 2px;
+  }
+
+  /* Layer diagram */
+  .layer-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin: 14px 0;
+  }
+  .layer-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 500;
+    gap: 10px;
+  }
+  .layer-item .l-num {
+    width: 24px; height: 24px;
+    background: white;
+    color: #1a1a1a;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .layer-5 { background: #1a1a1a; color: white; }
+  .layer-4 { background: #2d3a2d; color: white; }
+  .layer-3 { background: #4a6a30; color: white; }
+  .layer-2 { background: #5f8a20; color: white; }
+  .layer-1 { background: #76B900; color: white; }
+
+  /* GPU table */
+  .gpu-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 14px 0;
+    font-size: 13px;
+  }
+  .gpu-table th {
+    background: #1a1a1a;
+    color: white;
+    padding: 10px 12px;
+    text-align: left;
+    font-weight: 600;
+  }
+  .gpu-table th:first-child { border-radius: 8px 0 0 0; }
+  .gpu-table th:last-child { border-radius: 0 8px 0 0; }
+  .gpu-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid #f0ebe5;
+  }
+  .gpu-table tr:nth-child(even) td { background: #faf7f3; }
+  .gpu-table .highlight-row td { background: #f0f7e6; font-weight: 600; }
+
+  /* Sector analysis (Bull/Bear) */
+  .analysis-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 14px;
+  }
+  @media (max-width: 480px) {
+    .analysis-grid { grid-template-columns: 1fr; }
+  }
+  .analysis-box {
+    padding: 16px;
+    border-radius: 12px;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+  .analysis-box .a-label {
+    font-weight: 700;
+    font-size: 12px;
+    margin-bottom: 8px;
+    display: block;
+  }
+  .analysis-box.bull {
+    background: #f0f7e6;
+    border: 1px solid #d4e8b8;
+  }
+  .analysis-box.bull .a-label { color: #4a8c00; }
+  .analysis-box.bear {
+    background: #fef5f5;
+    border: 1px solid #f0d0d0;
+  }
+  .analysis-box.bear .a-label { color: #c0392b; }
+
+  /* Korea box */
+  .korea-box {
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2040 100%);
+    color: white;
+    border-radius: 16px;
+    padding: 28px;
+    margin-bottom: 16px;
+  }
+  .korea-box h2 {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .korea-box h2 .flag { font-size: 20px; }
+  .k-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .k-item {
+    background: rgba(255,255,255,0.08);
+    padding: 14px;
+    border-radius: 10px;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+  .k-item .k-title {
+    font-weight: 700;
+    font-size: 12px;
+    color: #76B900;
+    margin-bottom: 4px;
+  }
+
+  /* Source list */
+  .source-list {
+    list-style: none;
+    padding: 0;
+  }
+  .source-list li {
+    font-size: 12px;
+    color: #888;
+    padding: 4px 0;
+    border-bottom: 1px solid #f0ebe5;
+  }
+  .source-list li:last-child { border-bottom: none; }
+  .source-list a {
+    color: #76B900;
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    padding: 20px;
+    font-size: 11px;
+    color: #999;
+  }
+
+  .body-text {
+    font-size: 14px;
+    line-height: 1.7;
+    color: #444;
+    margin-bottom: 14px;
+  }
+
+  .divider {
+    height: 1px;
+    background: #E5DED5;
+    margin: 14px 0;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- Header -->
+  <div class="header">
+    <span class="tag">NVIDIA / AI INFRASTRUCTURE</span>
+    <h1>젠슨 황: "$7,000억은 시작일 뿐,<br>수조 달러가 더 필요하다"</h1>
+    <div class="subtitle">Fortune Interview | GTC 2026 Preview | 2026.03.10</div>
+  </div>
+
+  <!-- Big Quote -->
+  <div class="big-quote">
+    <p>"We have only just begun this buildout.<br>Trillions of dollars of infrastructure<br>still need to be built."</p>
+    <div class="attr">Jensen Huang, CEO of NVIDIA - Fortune (2026.03.10)</div>
+  </div>
+
+  <!-- 1. 핵심 수치 -->
+  <div class="card">
+    <h2><span class="num">1</span> 핵심 수치 한눈에 보기</h2>
+    <div class="stat-grid">
+      <div class="stat-box nvidia">
+        <div class="s-label">2026 빅테크 AI 설비투자</div>
+        <div class="s-value">$7,000억</div>
+        <div class="s-desc">약 1,021조 원 | 스웨덴+이스라엘+아르헨 GDP 초과</div>
+      </div>
+      <div class="stat-box nvidia">
+        <div class="s-label">2030 연간 AI 인프라 전망</div>
+        <div class="s-value">$4조</div>
+        <div class="s-desc">젠슨 황 추정 | 연간 데이터센터 지출</div>
+      </div>
+      <div class="stat-box">
+        <div class="s-label">맥킨지 2030 누적 전망</div>
+        <div class="s-value">$6.7조</div>
+        <div class="s-desc">글로벌 데이터센터 누적 투자</div>
+      </div>
+      <div class="stat-box">
+        <div class="s-label">AI의 미국 GDP 기여</div>
+        <div class="s-value">1.1%p</div>
+        <div class="s-desc">소비지출 기여도 초과 (JPMorgan)</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. 왜 수조 달러인가 -->
+  <div class="card">
+    <h2><span class="num">2</span> 왜 "수조 달러"가 필요한가</h2>
+    <p class="body-text">
+      젠슨 황에 따르면, 전 세계는 기존 클래식 컴퓨팅 인프라에 연간 약 $4,000억을 지출해왔다.
+      그러나 AI 워크로드에 필요한 컴퓨팅 용량은 기존 대비 <strong>1,000배</strong> 이상이다.
+      현재의 $7,000억 투자는 이 거대한 전환의 초입에 불과하다.
+    </p>
+
+    <div class="quote-block">
+      <p>"AI 거품은 없습니다. 우리는 수십조 달러에 달하는 인류 역사상 최대 규모 인프라 프로젝트의 시작점에 서 있을 뿐입니다."</p>
+      <div class="q-attr">- 젠슨 황, 한국경제 인터뷰 (2026.02)</div>
+    </div>
+
+    <ul class="bullet-list">
+      <li>하버드 경제학자 Jason Furman: 데이터센터 없었으면 2025 상반기 미국 GDP 성장률 <strong>0.1%</strong>에 불과</li>
+      <li>JPMorgan Stephanie Aliaga: AI 자본지출이 GDP 성장에 1.1%p 기여, 소비지출 초과</li>
+      <li>모건스탠리: 하이퍼스케일러 차입 2026년 $4,000억(583조 원) 전망</li>
+      <li>$7,000억 = 디즈니 + 나이키 + 타깃 시가총액 합계 초과, 아폴로 프로그램 비용 압도</li>
+    </ul>
+  </div>
+
+  <!-- 3. GTC 2026 -->
+  <div class="card">
+    <h2><span class="num">3</span> GTC 2026 컨퍼런스 프리뷰</h2>
+    <div class="stat-grid" style="margin-bottom: 14px;">
+      <div class="stat-box">
+        <div class="s-label">일시</div>
+        <div class="s-value" style="font-size:16px;">3/16 ~ 19</div>
+        <div class="s-desc">산호세, SAP Center</div>
+      </div>
+      <div class="stat-box">
+        <div class="s-label">참가 규모</div>
+        <div class="s-value" style="font-size:16px;">30,000+</div>
+        <div class="s-desc">190개국 이상</div>
+      </div>
+    </div>
+
+    <p class="body-text">
+      젠슨 황은 3월 16일 기조연설에서 "세상이 한 번도 본 적 없는 칩 여러 개"를 공개할 예정이다.
+      Tesla, OpenAI, Meta, Microsoft, Google DeepMind 등이 참가하며,
+      240개 이상의 NVIDIA Inception 스타트업이 데모를 선보인다.
+    </p>
+
+    <h3 style="font-size:14px; font-weight:700; margin: 16px 0 10px;">NVIDIA 5계층 AI 인프라 프레임워크</h3>
+    <div class="layer-stack">
+      <div class="layer-item layer-5">
+        <span class="l-num">5</span> Applications - 자율주행, 로보틱스, 디지털 트윈
+      </div>
+      <div class="layer-item layer-4">
+        <span class="l-num">4</span> Models - 파운데이션 모델, 에이전트 AI
+      </div>
+      <div class="layer-item layer-3">
+        <span class="l-num">3</span> Infrastructure - 데이터센터, 냉각, 네트워크
+      </div>
+      <div class="layer-item layer-2">
+        <span class="l-num">2</span> Chips - GPU, DPU, 네트워킹 반도체
+      </div>
+      <div class="layer-item layer-1">
+        <span class="l-num">1</span> Energy - AI 데이터센터 전력 공급 인프라
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. GPU 로드맵 -->
+  <div class="card">
+    <h2><span class="num">4</span> 차세대 GPU 플랫폼 로드맵</h2>
+
+    <table class="gpu-table">
+      <thead>
+        <tr><th>플랫폼</th><th>출시</th><th>메모리</th><th>핵심 특징</th></tr>
+      </thead>
+      <tbody>
+        <tr class="highlight-row">
+          <td>Vera Rubin</td><td>2026 H2</td><td>HBM4 x8</td><td>블랙웰 대비 5배 성능</td>
+        </tr>
+        <tr>
+          <td>Rubin Ultra</td><td>2027</td><td>HBM4 x12</td><td>울트라 플래그십</td>
+        </tr>
+        <tr>
+          <td>Feynman</td><td>2028 (예상)</td><td>HBM5</td><td>광학 인터커넥트(CPO)</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3 style="font-size:14px; font-weight:700; margin: 16px 0 10px;">Vera Rubin 핵심 스펙</h3>
+    <ul class="bullet-list">
+      <li>AI 모델 학습 시 GPU 사용량 <strong>75% 절감</strong> (vs Blackwell)</li>
+      <li>추론 토큰 비용 <strong>90% 절감</strong></li>
+      <li>GPU당 HBM4 메모리 8개 탑재, 메모리 대역폭 병목 해소</li>
+      <li>현재 양산 착수, 2026 하반기 상용 출하 시작</li>
+    </ul>
+  </div>
+
+  <!-- 5. HBM4 공급 경쟁 -->
+  <div class="card">
+    <h2><span class="num">5</span> HBM4 공급망 경쟁</h2>
+    <p class="body-text">
+      차세대 GPU의 핵심인 HBM4 메모리를 둘러싸고 삼성전자와 SK하이닉스 간의 치열한 공급 경쟁이 진행 중이다.
+    </p>
+
+    <div class="stat-grid">
+      <div class="stat-box" style="border-left: 4px solid #e74c3c;">
+        <div class="s-label">SK하이닉스</div>
+        <div class="s-value" style="font-size:14px;">1차 공급사</div>
+        <div class="s-desc">NVIDIA와 긴밀 협력, HBM4 양산 중</div>
+      </div>
+      <div class="stat-box" style="border-left: 4px solid #3498db;">
+        <div class="s-label">삼성전자</div>
+        <div class="s-value" style="font-size:14px;">양산 준비 착수</div>
+        <div class="s-desc">경쟁력 회복 총력, 추격 가속</div>
+      </div>
+    </div>
+
+    <div class="quote-block" style="margin-top: 14px;">
+      <p>"삼성의 경쟁력이 시장에 긍정적 긴장감을 제공한다."</p>
+      <div class="q-attr">- 젠슨 황, 글로벌이코노믹 (2026.02)</div>
+    </div>
+
+    <ul class="bullet-list">
+      <li>기술 방향: 3D 스태킹 기술 도입 검토</li>
+      <li>메모리 대역폭 병목 해소가 AI 성능 향상의 핵심 과제</li>
+      <li>Rubin Ultra(2027)는 HBM4 12개, Feynman(2028)은 HBM5 탑재 예정</li>
+    </ul>
+  </div>
+
+  <!-- 6. NVIDIA 재무 -->
+  <div class="card">
+    <h2><span class="num">6</span> NVIDIA 재무 현황</h2>
+    <div class="stat-grid">
+      <div class="stat-box nvidia">
+        <div class="s-label">FY2026 연간 매출</div>
+        <div class="s-value">$2,159억</div>
+        <div class="s-desc">전년 대비 +65%</div>
+      </div>
+      <div class="stat-box nvidia">
+        <div class="s-label">Q4 분기 매출</div>
+        <div class="s-value">$681억</div>
+        <div class="s-desc">전년 동기 대비 +73%</div>
+      </div>
+      <div class="stat-box">
+        <div class="s-label">데이터센터 FY2026</div>
+        <div class="s-value" style="font-size:18px;">$1,937억</div>
+        <div class="s-desc">+68% YoY</div>
+      </div>
+      <div class="stat-box">
+        <div class="s-label">Q1 FY2027 가이던스</div>
+        <div class="s-value" style="font-size:18px;">$780억</div>
+        <div class="s-desc">+77% YoY 예상</div>
+      </div>
+      <div class="stat-box">
+        <div class="s-label">시가총액</div>
+        <div class="s-value" style="font-size:18px;">$4.43조</div>
+        <div class="s-desc">세계 1위</div>
+      </div>
+      <div class="stat-box">
+        <div class="s-label">밸류에이션</div>
+        <div class="s-value" style="font-size:18px;">P/E 36.1x</div>
+        <div class="s-desc">10년 평균(61.6x) 대비 41% 할인</div>
+      </div>
+    </div>
+
+    <div style="margin-top: 14px; padding: 14px; background: #f7f4f0; border-radius: 10px; font-size: 13px; line-height: 1.6; color: #555;">
+      공급 약정: $503억 &rarr; $952억 | Forward P/E: 21.5x | Citi 목표가: $270 | 현재가: $182.48
+    </div>
+  </div>
+
+  <!-- 7. 투자 시사점 -->
+  <div class="card">
+    <h2><span class="num">7</span> 투자 시사점</h2>
+    <div class="analysis-grid">
+      <div class="analysis-box bull">
+        <span class="a-label">Bull Case</span>
+        <strong>AI 인프라 초기 단계</strong><br>
+        수조 달러 시장의 시작점. NVIDIA 풀스택 전략으로 최대 수혜
+        <div class="divider"></div>
+        <strong>Vera Rubin 효율 혁신</strong><br>
+        학습 GPU 75% 절감, 추론 비용 90% 절감 &rarr; AI ROI 극적 개선
+        <div class="divider"></div>
+        <strong>밸류에이션 매력</strong><br>
+        P/E 36.1x는 10년 평균 대비 41% 할인, Forward P/E 21.5x
+      </div>
+      <div class="analysis-box bear">
+        <span class="a-label">Bear Case</span>
+        <strong>과잉투자 우려</strong><br>
+        $7,000억이 실제 AI 수요 초과 가능. 차입 $4,000억은 금리 부담
+        <div class="divider"></div>
+        <strong>빅테크 구조조정 병행</strong><br>
+        Amazon 16,000명 감원 등 AI 투자 + 인력감축 동시 진행
+        <div class="divider"></div>
+        <strong>지정학적 리스크</strong><br>
+        미중 반도체 규제, 대만 리스크, 수출규제 강화 가능성
+      </div>
+    </div>
+  </div>
+
+  <!-- 8. 한국 투자자 관점 -->
+  <div class="korea-box">
+    <h2><span class="flag">&#x1F1F0;&#x1F1F7;</span> 한국 투자자 관점</h2>
+    <div class="k-grid">
+      <div class="k-item">
+        <div class="k-title">SK하이닉스</div>
+        HBM4 1차 공급사. Vera Rubin 양산과 직결된 직접적 매출 성장 기대
+      </div>
+      <div class="k-item">
+        <div class="k-title">삼성전자</div>
+        HBM4 양산 준비 착수. 젠슨 황의 긍정 평가로 점유율 회복 가능성
+      </div>
+      <div class="k-item">
+        <div class="k-title">환율 리스크</div>
+        원화 약세 시 해외 투자 수익 극대화 가능. 환 헤지 전략 고려 필요
+      </div>
+      <div class="k-item">
+        <div class="k-title">GTC 이벤트</div>
+        3/16 키노트 이후 반도체 섹터 변동성 확대 예상. 포지션 관리 유의
+      </div>
+    </div>
+  </div>
+
+  <!-- 9. 타임라인 -->
+  <div class="card">
+    <h2><span class="num">9</span> 주요 이벤트 타임라인</h2>
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-date">2026.03.10</div>
+        <div class="tl-text">Fortune 인터뷰: "수조 달러 인프라 필요" 발언</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-date">2026.03.16</div>
+        <div class="tl-text"><strong>GTC 2026 키노트</strong> - 차세대 칩 공개, AI 스택 비전 발표</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-date">2026.03.17</div>
+        <div class="tl-text">Financial Analyst Q&A 세션 (오전 9시 PT)</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-date">2026 H2</div>
+        <div class="tl-text"><strong>Vera Rubin</strong> 상용 출하 시작</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-date">2027</div>
+        <div class="tl-text">Rubin Ultra 출시 (HBM4 x12)</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-date">2028</div>
+        <div class="tl-text">Feynman 아키텍처 (HBM5, 광학 인터커넥트)</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sources -->
+  <div class="card">
+    <h2><span class="num">10</span> 참고 자료</h2>
+    <ul class="source-list">
+      <li><a href="https://fortune.com/2026/03/10/jensen-huang-ai-infrastructure-buildout-700-billion/">Fortune</a> - Jensen Huang: AI needs trillions more in infrastructure (2026.03.10)</li>
+      <li><a href="https://www.fool.com/investing/2026/03/06/jensen-huang-incredible-news-nvidia-stock-investor/">Motley Fool</a> - Jensen Huang Incredible News for Nvidia Investors (2026.03.06)</li>
+      <li><a href="https://nvidianews.nvidia.com/news/nvidia-ceo-jensen-huang-and-global-technology-leaders-to-showcase-age-of-ai-at-gtc-2026">NVIDIA Newsroom</a> - GTC 2026 Announcement</li>
+      <li><a href="https://www.ainvest.com/news/jensen-huang-700-billion-ai-buildout-beginning/">ainvest</a> - $700B AI Buildout Is Just the Beginning</li>
+      <li><a href="https://blockchain.news/news/nvidia-gtc-2026-jensen-huang-ai-stack-march">Blockchain News</a> - NVIDIA GTC 2026 AI Stack Reveal</li>
+      <li><a href="https://www.hankyung.com/article/2026021897121">한국경제</a> - 젠슨 황, AI 투자 시작 단계... 버블은 없다</li>
+      <li><a href="https://www.g-enews.com/article/Global-Biz/2026/02/202602200717314727fbbec65dfb_1">글로벌이코노믹</a> - GTC 2026서 세상 못 본 칩 여러 개 꺼낸다</li>
+      <li><a href="https://blogs.nvidia.co.kr/blog/nvidia-ceo-jensen-huang-and-global-technology-leaders-to-showcase-age-of-ai-at-gtc-2026/">NVIDIA Blog Korea</a> - GTC 2026 AI 시대</li>
+    </ul>
+  </div>
+
+  <!-- Disclaimer + Footer -->
+  <div class="footer">
+    본 아티클은 공개 뉴스 및 기업 발표 자료를 기반으로 정리한 참고 자료이며, 투자 권유를 목적으로 하지 않습니다.<br>
+    투자 판단은 본인의 책임하에 이루어져야 합니다.<br><br>
+    Macro Cockpit | 2026.03.11 작성
+  </div>
+
+</div>
+</body>
+</html>
