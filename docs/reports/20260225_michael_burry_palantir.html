@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>마이클 버리가 팔란티어에 던진 질문: Palantir's New Clothes</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background: #F3F0F5;
+    color: #2D2D2D;
+    padding: 20px;
+  }
+
+  .container {
+    max-width: 720px;
+    margin: 0 auto;
+  }
+
+  /* Header */
+  .header {
+    background: linear-gradient(135deg, #1a1020 0%, #2d1f3d 50%, #6B3FA0 200%);
+    color: white;
+    padding: 40px 30px;
+    border-radius: 16px;
+    margin-bottom: 16px;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 140px; height: 140px;
+    background: rgba(207,163,60,0.20);
+    border-radius: 50%;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    bottom: -20px; left: 30%;
+    width: 80px; height: 80px;
+    background: rgba(107,63,160,0.20);
+    border-radius: 50%;
+  }
+  .header .tag {
+    display: inline-block;
+    background: #CFA33C;
+    color: #1a1020;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 20px;
+    margin-bottom: 12px;
+    letter-spacing: 1px;
+  }
+  .header h1 {
+    font-size: 24px;
+    font-weight: 900;
+    line-height: 1.35;
+    margin-bottom: 8px;
+  }
+  .header .subtitle {
+    font-size: 14px;
+    opacity: 0.7;
+    font-weight: 300;
+  }
+
+  /* Big Quote */
+  .big-quote {
+    background: linear-gradient(135deg, #6B3FA0, #4a2a70);
+    color: white;
+    padding: 28px 30px;
+    border-radius: 16px;
+    margin-bottom: 16px;
+    text-align: center;
+  }
+  .big-quote p {
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.5;
+  }
+  .big-quote .attr {
+    font-size: 12px;
+    opacity: 0.7;
+    margin-top: 10px;
+  }
+
+  /* Card */
+  .card {
+    background: white;
+    border-radius: 16px;
+    padding: 28px;
+    margin-bottom: 16px;
+    border: 1px solid #E0DAE8;
+  }
+  .card h2 {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .card h2 .num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px; height: 28px;
+    background: #1a1020;
+    color: white;
+    border-radius: 50%;
+    font-size: 13px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  /* Stat grid */
+  .stat-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+  }
+  @media (max-width: 480px) {
+    .stat-grid { grid-template-columns: 1fr; }
+  }
+  .stat-box {
+    padding: 16px;
+    border-radius: 12px;
+    background: #f7f4fa;
+  }
+  .stat-box .s-label {
+    font-size: 11px;
+    font-weight: 500;
+    color: #888;
+    margin-bottom: 4px;
+  }
+  .stat-box .s-value {
+    font-size: 20px;
+    font-weight: 900;
+    color: #1a1020;
+  }
+  .stat-box .s-desc {
+    font-size: 11px;
+    color: #999;
+    margin-top: 2px;
+  }
+  .stat-box.accent {
+    background: linear-gradient(135deg, #1a1020, #2d1f3d);
+    color: white;
+  }
+  .stat-box.accent .s-label { color: rgba(255,255,255,0.6); }
+  .stat-box.accent .s-value { color: #CFA33C; }
+  .stat-box.accent .s-desc { color: rgba(255,255,255,0.5); }
+
+  /* Platform cards */
+  .platform-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin-top: 14px;
+  }
+  .platform-card {
+    padding: 20px;
+    border-radius: 12px;
+    border: 1px solid #E0DAE8;
+    position: relative;
+  }
+  .platform-card .p-name {
+    font-size: 18px;
+    font-weight: 900;
+    margin-bottom: 4px;
+  }
+  .platform-card .p-target {
+    font-size: 11px;
+    font-weight: 600;
+    color: #888;
+    margin-bottom: 10px;
+  }
+  .platform-card .p-desc {
+    font-size: 13px;
+    line-height: 1.6;
+    color: #555;
+  }
+  .platform-card .verdict {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+  }
+  .verdict-positive {
+    background: #e8f5e9;
+    color: #2e7d32;
+  }
+  .verdict-skeptical {
+    background: #fff3e0;
+    color: #e65100;
+  }
+  .verdict-critical {
+    background: #fce4ec;
+    color: #c62828;
+  }
+
+  .gotham-card { border-left: 4px solid #2e7d32; }
+  .foundry-card { border-left: 4px solid #e65100; }
+  .aip-card { border-left: 4px solid #c62828; }
+
+  /* Quote block */
+  .quote-block {
+    background: #faf7f3;
+    border-left: 4px solid #CFA33C;
+    padding: 18px 20px;
+    margin: 14px 0;
+    border-radius: 0 12px 12px 0;
+  }
+  .quote-block p {
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.6;
+    font-style: italic;
+  }
+  .quote-block .q-attr {
+    font-size: 11px;
+    color: #999;
+    margin-top: 6px;
+    font-style: normal;
+  }
+
+  /* Bullet list */
+  .bullet-list {
+    list-style: none;
+    padding: 0;
+  }
+  .bullet-list li {
+    position: relative;
+    padding-left: 18px;
+    margin-bottom: 10px;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  .bullet-list li::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 8px;
+    width: 8px; height: 8px;
+    background: #6B3FA0;
+    border-radius: 50%;
+  }
+
+  /* Question cards */
+  .question-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+    margin-top: 14px;
+  }
+  .question-item {
+    display: flex;
+    align-items: flex-start;
+    padding: 16px;
+    border-radius: 12px;
+    background: #f7f4fa;
+    gap: 12px;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  .question-item .q-num {
+    width: 28px; height: 28px;
+    background: #6B3FA0;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  /* Analysis grid */
+  .analysis-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 14px;
+  }
+  @media (max-width: 480px) {
+    .analysis-grid { grid-template-columns: 1fr; }
+  }
+  .analysis-box {
+    padding: 16px;
+    border-radius: 12px;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+  .analysis-box .a-label {
+    font-weight: 700;
+    font-size: 12px;
+    margin-bottom: 8px;
+    display: block;
+  }
+  .analysis-box.bull {
+    background: #f3edfb;
+    border: 1px solid #d4c4e8;
+  }
+  .analysis-box.bull .a-label { color: #6B3FA0; }
+  .analysis-box.bear {
+    background: #fef5f5;
+    border: 1px solid #f0d0d0;
+  }
+  .analysis-box.bear .a-label { color: #c0392b; }
+
+  .body-text {
+    font-size: 14px;
+    line-height: 1.7;
+    color: #444;
+    margin-bottom: 14px;
+  }
+
+  .divider {
+    height: 1px;
+    background: #E0DAE8;
+    margin: 14px 0;
+  }
+
+  /* Gauge */
+  .gauge-container {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 14px 0;
+  }
+  .gauge-bar {
+    flex: 1;
+    height: 10px;
+    background: #e8e0f0;
+    border-radius: 5px;
+    overflow: hidden;
+  }
+  .gauge-fill {
+    height: 100%;
+    border-radius: 5px;
+  }
+  .gauge-label {
+    font-size: 12px;
+    font-weight: 700;
+    color: #555;
+    white-space: nowrap;
+  }
+
+  /* Source list */
+  .source-list {
+    list-style: none;
+    padding: 0;
+  }
+  .source-list li {
+    font-size: 12px;
+    color: #888;
+    padding: 4px 0;
+    border-bottom: 1px solid #f0ebe5;
+  }
+  .source-list li:last-child { border-bottom: none; }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    padding: 20px;
+    font-size: 11px;
+    color: #999;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- Header -->
+  <div class="header">
+    <span class="tag">PLTR / VALUATION CRITIQUE</span>
+    <h1>마이클 버리가 팔란티어에<br>던진 질문</h1>
+    <div class="subtitle">Palantir's New Clothes | Michael Burry Analysis | 2026.02.25</div>
+  </div>
+
+  <!-- Big Quote -->
+  <div class="big-quote">
+    <p>"벌거벗은 임금님, 팔란티어?"<br>AI 시대의 총아는 실제로<br>시장의 기대만큼 입고 있는가</p>
+    <div class="attr">Michael Burry - "Palantir's New Clothes" (2026.02)</div>
+  </div>
+
+  <!-- 1. 버리는 누구인가 -->
+  <div class="card">
+    <h2><span class="num">1</span> 빅쇼트의 눈</h2>
+    <p class="body-text">
+      마이클 버리는 2008년 서브프라임 모기지 사태를 예견한 인물이다. 그의 분석이 항상 맞는 것은 아니지만, 그가 의문을 제기할 때는 최소한 <strong>그 논거를 꼼꼼히 살펴볼 가치</strong>가 있다.
+    </p>
+    <p class="body-text">
+      이번에 그가 정조준한 대상은 <strong>팔란티어(PLTR)</strong>다. 안데르센 동화 '벌거벗은 임금님'에 빗대어, AI 시대의 총아가 실제로는 시장의 기대만큼 입고 있지 않다는 것이 핵심 주장이다.
+    </p>
+  </div>
+
+  <!-- 2. 세 플랫폼 해부 -->
+  <div class="card">
+    <h2><span class="num">2</span> 세 개의 플랫폼, 세 가지 평가</h2>
+    <p class="body-text">
+      팔란티어의 사업은 <strong>Gotham</strong>, <strong>Foundry</strong>, <strong>AIP</strong> 세 개의 플랫폼으로 구성된다. 버리는 각각에 대해 날카롭게 다른 평가를 내린다.
+    </p>
+
+    <div class="platform-grid">
+      <div class="platform-card gotham-card">
+        <div class="p-name">Gotham</div>
+        <div class="p-target">정보기관 / 군사 부문</div>
+        <div class="p-desc">
+          미국 정보기관과 국방부의 핵심 파트너로서 독보적인 위치를 점하고 있다. <strong>대체재가 거의 없다</strong>는 점에서 해자(moat)가 깊다. 버리도 이 부분의 역량은 인정한다.
+        </div>
+        <span class="verdict verdict-positive">역량 인정</span>
+        <div class="gauge-container">
+          <div class="gauge-label">해자(Moat)</div>
+          <div class="gauge-bar">
+            <div class="gauge-fill" style="width: 90%; background: linear-gradient(90deg, #2e7d32, #4caf50);"></div>
+          </div>
+          <div class="gauge-label" style="color: #2e7d32;">90%</div>
+        </div>
+      </div>
+
+      <div class="platform-card foundry-card">
+        <div class="p-name">Foundry</div>
+        <div class="p-target">상업 부문 (기업 고객)</div>
+        <div class="p-desc">
+          기업 고객에게 제공하는 가치가 과연 팔란티어가 주장하는 만큼 차별적인가? 기존 데이터 분석 플랫폼(Snowflake, Databricks 등)과의 경쟁에서 <strong>압도적 우위를 점하고 있다는 근거가 불충분</strong>하다.
+        </div>
+        <span class="verdict verdict-skeptical">확장성 회의적</span>
+        <div class="gauge-container">
+          <div class="gauge-label">차별화</div>
+          <div class="gauge-bar">
+            <div class="gauge-fill" style="width: 45%; background: linear-gradient(90deg, #e65100, #ff9800);"></div>
+          </div>
+          <div class="gauge-label" style="color: #e65100;">45%</div>
+        </div>
+      </div>
+
+      <div class="platform-card aip-card">
+        <div class="p-name">AIP</div>
+        <div class="p-target">AI 플랫폼 (LLM 추론)</div>
+        <div class="p-desc">
+          가장 최근에 추가된 플랫폼으로, 주가 급등의 핵심 동력이었다. 그러나 버리는 <strong>LLM 추론 능력이 과대평가</strong>되었다고 판단한다. 'AI'라는 라벨이 붙었다는 이유만으로 시장이 과도한 프리미엄을 부여하고 있다는 지적이다.
+        </div>
+        <span class="verdict verdict-critical">과대평가 우려</span>
+        <div class="gauge-container">
+          <div class="gauge-label">프리미엄 정당성</div>
+          <div class="gauge-bar">
+            <div class="gauge-fill" style="width: 25%; background: linear-gradient(90deg, #c62828, #ef5350);"></div>
+          </div>
+          <div class="gauge-label" style="color: #c62828;">25%</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. 핵심 질문 -->
+  <div class="card">
+    <h2><span class="num">3</span> 투자자가 스스로에게 물어야 할 것</h2>
+    <p class="body-text">
+      버리의 비판을 액면 그대로 받아들일 필요는 없다. 하지만 팔란티어 보유자라면 다음 질문에 대한 <strong>자신만의 답</strong>을 가지고 있어야 한다.
+    </p>
+
+    <div class="question-grid">
+      <div class="question-item">
+        <span class="q-num">1</span>
+        <div>Foundry가 <strong>Snowflake, Databricks</strong> 등 경쟁 플랫폼 대비 어떤 구체적 우위를 가지는가?</div>
+      </div>
+      <div class="question-item">
+        <span class="q-num">2</span>
+        <div>AIP가 실제 기업 현장에서 <strong>측정 가능한 ROI</strong>를 만들어내고 있는가?</div>
+      </div>
+      <div class="question-item">
+        <span class="q-num">3</span>
+        <div>현재 밸류에이션이 Gotham의 안정적 매출 외에 <strong>Foundry와 AIP의 성장을 얼마나 선반영</strong>하고 있는가?</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. 판단 프레임워크 -->
+  <div class="card">
+    <h2><span class="num">4</span> 판단 프레임워크</h2>
+    <div class="analysis-grid">
+      <div class="analysis-box bull">
+        <span class="a-label">확신이 있다면</span>
+        <strong>보유 유지</strong><br>
+        위 세 질문에 대한 확신 있는 답을 가지고 있다면, 보유를 유지할 근거가 있다.
+        <div class="divider"></div>
+        Gotham의 독보적 해자, 상업 부문의 구체적 성장 경로, AIP의 차별화된 기술적 우위를 설명할 수 있어야 한다.
+      </div>
+      <div class="analysis-box bear">
+        <span class="a-label">답이 모호하다면</span>
+        <strong>리스크 관리 필수</strong><br>
+        목표가와 손절 기준을 재점검해야 할 시점이다.
+        <div class="divider"></div>
+        AI 프리미엄이 과도하게 반영된 밸류에이션은 기대가 꺾이는 순간 급격한 되돌림이 발생할 수 있다.
+      </div>
+    </div>
+
+    <div class="quote-block" style="margin-top: 16px;">
+      <p>"확신 있는 답을 가지고 있다면 보유를 유지할 근거가 있다. 답이 모호하다면, 목표가와 손절 기준을 재점검해야 할 시점이다."</p>
+      <div class="q-attr">- 투자 판단 원칙</div>
+    </div>
+  </div>
+
+  <!-- 5. 시사점 요약 -->
+  <div class="card" style="background: linear-gradient(135deg, #1a1020 0%, #2d1f3d 100%); color: white; border: none;">
+    <h2 style="color: white;"><span class="num" style="background: #CFA33C; color: #1a1020;">5</span> 핵심 테이크어웨이</h2>
+    <ul class="bullet-list">
+      <li style="color: rgba(255,255,255,0.85);">버리의 비판은 <strong style="color: #CFA33C;">Gotham은 인정, Foundry와 AIP에 집중</strong>된 구조적 의문이다</li>
+      <li style="color: rgba(255,255,255,0.85);">'AI'라는 라벨이 부여하는 <strong style="color: #CFA33C;">밸류에이션 프리미엄의 정당성</strong>을 개인 투자자 스스로 검증해야 한다</li>
+      <li style="color: rgba(255,255,255,0.85);">비판론자의 논거를 이해하고 <strong style="color: #CFA33C;">자신만의 반론</strong>을 구축하는 것이 건강한 투자 과정이다</li>
+      <li style="color: rgba(255,255,255,0.85);">확신 없는 포지션은 <strong style="color: #CFA33C;">목표가와 손절 기준</strong>을 즉시 재설정해야 한다</li>
+    </ul>
+  </div>
+
+  <!-- Sources -->
+  <div class="card">
+    <h2><span class="num">6</span> 참고 자료</h2>
+    <ul class="source-list">
+      <li>Michael Burry, "Palantir's New Clothes" 분석 번역본 (2026.02.25)</li>
+      <li>Palantir Technologies 10-K, 10-Q 공시 자료</li>
+    </ul>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    본 아티클은 공개 자료를 기반으로 정리한 참고 자료이며, 특정 금융 상품의 매수 또는 매도를 권유하지 않습니다.<br>
+    투자 판단은 본인의 책임하에 이루어져야 합니다.<br><br>
+    Macro Cockpit | 2026.02.25 작성
+  </div>
+
+</div>
+</body>
+</html>

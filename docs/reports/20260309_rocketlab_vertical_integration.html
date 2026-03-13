@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rocket Lab - 수직계열화가 만든 압도적 마진</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background: #EEEEF5;
+    color: #2D2D2D;
+    padding: 20px;
+  }
+
+  .container {
+    max-width: 720px;
+    margin: 0 auto;
+  }
+
+  /* Header */
+  .header {
+    background: linear-gradient(135deg, #0C0C2D 0%, #1A1A4E 50%, #5B2FCC 200%);
+    color: white;
+    padding: 40px 30px;
+    border-radius: 16px;
+    margin-bottom: 16px;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 140px; height: 140px;
+    background: rgba(91,47,204,0.25);
+    border-radius: 50%;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    bottom: -20px; left: 30%;
+    width: 80px; height: 80px;
+    background: rgba(91,47,204,0.12);
+    border-radius: 50%;
+  }
+  .header .tag {
+    display: inline-block;
+    background: #5B2FCC;
+    color: white;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 20px;
+    margin-bottom: 12px;
+    letter-spacing: 1px;
+  }
+  .header h1 {
+    font-size: 26px;
+    font-weight: 900;
+    line-height: 1.3;
+    margin-bottom: 8px;
+  }
+  .header .subtitle {
+    font-size: 14px;
+    opacity: 0.7;
+    font-weight: 300;
+  }
+
+  /* Big Quote */
+  .big-quote {
+    background: linear-gradient(135deg, #5B2FCC, #3D1F8C);
+    color: white;
+    padding: 28px 30px;
+    border-radius: 16px;
+    margin-bottom: 16px;
+    text-align: center;
+  }
+  .big-quote p {
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 1.4;
+  }
+  .big-quote .attr {
+    font-size: 12px;
+    opacity: 0.7;
+    margin-top: 8px;
+  }
+
+  /* Card */
+  .card {
+    background: white;
+    border-radius: 16px;
+    padding: 28px;
+    margin-bottom: 16px;
+    border: 1px solid #DDDDE8;
+  }
+  .card h2 {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .card h2 .num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px; height: 28px;
+    background: #0C0C2D;
+    color: white;
+    border-radius: 50%;
+    font-size: 13px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  /* Stat grid */
+  .stat-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  @media (max-width: 480px) {
+    .stat-grid { grid-template-columns: 1fr; }
+  }
+  .stat-box {
+    padding: 16px;
+    border-radius: 12px;
+    background: #f5f5fa;
+  }
+  .stat-box .s-label {
+    font-size: 11px;
+    font-weight: 500;
+    color: #888;
+    margin-bottom: 4px;
+  }
+  .stat-box .s-value {
+    font-size: 22px;
+    font-weight: 900;
+    color: #0C0C2D;
+  }
+  .stat-box .s-desc {
+    font-size: 11px;
+    color: #999;
+    margin-top: 2px;
+  }
+  .stat-box.accent {
+    background: linear-gradient(135deg, #0C0C2D, #1A1A4E);
+    color: white;
+  }
+  .stat-box.accent .s-label { color: rgba(255,255,255,0.6); }
+  .stat-box.accent .s-value { color: #A78BFA; }
+  .stat-box.accent .s-desc { color: rgba(255,255,255,0.5); }
+
+  /* Margin comparison bars */
+  .margin-bar-container {
+    margin: 14px 0;
+  }
+  .margin-bar-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    gap: 10px;
+  }
+  .margin-bar-label {
+    font-size: 12px;
+    font-weight: 600;
+    width: 130px;
+    text-align: right;
+    flex-shrink: 0;
+  }
+  .margin-bar-track {
+    flex: 1;
+    height: 28px;
+    background: #f0f0f5;
+    border-radius: 8px;
+    overflow: hidden;
+    position: relative;
+  }
+  .margin-bar-fill {
+    height: 100%;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 10px;
+    font-size: 12px;
+    font-weight: 700;
+    color: white;
+  }
+
+  /* Quote block */
+  .quote-block {
+    background: #f7f5fa;
+    border-left: 4px solid #5B2FCC;
+    padding: 18px 20px;
+    margin: 14px 0;
+    border-radius: 0 12px 12px 0;
+  }
+  .quote-block p {
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.6;
+    font-style: italic;
+  }
+  .quote-block .q-attr {
+    font-size: 11px;
+    color: #999;
+    margin-top: 6px;
+    font-style: normal;
+  }
+
+  /* Bullet list */
+  .bullet-list {
+    list-style: none;
+    padding: 0;
+  }
+  .bullet-list li {
+    position: relative;
+    padding-left: 18px;
+    margin-bottom: 10px;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  .bullet-list li::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 8px;
+    width: 8px; height: 8px;
+    background: #5B2FCC;
+    border-radius: 50%;
+  }
+
+  /* Layer stack */
+  .layer-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin: 14px 0;
+  }
+  .layer-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 500;
+    gap: 10px;
+  }
+  .layer-item .l-icon { font-size: 18px; flex-shrink: 0; }
+  .layer-item .l-title { font-weight: 700; margin-right: 6px; }
+  .lv-1 { background: #0C0C2D; color: white; }
+  .lv-2 { background: #1A1A4E; color: white; }
+  .lv-3 { background: #3D1F8C; color: white; }
+  .lv-4 { background: #5B2FCC; color: white; }
+  .lv-5 { background: #A78BFA; color: white; }
+
+  /* DCF Table */
+  .dcf-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 14px 0;
+    font-size: 13px;
+  }
+  .dcf-table th {
+    background: #0C0C2D;
+    color: white;
+    padding: 10px 12px;
+    text-align: left;
+    font-weight: 600;
+  }
+  .dcf-table th:first-child { border-radius: 8px 0 0 0; }
+  .dcf-table th:last-child { border-radius: 0 8px 0 0; }
+  .dcf-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid #eeeef5;
+  }
+  .dcf-table tr:nth-child(even) td { background: #fafafe; }
+  .dcf-table .highlight-row td { background: #f0eef7; font-weight: 600; }
+
+  /* Timeline */
+  .timeline {
+    position: relative;
+    padding-left: 24px;
+  }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 8px; top: 4px; bottom: 4px;
+    width: 2px;
+    background: #5B2FCC;
+  }
+  .tl-item {
+    position: relative;
+    margin-bottom: 16px;
+    padding-left: 16px;
+  }
+  .tl-item::before {
+    content: '';
+    position: absolute;
+    left: -20px; top: 6px;
+    width: 10px; height: 10px;
+    background: #5B2FCC;
+    border-radius: 50%;
+    border: 2px solid white;
+  }
+  .tl-date {
+    font-size: 11px;
+    font-weight: 700;
+    color: #5B2FCC;
+  }
+  .tl-text {
+    font-size: 13px;
+    line-height: 1.5;
+    margin-top: 2px;
+  }
+
+  /* Analysis grid */
+  .analysis-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 14px;
+  }
+  @media (max-width: 480px) {
+    .analysis-grid { grid-template-columns: 1fr; }
+  }
+  .analysis-box {
+    padding: 16px;
+    border-radius: 12px;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+  .analysis-box .a-label {
+    font-weight: 700;
+    font-size: 12px;
+    margin-bottom: 8px;
+    display: block;
+  }
+  .analysis-box.bull {
+    background: #f0eef7;
+    border: 1px solid #d5d0e8;
+  }
+  .analysis-box.bull .a-label { color: #5B2FCC; }
+  .analysis-box.bear {
+    background: #fef5f5;
+    border: 1px solid #f0d0d0;
+  }
+  .analysis-box.bear .a-label { color: #c0392b; }
+
+  .body-text {
+    font-size: 14px;
+    line-height: 1.7;
+    color: #444;
+    margin-bottom: 14px;
+  }
+
+  .divider {
+    height: 1px;
+    background: #DDDDE8;
+    margin: 14px 0;
+  }
+
+  .footer {
+    text-align: center;
+    padding: 20px;
+    font-size: 11px;
+    color: #999;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- Header -->
+  <div class="header">
+    <span class="tag">RKLB / SPACE INDUSTRY</span>
+    <h1>로켓랩: 수직계열화가 만든<br>압도적 마진의 비밀</h1>
+    <div class="subtitle">33개월 추적 심층 분석 | 2026.03.09</div>
+  </div>
+
+  <!-- Big Quote -->
+  <div class="big-quote">
+    <p>"이 회사의 핵심 경쟁력은<br>로켓이 아니라 수직계열화에서<br>나오는 마진 구조다"</p>
+    <div class="attr">33개월간 RKLB를 추적한 투자자의 결론</div>
+  </div>
+
+  <!-- 1. 핵심 수치 -->
+  <div class="card">
+    <h2><span class="num">1</span> 핵심 수치 한눈에 보기</h2>
+    <div class="stat-grid">
+      <div class="stat-box accent">
+        <div class="s-label">매출총이익률 (GP Margin)</div>
+        <div class="s-value">35%+</div>
+        <div class="s-desc">경쟁사 대비 10%p+ 우위</div>
+      </div>
+      <div class="stat-box accent">
+        <div class="s-label">DCF 내재가치 (가중평균)</div>
+        <div class="s-value">$91.50</div>
+        <div class="s-desc">현재가 $79 대비 15.2% 저평가</div>
+      </div>
+      <div class="stat-box">
+        <div class="s-label">매출 성장률 (YoY)</div>
+        <div class="s-value" style="color:#5B2FCC;">30%+</div>
+        <div class="s-desc">지속적 고성장 궤도</div>
+      </div>
+      <div class="stat-box">
+        <div class="s-label">총이익 성장률 (YoY)</div>
+        <div class="s-value" style="color:#5B2FCC;">70%+</div>
+        <div class="s-desc">매출보다 이익이 더 빠르게 성장</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. 마진 비교 -->
+  <div class="card">
+    <h2><span class="num">2</span> 경쟁사를 압도하는 마진 구조</h2>
+    <p class="body-text">
+      우주 산업에서 마진은 보통 박하다. 초기 투자가 막대하고 발사 실패 리스크가 존재하며 정부 계약 의존도가 높다.
+      그러나 로켓랩의 숫자는 <strong>업계의 상식을 깨고 있다</strong>.
+    </p>
+
+    <div class="margin-bar-container">
+      <div class="margin-bar-item">
+        <div class="margin-bar-label" style="color:#5B2FCC;">Rocket Lab</div>
+        <div class="margin-bar-track">
+          <div class="margin-bar-fill" style="width:87.5%; background: linear-gradient(90deg, #3D1F8C, #5B2FCC);">35%+</div>
+        </div>
+      </div>
+      <div class="margin-bar-item">
+        <div class="margin-bar-label">Redwire (RDW)</div>
+        <div class="margin-bar-track">
+          <div class="margin-bar-fill" style="width:56%; background: #9B9BC0;">20~25%</div>
+        </div>
+      </div>
+      <div class="margin-bar-item">
+        <div class="margin-bar-label">Kratos (KTOS)</div>
+        <div class="margin-bar-track">
+          <div class="margin-bar-fill" style="width:60%; background: #9B9BC0;">23~25%</div>
+        </div>
+      </div>
+      <div class="margin-bar-item">
+        <div class="margin-bar-label">York Space</div>
+        <div class="margin-bar-track">
+          <div class="margin-bar-fill" style="width:49%; background: #BDBDBD;">19.6%</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="quote-block">
+      <p>"수직계열화 전략으로 위성 부품에서 발사 서비스까지 밸류 체인 전반을 내재화. 중간 마진을 자체적으로 흡수하는 구조를 만들어냈다."</p>
+    </div>
+  </div>
+
+  <!-- 3. 수직계열화 밸류 체인 -->
+  <div class="card">
+    <h2><span class="num">3</span> 수직계열화 밸류 체인</h2>
+    <div class="layer-stack">
+      <div class="layer-item lv-1">
+        <span class="l-icon">&#128640;</span>
+        <span><span class="l-title">발사 서비스</span> Electron(소형) + Neutron(중형) 로켓</span>
+      </div>
+      <div class="layer-item lv-2">
+        <span class="l-icon">&#128752;</span>
+        <span><span class="l-title">위성 버스</span> 소형 위성 플랫폼 자체 설계/제작</span>
+      </div>
+      <div class="layer-item lv-3">
+        <span class="l-icon">&#9728;</span>
+        <span><span class="l-title">태양전지</span> SolAero 인수 (2022) - 우주용 태양전지</span>
+      </div>
+      <div class="layer-item lv-4">
+        <span class="l-icon">&#128295;</span>
+        <span><span class="l-title">핵심 부품</span> 리액션 휠, 스타 트래커 자체 생산</span>
+      </div>
+      <div class="layer-item lv-5">
+        <span class="l-icon">&#128187;</span>
+        <span><span class="l-title">소프트웨어</span> 위성 운영 및 데이터 관리 시스템</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. 운영 레버리지 -->
+  <div class="card">
+    <h2><span class="num">4</span> 운영 레버리지 효과</h2>
+    <p class="body-text">
+      매출보다 이익이 더 빠르게 성장하고 있으며, SG&A 비중이 꾸준히 하락하고 있다.
+      이 추세가 계속되면 <strong>영업이익 흑자 전환</strong>의 문턱에 도달할 수 있다.
+    </p>
+
+    <div class="stat-grid">
+      <div class="stat-box">
+        <div class="s-label">매출 성장률</div>
+        <div class="s-value" style="color:#5B2FCC;">30%+</div>
+        <div class="s-desc">전년 대비 (YoY)</div>
+      </div>
+      <div class="stat-box">
+        <div class="s-label">총이익 성장률</div>
+        <div class="s-value" style="color:#5B2FCC;">70%+</div>
+        <div class="s-desc">매출 대비 2배 이상 성장</div>
+      </div>
+      <div class="stat-box">
+        <div class="s-label">SG&A 비중 추이</div>
+        <div class="s-value" style="font-size:16px;">30% &rarr; 21%</div>
+        <div class="s-desc">고정비 희석 진행 중</div>
+      </div>
+      <div class="stat-box">
+        <div class="s-label">규모의 경제</div>
+        <div class="s-value" style="font-size:16px;">작동 중</div>
+        <div class="s-desc">마진 확대 추세 확인</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. DCF 밸류에이션 -->
+  <div class="card">
+    <h2><span class="num">5</span> DCF 밸류에이션 분석</h2>
+
+    <table class="dcf-table">
+      <thead>
+        <tr><th>시나리오</th><th>내재가치</th><th>현재가 대비</th><th>확률 가중</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Bull (강세)</td><td><strong>$113</strong></td><td>+43%</td><td>높은 TAM 확대 반영</td>
+        </tr>
+        <tr class="highlight-row">
+          <td>Base (기본)</td><td><strong>$90</strong></td><td>+14%</td><td>현실적 성장 반영</td>
+        </tr>
+        <tr>
+          <td>Bear (약세)</td><td><strong>$71</strong></td><td>-10%</td><td>보수적 시나리오</td>
+        </tr>
+        <tr class="highlight-row">
+          <td><strong>가중평균</strong></td><td><strong style="color:#5B2FCC;">$91.50</strong></td><td><strong>+15.2%</strong></td><td>최종 내재가치</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div style="margin-top:14px; padding:14px; background:#f5f5fa; border-radius:10px; font-size:13px; line-height:1.6; color:#555; text-align:center;">
+      분석 시점 주가 <strong>$79</strong> | 가중평균 내재가치 <strong style="color:#5B2FCC;">$91.50</strong> | 약 <strong>15.2% 저평가</strong>
+    </div>
+  </div>
+
+  <!-- 6. 뉴트론 & 모멘텀 -->
+  <div class="card">
+    <h2><span class="num">6</span> 뉴트론 + 2026~27 모멘텀</h2>
+    <p class="body-text">
+      뉴트론(Neutron) 중형 로켓의 첫 발사 지연이 단기 주가 하락의 원인이다.
+      그러나 <strong>장기적 기업 가치에 미치는 영향은 미미</strong>하다는 것이 분석의 결론이다.
+    </p>
+
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-date">2022</div>
+        <div class="tl-text">SolAero Technologies 인수 - 수직계열화 완성</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-date">2026 현재</div>
+        <div class="tl-text"><strong>뉴트론 첫 발사 지연</strong> - 주가 조정, 단기 소음</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-date">2026~27</div>
+        <div class="tl-text"><strong>SpaceX IPO 가능성</strong> - 우주 산업 전체 밸류에이션 재평가</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-date">2026~27</div>
+        <div class="tl-text"><strong>AI + 위성 결합</strong> - 위성 데이터 분석에 AI 적용 급증</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-date">2026~27</div>
+        <div class="tl-text"><strong>방산 예산 확대</strong> - 우주 방산 가장 빠른 성장 분야</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7. 투자 시사점 -->
+  <div class="card">
+    <h2><span class="num">7</span> 투자 시사점</h2>
+    <div class="analysis-grid">
+      <div class="analysis-box bull">
+        <span class="a-label">Bull Case</span>
+        <strong>수직계열화 마진 우위</strong><br>
+        GP Margin 35%+로 경쟁사 대비 10%p 이상 격차
+        <div class="divider"></div>
+        <strong>DCF 15% 저평가</strong><br>
+        Bear 시나리오에서도 하방 제한적 (내재가치 $71)
+        <div class="divider"></div>
+        <strong>2030년 장기 궤적</strong><br>
+        SpaceX IPO, AI+위성, 방산 예산 확대 등 복합 모멘텀
+      </div>
+      <div class="analysis-box bear">
+        <span class="a-label">Bear Case</span>
+        <strong>뉴트론 첫 발사 리스크</strong><br>
+        추가 지연 시 시장 실망 가능, 단기 주가 변수
+        <div class="divider"></div>
+        <strong>영업이익 미흑자</strong><br>
+        아직 흑자 전환 전, 고성장 중소형주 리스크
+        <div class="divider"></div>
+        <strong>매출 의존도</strong><br>
+        정부 계약 비중이 높아 정책 변동에 민감
+      </div>
+    </div>
+
+    <div style="margin-top:14px; padding:14px; background:#f0eef7; border-radius:10px; font-size:13px; line-height:1.6; color:#3D1F8C; text-align:center;">
+      <strong>탐색 매수 가격대: $75 이하 조정 시</strong> | 2030년까지 보유할 가치가 있는 종목
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    본 아티클은 공개 자료를 기반으로 정리한 참고 자료이며, 투자 권유를 목적으로 하지 않습니다.<br>
+    투자 판단은 본인의 책임하에 이루어져야 합니다.<br><br>
+    Macro Cockpit | 2026.03.09 작성
+  </div>
+
+</div>
+</body>
+</html>

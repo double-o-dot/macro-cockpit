@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>1%의 차이가 만드는 거대한 격차: 복리의 함정과 자본 보존의 수학</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background: #F0F3EE;
+    color: #2D2D2D;
+    padding: 20px;
+  }
+
+  .container {
+    max-width: 720px;
+    margin: 0 auto;
+  }
+
+  /* Header */
+  .header {
+    background: linear-gradient(135deg, #1B2A1B 0%, #2D4A2D 50%, #4CAF50 200%);
+    color: white;
+    padding: 40px 30px;
+    border-radius: 16px;
+    margin-bottom: 16px;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 140px; height: 140px;
+    background: rgba(76,175,80,0.25);
+    border-radius: 50%;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    bottom: -20px; left: 30%;
+    width: 80px; height: 80px;
+    background: rgba(76,175,80,0.12);
+    border-radius: 50%;
+  }
+  .header .tag {
+    display: inline-block;
+    background: #4CAF50;
+    color: white;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 20px;
+    margin-bottom: 12px;
+    letter-spacing: 1px;
+  }
+  .header h1 {
+    font-size: 24px;
+    font-weight: 900;
+    line-height: 1.35;
+    margin-bottom: 8px;
+  }
+  .header .subtitle {
+    font-size: 14px;
+    opacity: 0.7;
+    font-weight: 300;
+  }
+
+  /* Big Quote */
+  .big-quote {
+    background: linear-gradient(135deg, #4CAF50, #2E7D32);
+    color: white;
+    padding: 28px 30px;
+    border-radius: 16px;
+    margin-bottom: 16px;
+    text-align: center;
+  }
+  .big-quote p {
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 1.4;
+  }
+  .big-quote .attr {
+    font-size: 12px;
+    opacity: 0.7;
+    margin-top: 8px;
+  }
+
+  /* Card */
+  .card {
+    background: white;
+    border-radius: 16px;
+    padding: 28px;
+    margin-bottom: 16px;
+    border: 1px solid #D5E0D5;
+  }
+  .card h2 {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .card h2 .num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px; height: 28px;
+    background: #1B2A1B;
+    color: white;
+    border-radius: 50%;
+    font-size: 13px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .card h3 {
+    font-size: 14px;
+    font-weight: 700;
+    margin: 16px 0 10px;
+    color: #2E7D32;
+  }
+
+  /* Stat grid */
+  .stat-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  @media (max-width: 480px) {
+    .stat-grid { grid-template-columns: 1fr; }
+  }
+  .stat-box {
+    padding: 16px;
+    border-radius: 12px;
+    background: #f3f7f3;
+  }
+  .stat-box .s-label {
+    font-size: 11px;
+    font-weight: 500;
+    color: #888;
+    margin-bottom: 4px;
+  }
+  .stat-box .s-value {
+    font-size: 22px;
+    font-weight: 900;
+    color: #1B2A1B;
+  }
+  .stat-box .s-desc {
+    font-size: 11px;
+    color: #999;
+    margin-top: 2px;
+  }
+  .stat-box.positive {
+    background: linear-gradient(135deg, #1B2A1B, #2D4A2D);
+    color: white;
+  }
+  .stat-box.positive .s-label { color: rgba(255,255,255,0.6); }
+  .stat-box.positive .s-value { color: #81C784; }
+  .stat-box.positive .s-desc { color: rgba(255,255,255,0.5); }
+  .stat-box.negative {
+    background: linear-gradient(135deg, #3E1B1B, #5C2A2A);
+    color: white;
+  }
+  .stat-box.negative .s-label { color: rgba(255,255,255,0.6); }
+  .stat-box.negative .s-value { color: #EF9A9A; }
+  .stat-box.negative .s-desc { color: rgba(255,255,255,0.5); }
+
+  /* Comparison Table */
+  .comp-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 14px 0;
+    font-size: 13px;
+  }
+  .comp-table th {
+    background: #1B2A1B;
+    color: white;
+    padding: 10px 12px;
+    text-align: center;
+    font-weight: 600;
+  }
+  .comp-table th:first-child { border-radius: 8px 0 0 0; }
+  .comp-table th:last-child { border-radius: 0 8px 0 0; }
+  .comp-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid #e0e8e0;
+    text-align: center;
+  }
+  .comp-table tr:nth-child(even) td { background: #f5f9f5; }
+  .comp-table .highlight-row td { background: #E8F5E9; font-weight: 700; }
+  .comp-table .loss-row td { background: #FFEBEE; font-weight: 700; }
+
+  /* Visual bar comparison */
+  .bar-compare {
+    margin: 16px 0;
+  }
+  .bar-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    gap: 10px;
+  }
+  .bar-label {
+    width: 100px;
+    font-size: 12px;
+    font-weight: 700;
+    text-align: right;
+    flex-shrink: 0;
+  }
+  .bar-track {
+    flex: 1;
+    height: 28px;
+    background: #f0f0f0;
+    border-radius: 6px;
+    overflow: hidden;
+    position: relative;
+  }
+  .bar-fill {
+    height: 100%;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 8px;
+    font-size: 11px;
+    font-weight: 700;
+    color: white;
+    min-width: 40px;
+  }
+  .bar-fill.green { background: linear-gradient(90deg, #81C784, #4CAF50); }
+  .bar-fill.red { background: linear-gradient(90deg, #EF9A9A, #E53935); }
+
+  /* Quote block */
+  .quote-block {
+    background: #f5f9f3;
+    border-left: 4px solid #4CAF50;
+    padding: 18px 20px;
+    margin: 14px 0;
+    border-radius: 0 12px 12px 0;
+  }
+  .quote-block p {
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.6;
+    font-style: italic;
+  }
+  .quote-block .q-attr {
+    font-size: 11px;
+    color: #999;
+    margin-top: 6px;
+    font-style: normal;
+  }
+
+  /* Bullet list */
+  .bullet-list {
+    list-style: none;
+    padding: 0;
+  }
+  .bullet-list li {
+    position: relative;
+    padding-left: 18px;
+    margin-bottom: 10px;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  .bullet-list li::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 8px;
+    width: 8px; height: 8px;
+    background: #4CAF50;
+    border-radius: 50%;
+  }
+
+  /* Strategy cards */
+  .strategy-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin-top: 14px;
+  }
+  .strategy-card {
+    padding: 18px;
+    border-radius: 12px;
+    border-left: 5px solid #4CAF50;
+    background: #f5f9f3;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+  .strategy-card .strat-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px; height: 24px;
+    background: #4CAF50;
+    color: white;
+    border-radius: 50%;
+    font-size: 12px;
+    font-weight: 700;
+    margin-right: 8px;
+  }
+  .strategy-card .strat-title {
+    font-weight: 900;
+    font-size: 14px;
+    margin-bottom: 6px;
+  }
+
+  /* Asymmetry diagram */
+  .asymmetry-box {
+    background: linear-gradient(135deg, #1B2A1B, #2D4A2D);
+    color: white;
+    border-radius: 16px;
+    padding: 28px;
+    margin-bottom: 16px;
+    text-align: center;
+  }
+  .asymmetry-box h2 {
+    color: white;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+  .asym-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+  }
+  .asym-item {
+    padding: 12px 20px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 700;
+    min-width: 120px;
+  }
+  .asym-down { background: rgba(239,154,154,0.3); color: #EF9A9A; }
+  .asym-arrow { font-size: 24px; color: #81C784; }
+  .asym-up { background: rgba(129,199,132,0.3); color: #81C784; }
+  .asym-note {
+    font-size: 12px;
+    opacity: 0.7;
+    margin-top: 8px;
+  }
+
+  .body-text {
+    font-size: 14px;
+    line-height: 1.7;
+    color: #444;
+    margin-bottom: 14px;
+  }
+
+  .divider {
+    height: 1px;
+    background: #D5E0D5;
+    margin: 14px 0;
+  }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    padding: 20px;
+    font-size: 11px;
+    color: #999;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- Header -->
+  <div class="header">
+    <span class="tag">RISK MANAGEMENT / COMPOUNDING</span>
+    <h1>1%의 차이가 만드는 거대한 격차:<br>복리의 함정과 자본 보존의 수학</h1>
+    <div class="subtitle">Negative Convexity & Capital Preservation | 2026.03.11</div>
+  </div>
+
+  <!-- Big Quote -->
+  <div class="big-quote">
+    <p>"얼마나 버느냐"보다<br>"얼마나 덜 잃느냐"가 핵심이다</p>
+    <div class="attr">Seth Klarman, Margin of Safety</div>
+  </div>
+
+  <!-- 1. Negative Convexity -->
+  <div class="asymmetry-box">
+    <h2>음의 볼록성(Negative Convexity)</h2>
+    <p style="font-size:14px; opacity:0.8; margin-bottom:16px;">투자에서 하락과 상승은 대칭이 아니다</p>
+    <div class="asym-row">
+      <div class="asym-item asym-down">-10% 하락</div>
+      <div class="asym-arrow">&rarr;</div>
+      <div class="asym-item asym-up">+11.1% 필요</div>
+    </div>
+    <div class="asym-row">
+      <div class="asym-item asym-down">-30% 하락</div>
+      <div class="asym-arrow">&rarr;</div>
+      <div class="asym-item asym-up">+42.9% 필요</div>
+    </div>
+    <div class="asym-row">
+      <div class="asym-item asym-down" style="background:rgba(239,83,80,0.4); color:#FF8A80;">-50% 하락</div>
+      <div class="asym-arrow">&rarr;</div>
+      <div class="asym-item asym-up" style="background:rgba(129,199,132,0.4);">+100% 필요</div>
+    </div>
+    <div class="asym-note">하락이 클수록 회복에 필요한 수익률은 기하급수적으로 증가한다</div>
+  </div>
+
+  <!-- 2. 같은 평균, 다른 결과 -->
+  <div class="card">
+    <h2><span class="num">1</span> 같은 평균, 전혀 다른 결과</h2>
+
+    <table class="comp-table">
+      <thead>
+        <tr><th>구분</th><th>투자자 A (공격형)</th><th>투자자 B (안정형)</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>1년차 수익률</td><td>+40%</td><td>+15%</td></tr>
+        <tr><td>2년차 수익률</td><td>-30%</td><td>-5%</td></tr>
+        <tr><td>산술 평균</td><td>+5%</td><td>+5%</td></tr>
+        <tr class="loss-row"><td>실제 복리 결과 (A)</td><td colspan="2">-2% 손실</td></tr>
+        <tr class="highlight-row"><td>실제 복리 결과 (B)</td><td colspan="2">+9.25% 수익</td></tr>
+      </tbody>
+    </table>
+
+    <div class="bar-compare" style="margin-top:16px;">
+      <div class="bar-item">
+        <div class="bar-label">투자자 A<br><small>공격형</small></div>
+        <div class="bar-track">
+          <div class="bar-fill red" style="width: 48%;">-2%</div>
+        </div>
+      </div>
+      <div class="bar-item">
+        <div class="bar-label">투자자 B<br><small>안정형</small></div>
+        <div class="bar-track">
+          <div class="bar-fill green" style="width: 72%;">+9.25%</div>
+        </div>
+      </div>
+    </div>
+
+    <p class="body-text">
+      차이를 만드는 것은 <strong>기하 평균(Geometric Mean)</strong>이다. 기하 평균은 변동성이 클수록 산술 평균보다 낮아지며, 이것이 실제 계좌에 반영되는 진짜 수익률이다.
+    </p>
+  </div>
+
+  <!-- 3. MDD와 복리 -->
+  <div class="card">
+    <h2><span class="num">2</span> 낮은 MDD가 복리 효과의 핵심</h2>
+    <div class="stat-grid">
+      <div class="stat-box positive">
+        <div class="s-label">안정형 투자자의 무기</div>
+        <div class="s-value" style="font-size:18px;">낮은 MDD</div>
+        <div class="s-desc">기하학적 우위 확보</div>
+      </div>
+      <div class="stat-box negative">
+        <div class="s-label">공격형 투자자의 함정</div>
+        <div class="s-value" style="font-size:18px;">높은 변동성</div>
+        <div class="s-desc">산술 vs 기하 평균 괴리</div>
+      </div>
+    </div>
+    <div class="quote-block" style="margin-top:14px;">
+      <p>"좋은 투자란 높은 수익을 올리는 것이 아니라 리스크 대비 적절한 수익을 올리는 것이다."</p>
+      <div class="q-attr">- Howard Marks</div>
+    </div>
+    <p class="body-text">
+      하락장에서 자본을 지켜내야만 다음 상승장에서 <strong>기하학적 우위</strong>를 확보할 수 있다. 이것이 안정형 투자자가 장기적으로 공격형 투자자를 이기는 수학적 이유다.
+    </p>
+  </div>
+
+  <!-- 4. 세 가지 실천 전략 -->
+  <div class="card">
+    <h2><span class="num">3</span> 세 가지 실천 전략</h2>
+    <div class="strategy-grid">
+      <div class="strategy-card">
+        <div class="strat-title"><span class="strat-num">1</span> 확률적 사고: All-in 금지</div>
+        승률이 높은 위치에서도 리스크를 감안한 분산 투자가 필수다. 한 번의 대형 손실이 수년간의 복리 효과를 파괴할 수 있다.
+      </div>
+      <div class="strategy-card">
+        <div class="strat-title"><span class="strat-num">2</span> Tail Risk 대비: Black Swan에 보험을 걸어라</div>
+        Nassim Taleb의 바벨 전략처럼, 포트폴리오 대부분을 안전자산에 배치하되 소량의 옵션으로 극단적 사건에 대비하라. 비용은 작지만 보호 효과는 크다.
+      </div>
+      <div class="strategy-card">
+        <div class="strat-title"><span class="strat-num">3</span> 경제적 해자(Moat) 기업 선별</div>
+        경기가 흔들려도 가격 결정력을 가진 기업은 하락장에서 덜 빠진다. 이런 기업으로 포트폴리오를 구성하면 MDD 자체를 구조적으로 낮출 수 있다.
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. 지금 왜 중요한가 -->
+  <div class="card">
+    <h2><span class="num">4</span> 2026년 3월, 지금 이 글이 중요한 이유</h2>
+    <ul class="bullet-list">
+      <li>사모펀드 환매 위기, 유가 리스크, 하이일드 스프레드 상승이 <strong>동시 진행</strong> 중</li>
+      <li>공격적 수익 추구보다 <strong>방어적 자본 보존</strong>이 우선인 시기</li>
+      <li>현재 포지션의 <strong>MDD 관리</strong>가 수익률 최적화보다 중요</li>
+      <li>개별 포지션의 <strong>손절 기준을 엄격하게</strong> 설정해야 할 시점</li>
+    </ul>
+
+    <div class="quote-block" style="margin-top:14px;">
+      <p>"얼마나 버느냐가 아니라 얼마나 덜 잃느냐가 다음 상승장에서의 출발선을 결정한다."</p>
+      <div class="q-attr">- 음의 볼록성의 핵심 교훈</div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    본 아티클은 공개 리서치 자료를 기반으로 정리한 참고 자료이며, 투자 권유를 목적으로 하지 않습니다.<br>
+    투자 판단은 본인의 책임하에 이루어져야 합니다.<br><br>
+    Sources: Howard Marks, Seth Klarman, Nassim Taleb, Li Lu | Valley AI (2026.03.11)<br>
+    Macro Cockpit | 2026.03.11 작성
+  </div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>시타델 럽너 - 4월 반등을 위한 6가지 조건</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background: #F0F2F5;
+    color: #2D2D2D;
+    padding: 20px;
+  }
+
+  .container {
+    max-width: 720px;
+    margin: 0 auto;
+  }
+
+  /* Header */
+  .header {
+    background: linear-gradient(135deg, #0D1B2A 0%, #1B2838 50%, #E8871E 200%);
+    color: white;
+    padding: 40px 30px;
+    border-radius: 16px;
+    margin-bottom: 16px;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 140px; height: 140px;
+    background: rgba(232,135,30,0.25);
+    border-radius: 50%;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    bottom: -20px; left: 30%;
+    width: 80px; height: 80px;
+    background: rgba(232,135,30,0.12);
+    border-radius: 50%;
+  }
+  .header .tag {
+    display: inline-block;
+    background: #E8871E;
+    color: white;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 20px;
+    margin-bottom: 12px;
+    letter-spacing: 1px;
+  }
+  .header h1 {
+    font-size: 26px;
+    font-weight: 900;
+    line-height: 1.3;
+    margin-bottom: 8px;
+  }
+  .header .subtitle {
+    font-size: 14px;
+    opacity: 0.7;
+    font-weight: 300;
+  }
+
+  /* Big Quote */
+  .big-quote {
+    background: linear-gradient(135deg, #E8871E, #C06A10);
+    color: white;
+    padding: 28px 30px;
+    border-radius: 16px;
+    margin-bottom: 16px;
+    text-align: center;
+  }
+  .big-quote p {
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 1.4;
+  }
+  .big-quote .attr {
+    font-size: 12px;
+    opacity: 0.7;
+    margin-top: 8px;
+  }
+
+  /* Card */
+  .card {
+    background: white;
+    border-radius: 16px;
+    padding: 28px;
+    margin-bottom: 16px;
+    border: 1px solid #DDE0E5;
+  }
+  .card h2 {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .card h2 .num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px; height: 28px;
+    background: #0D1B2A;
+    color: white;
+    border-radius: 50%;
+    font-size: 13px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  /* Stat grid */
+  .stat-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  @media (max-width: 480px) {
+    .stat-grid { grid-template-columns: 1fr; }
+  }
+  .stat-box {
+    padding: 16px;
+    border-radius: 12px;
+    background: #f7f5f0;
+  }
+  .stat-box .s-label {
+    font-size: 11px;
+    font-weight: 500;
+    color: #888;
+    margin-bottom: 4px;
+  }
+  .stat-box .s-value {
+    font-size: 22px;
+    font-weight: 900;
+    color: #0D1B2A;
+  }
+  .stat-box .s-desc {
+    font-size: 11px;
+    color: #999;
+    margin-top: 2px;
+  }
+  .stat-box.accent {
+    background: linear-gradient(135deg, #0D1B2A, #1B2838);
+    color: white;
+  }
+  .stat-box.accent .s-label { color: rgba(255,255,255,0.6); }
+  .stat-box.accent .s-value { color: #E8871E; }
+  .stat-box.accent .s-desc { color: rgba(255,255,255,0.5); }
+
+  /* Condition cards */
+  .condition-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin: 14px 0;
+  }
+  @media (max-width: 480px) {
+    .condition-grid { grid-template-columns: 1fr; }
+  }
+  .condition-card {
+    padding: 16px;
+    border-radius: 12px;
+    border: 1px solid #e8e0d5;
+    background: #fdfbf7;
+  }
+  .condition-card .c-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px; height: 24px;
+    background: #E8871E;
+    color: white;
+    border-radius: 50%;
+    font-size: 12px;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .condition-card .c-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: #0D1B2A;
+    margin-bottom: 6px;
+  }
+  .condition-card .c-desc {
+    font-size: 12px;
+    line-height: 1.5;
+    color: #666;
+  }
+
+  /* Quote block */
+  .quote-block {
+    background: #faf7f0;
+    border-left: 4px solid #E8871E;
+    padding: 18px 20px;
+    margin: 14px 0;
+    border-radius: 0 12px 12px 0;
+  }
+  .quote-block p {
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.6;
+    font-style: italic;
+  }
+  .quote-block .q-attr {
+    font-size: 11px;
+    color: #999;
+    margin-top: 6px;
+    font-style: normal;
+  }
+
+  /* Bullet list */
+  .bullet-list {
+    list-style: none;
+    padding: 0;
+  }
+  .bullet-list li {
+    position: relative;
+    padding-left: 18px;
+    margin-bottom: 10px;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  .bullet-list li::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 8px;
+    width: 8px; height: 8px;
+    background: #E8871E;
+    border-radius: 50%;
+  }
+
+  /* Timeline */
+  .timeline {
+    position: relative;
+    padding-left: 24px;
+  }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 8px; top: 4px; bottom: 4px;
+    width: 2px;
+    background: #E8871E;
+  }
+  .tl-item {
+    position: relative;
+    margin-bottom: 16px;
+    padding-left: 16px;
+  }
+  .tl-item::before {
+    content: '';
+    position: absolute;
+    left: -20px; top: 6px;
+    width: 10px; height: 10px;
+    background: #E8871E;
+    border-radius: 50%;
+    border: 2px solid white;
+  }
+  .tl-date {
+    font-size: 11px;
+    font-weight: 700;
+    color: #E8871E;
+  }
+  .tl-text {
+    font-size: 13px;
+    line-height: 1.5;
+    margin-top: 2px;
+  }
+
+  /* Warning box */
+  .warning-box {
+    background: linear-gradient(135deg, #2D0A0A, #4A1515);
+    color: white;
+    border-radius: 16px;
+    padding: 28px;
+    margin-bottom: 16px;
+  }
+  .warning-box h2 {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    color: #FF6B6B;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .warning-box p {
+    font-size: 14px;
+    line-height: 1.7;
+    color: rgba(255,255,255,0.85);
+    margin-bottom: 14px;
+  }
+  .warning-chain {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+  }
+  .warning-chain .wc-item {
+    padding: 8px 12px;
+    background: rgba(255,107,107,0.15);
+    border: 1px solid rgba(255,107,107,0.3);
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #FF6B6B;
+  }
+  .warning-chain .wc-arrow {
+    color: rgba(255,255,255,0.4);
+    font-size: 14px;
+  }
+
+  /* Probability bars */
+  .prob-container {
+    margin: 14px 0;
+  }
+  .prob-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+    gap: 10px;
+  }
+  .prob-label {
+    font-size: 12px;
+    font-weight: 600;
+    width: 50px;
+    text-align: center;
+    flex-shrink: 0;
+  }
+  .prob-track {
+    flex: 1;
+    height: 20px;
+    background: #f0ece5;
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  .prob-fill {
+    height: 100%;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    padding-left: 8px;
+    font-size: 11px;
+    font-weight: 600;
+    color: white;
+  }
+
+  .body-text {
+    font-size: 14px;
+    line-height: 1.7;
+    color: #444;
+    margin-bottom: 14px;
+  }
+
+  .divider {
+    height: 1px;
+    background: #DDE0E5;
+    margin: 14px 0;
+  }
+
+  .footer {
+    text-align: center;
+    padding: 20px;
+    font-size: 11px;
+    color: #999;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- Header -->
+  <div class="header">
+    <span class="tag">CITADEL / MACRO STRATEGY</span>
+    <h1>시타델 럽너: "4월이 변곡점,<br>6가지 조건을 주시하라"</h1>
+    <div class="subtitle">옵션 수급 구조 분석 | 2026.03.09</div>
+  </div>
+
+  <!-- Big Quote -->
+  <div class="big-quote">
+    <p>"유가만 통제되면,<br>4월부터 시장은 반등한다"</p>
+    <div class="attr">Citadel Luppner | March 2026</div>
+  </div>
+
+  <!-- 1. 핵심 수치 -->
+  <div class="card">
+    <h2><span class="num">1</span> 핵심 수치</h2>
+    <div class="stat-grid">
+      <div class="stat-box accent">
+        <div class="s-label">3월 20일 옵션 만기</div>
+        <div class="s-value">$5조</div>
+        <div class="s-desc">사상 최대 규모</div>
+      </div>
+      <div class="stat-box accent">
+        <div class="s-label">4월까지 세금 환급</div>
+        <div class="s-value">75%</div>
+        <div class="s-desc">전체 환급의 3/4 완료</div>
+      </div>
+      <div class="stat-box">
+        <div class="s-label">3월 상승 확률 (역사적)</div>
+        <div class="s-value" style="color:#E8871E;">61%</div>
+        <div class="s-desc">통계적 계절성 우위</div>
+      </div>
+      <div class="stat-box">
+        <div class="s-label">4월 상승 확률 (역사적)</div>
+        <div class="s-value" style="color:#E8871E;">63%</div>
+        <div class="s-desc">세금환급 + 리밸런싱 시기</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. 6가지 조건 -->
+  <div class="card">
+    <h2><span class="num">2</span> 4월 반등을 위한 6가지 조건</h2>
+    <p class="body-text">
+      약세 전망이 맞아떨어진 후, 럽너가 방향을 전환했다. 감에 의한 것이 아니라 <strong>구조적 수급 분석</strong>에 기반한 6가지 조건이다.
+    </p>
+
+    <div class="condition-grid">
+      <div class="condition-card">
+        <span class="c-num">1</span>
+        <div class="c-title">$5조 옵션 만기 (3/20)</div>
+        <div class="c-desc">사상 최대 규모 옵션 만기가 기계적 수급 제약을 해소. 억눌린 방향성이 한꺼번에 터져 나올 환경 조성</div>
+      </div>
+      <div class="condition-card">
+        <span class="c-num">2</span>
+        <div class="c-title">세금 환급 유동성</div>
+        <div class="c-desc">4월까지 전체 환급의 75% 완료. 개인 자금은 기술주/성장주에 집중 유입되는 경향</div>
+      </div>
+      <div class="condition-card">
+        <span class="c-num">3</span>
+        <div class="c-title">풋옵션 과매수 해소</div>
+        <div class="c-desc">기관의 방어적 풋 청산 시 딜러들의 기계적 매수 수요 발생. 숏커버링 랠리의 옵션 버전</div>
+      </div>
+      <div class="condition-card">
+        <span class="c-num">4</span>
+        <div class="c-title">기술주 회복 필수</div>
+        <div class="c-desc">S&P/나스닥 내 기술주 비중 고려 시, NVIDIA/Apple/MSFT 안정화가 반등의 전제 조건</div>
+      </div>
+      <div class="condition-card">
+        <span class="c-num">5</span>
+        <div class="c-title">VIX 진정 + 백워데이션 해소</div>
+        <div class="c-desc">현물 VIX > VIX 선물의 비정상 구조(백워데이션)가 정상 콘탱고로 복귀해야</div>
+      </div>
+      <div class="condition-card">
+        <span class="c-num">6</span>
+        <div class="c-title">계절성의 힘</div>
+        <div class="c-desc">4월 상승 확률 63%. 세금환급, 옵션만기, 기관 리밸런싱이 겹치는 강한 수급 시기</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. 옵션 수급 메커니즘 -->
+  <div class="card">
+    <h2><span class="num">3</span> 옵션 수급 메커니즘</h2>
+    <p class="body-text">
+      현재 시장을 억누르는 가장 강력한 힘은 펀더멘탈이 아니라 <strong>옵션 수급의 기계적 제약</strong>이다.
+      딜러들의 감마 헤지가 시장의 방향성을 상쇄시키고 있다.
+    </p>
+
+    <div style="display:flex; flex-direction:column; gap:8px; margin:14px 0;">
+      <div style="padding:12px 16px; border-radius:10px; background:#0D1B2A; color:white; font-size:13px;">
+        <strong style="color:#E8871E;">현재 상태</strong> &mdash; 딜러 감마 헤지: 주가 상승 &rarr; 매도 / 주가 하락 &rarr; 매수 (방향성 상쇄)
+      </div>
+      <div style="padding:12px 16px; border-radius:10px; background:#E8871E; color:white; font-size:13px;">
+        <strong>3/20 만기 이후</strong> &mdash; 기계적 제약 해소 &rarr; 억눌린 방향성 폭발 가능
+      </div>
+      <div style="padding:12px 16px; border-radius:10px; background:#27AE60; color:white; font-size:13px;">
+        <strong>풋 청산 선순환</strong> &mdash; 풋 포지션 청산 &rarr; 딜러 기계적 매수 &rarr; 추가 상승 압력
+      </div>
+    </div>
+  </div>
+
+  <!-- 계절성 -->
+  <div class="card">
+    <h2><span class="num">4</span> 역사적 계절성 데이터</h2>
+    <div class="prob-container">
+      <div class="prob-item">
+        <div class="prob-label">3월</div>
+        <div class="prob-track">
+          <div class="prob-fill" style="width:61%; background: linear-gradient(90deg, #C06A10, #E8871E);">61%</div>
+        </div>
+      </div>
+      <div class="prob-item">
+        <div class="prob-label">4월</div>
+        <div class="prob-track">
+          <div class="prob-fill" style="width:63%; background: linear-gradient(90deg, #E8871E, #F5A623);">63%</div>
+        </div>
+      </div>
+    </div>
+    <p class="body-text" style="margin-top:10px; font-size:13px;">
+      절대적 수치는 아니지만, 옵션 만기 사이클 + 세금 환급 + 기관 리밸런싱이 겹치는 4월은 역사적으로 강한 수급 환경이 조성되는 시기다.
+    </p>
+  </div>
+
+  <!-- Warning: 유가 -->
+  <div class="warning-box">
+    <h2>&#9888; 모든 것을 무효화하는 단일 변수: 유가</h2>
+    <p>
+      호르무즈 해협 봉쇄가 장기화되어 <strong>유가가 75% 이상 폭등</strong>하면,
+      위의 6가지 낙관 시나리오는 <strong>전부 무효화</strong>된다.
+    </p>
+    <div class="warning-chain">
+      <div class="wc-item">유가 폭등</div>
+      <span class="wc-arrow">&rarr;</span>
+      <div class="wc-item">인플레 재점화</div>
+      <span class="wc-arrow">&rarr;</span>
+      <div class="wc-item">금리 인하 소멸</div>
+      <span class="wc-arrow">&rarr;</span>
+      <div class="wc-item">마진 압축</div>
+      <span class="wc-arrow">&rarr;</span>
+      <div class="wc-item">소비 둔화</div>
+    </div>
+  </div>
+
+  <!-- 5. 실전 타임라인 -->
+  <div class="card">
+    <h2><span class="num">5</span> 실전 타임라인</h2>
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-date">~3월 20일</div>
+        <div class="tl-text"><strong>신규 매수 자제</strong>. 옵션 만기 전후 변동성 확대에 대비</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-date">3월 20일</div>
+        <div class="tl-text"><strong>사상 최대 $5조 옵션 만기</strong> - 시장의 기계적 족쇄가 풀리는 변곡점</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-date">3월 20~31일</div>
+        <div class="tl-text">6가지 조건을 하나씩 <strong>체크리스트로 점검</strong></div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-date">4월 이후</div>
+        <div class="tl-text">조건 충족 시 <strong>성장주 포지션 확대</strong> 타이밍 탐색</div>
+      </div>
+    </div>
+
+    <div style="margin-top:14px; padding:14px; background:#fdf8f0; border-radius:10px; font-size:13px; line-height:1.6; color:#C06A10; text-align:center; border:1px solid #e8d5b5;">
+      <strong>핵심 날짜: 3월 20일</strong> | 사상 최대 옵션 만기가 시장의 기계적 족쇄를 풀어주는 변곡점
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    본 아티클은 공개 자료를 기반으로 정리한 참고 자료이며, 투자 권유를 목적으로 하지 않습니다.<br>
+    투자 판단은 본인의 책임하에 이루어져야 합니다.<br><br>
+    Macro Cockpit | 2026.03.09 작성
+  </div>
+
+</div>
+</body>
+</html>

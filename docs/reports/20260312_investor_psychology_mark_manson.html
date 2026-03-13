@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>감수할 수 있는 어려움을 선택하라: Mark Manson의 15가지 원칙과 투자 심리</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background: #F0EDF5;
+    color: #2D2D2D;
+    padding: 20px;
+  }
+
+  .container {
+    max-width: 720px;
+    margin: 0 auto;
+  }
+
+  /* Header */
+  .header {
+    background: linear-gradient(135deg, #1A0A2E 0%, #2D1B69 50%, #7C3AED 200%);
+    color: white;
+    padding: 40px 30px;
+    border-radius: 16px;
+    margin-bottom: 16px;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 140px; height: 140px;
+    background: rgba(124,58,237,0.25);
+    border-radius: 50%;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    bottom: -20px; left: 30%;
+    width: 80px; height: 80px;
+    background: rgba(124,58,237,0.12);
+    border-radius: 50%;
+  }
+  .header .tag {
+    display: inline-block;
+    background: #7C3AED;
+    color: white;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 20px;
+    margin-bottom: 12px;
+    letter-spacing: 1px;
+  }
+  .header h1 {
+    font-size: 24px;
+    font-weight: 900;
+    line-height: 1.35;
+    margin-bottom: 8px;
+  }
+  .header .subtitle {
+    font-size: 14px;
+    opacity: 0.7;
+    font-weight: 300;
+  }
+
+  /* Big Quote */
+  .big-quote {
+    background: linear-gradient(135deg, #7C3AED, #4C1D95);
+    color: white;
+    padding: 28px 30px;
+    border-radius: 16px;
+    margin-bottom: 16px;
+    text-align: center;
+  }
+  .big-quote p {
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 1.4;
+  }
+  .big-quote .attr {
+    font-size: 12px;
+    opacity: 0.7;
+    margin-top: 8px;
+  }
+
+  /* Card */
+  .card {
+    background: white;
+    border-radius: 16px;
+    padding: 28px;
+    margin-bottom: 16px;
+    border: 1px solid #DDD5E8;
+  }
+  .card h2 {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .card h2 .num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px; height: 28px;
+    background: #1A0A2E;
+    color: white;
+    border-radius: 50%;
+    font-size: 13px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .card h3 {
+    font-size: 14px;
+    font-weight: 700;
+    margin: 16px 0 10px;
+    color: #5B21B6;
+  }
+
+  /* Stat grid */
+  .stat-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  @media (max-width: 480px) {
+    .stat-grid { grid-template-columns: 1fr; }
+  }
+
+  /* Principle card grid */
+  .principle-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 12px;
+  }
+  @media (max-width: 480px) {
+    .principle-grid { grid-template-columns: 1fr; }
+  }
+  .principle-card {
+    padding: 16px;
+    border-radius: 12px;
+    background: #f8f5fc;
+    border: 1px solid #e8e0f0;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+  .principle-card .p-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px; height: 22px;
+    background: #7C3AED;
+    color: white;
+    border-radius: 50%;
+    font-size: 11px;
+    font-weight: 700;
+    margin-right: 6px;
+    flex-shrink: 0;
+  }
+  .principle-card .p-title {
+    font-weight: 700;
+    font-size: 13px;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+  }
+  .principle-card .p-manson {
+    font-size: 11px;
+    color: #7C3AED;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+  .principle-card .p-invest {
+    font-size: 12px;
+    color: #555;
+  }
+
+  /* Full width principle */
+  .principle-full {
+    padding: 20px;
+    border-radius: 12px;
+    background: #f8f5fc;
+    border: 1px solid #e8e0f0;
+    margin-bottom: 12px;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+  .principle-full .p-title {
+    font-weight: 700;
+    font-size: 14px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .principle-full .p-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px; height: 24px;
+    background: #7C3AED;
+    color: white;
+    border-radius: 50%;
+    font-size: 12px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  /* Comparison table */
+  .comp-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 14px 0;
+    font-size: 13px;
+  }
+  .comp-table th {
+    background: #1A0A2E;
+    color: white;
+    padding: 10px 12px;
+    text-align: left;
+    font-weight: 600;
+  }
+  .comp-table th:first-child { border-radius: 8px 0 0 0; }
+  .comp-table th:last-child { border-radius: 0 8px 0 0; }
+  .comp-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid #e8e0f0;
+  }
+  .comp-table tr:nth-child(even) td { background: #faf8fc; }
+
+  /* Quote block */
+  .quote-block {
+    background: #faf8fc;
+    border-left: 4px solid #7C3AED;
+    padding: 18px 20px;
+    margin: 14px 0;
+    border-radius: 0 12px 12px 0;
+  }
+  .quote-block p {
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.6;
+    font-style: italic;
+  }
+  .quote-block .q-attr {
+    font-size: 11px;
+    color: #999;
+    margin-top: 6px;
+    font-style: normal;
+  }
+
+  /* Bullet list */
+  .bullet-list {
+    list-style: none;
+    padding: 0;
+  }
+  .bullet-list li {
+    position: relative;
+    padding-left: 18px;
+    margin-bottom: 10px;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  .bullet-list li::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 8px;
+    width: 8px; height: 8px;
+    background: #7C3AED;
+    border-radius: 50%;
+  }
+
+  /* Bad advice markers */
+  .bad-advice-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin: 12px 0;
+  }
+  @media (max-width: 480px) {
+    .bad-advice-grid { grid-template-columns: 1fr; }
+  }
+  .bad-advice-item {
+    padding: 12px 14px;
+    border-radius: 10px;
+    background: #FEF2F2;
+    border: 1px solid #FECACA;
+    font-size: 12px;
+    font-weight: 600;
+    color: #991B1B;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    line-height: 1.4;
+  }
+  .bad-x {
+    color: #DC2626;
+    font-size: 16px;
+    font-weight: 900;
+    flex-shrink: 0;
+  }
+
+  /* Distinction table */
+  .distinction-box {
+    display: flex;
+    gap: 10px;
+    margin: 12px 0;
+    flex-wrap: wrap;
+  }
+  .dist-item {
+    flex: 1;
+    min-width: 180px;
+    padding: 14px 16px;
+    border-radius: 12px;
+    font-size: 13px;
+    line-height: 1.5;
+    text-align: center;
+  }
+  .dist-quiet {
+    background: linear-gradient(135deg, #1A0A2E, #2D1B69);
+    color: white;
+  }
+  .dist-quiet .dist-label { color: #A78BFA; font-weight: 700; font-size: 12px; margin-bottom: 4px; }
+  .dist-loud {
+    background: #FEF3C7;
+    border: 1px solid #FDE68A;
+    color: #92400E;
+  }
+  .dist-loud .dist-label { color: #92400E; font-weight: 700; font-size: 12px; margin-bottom: 4px; }
+
+  /* Action table */
+  .action-card {
+    background: linear-gradient(135deg, #1A0A2E, #2D1B69);
+    color: white;
+    border-radius: 16px;
+    padding: 28px;
+    margin-bottom: 16px;
+  }
+  .action-card h2 {
+    color: white;
+    justify-content: center;
+    margin-bottom: 16px;
+  }
+  .action-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  .action-table th {
+    background: rgba(124,58,237,0.3);
+    color: #C4B5FD;
+    padding: 10px 12px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 11px;
+  }
+  .action-table th:first-child { border-radius: 8px 0 0 0; }
+  .action-table th:last-child { border-radius: 0 8px 0 0; }
+  .action-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    color: rgba(255,255,255,0.9);
+    line-height: 1.5;
+  }
+  .action-table .a-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px; height: 20px;
+    background: #7C3AED;
+    color: white;
+    border-radius: 50%;
+    font-size: 10px;
+    font-weight: 700;
+  }
+
+  .body-text {
+    font-size: 14px;
+    line-height: 1.7;
+    color: #444;
+    margin-bottom: 14px;
+  }
+
+  .divider {
+    height: 1px;
+    background: #DDD5E8;
+    margin: 14px 0;
+  }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    padding: 20px;
+    font-size: 11px;
+    color: #999;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- Header -->
+  <div class="header">
+    <span class="tag">MINDSET / INVESTOR PSYCHOLOGY</span>
+    <h1>감수할 수 있는 어려움을<br>선택하라</h1>
+    <div class="subtitle">Mark Manson의 15가지 변화 원칙 x 투자 심리 | 2026.03.12</div>
+  </div>
+
+  <!-- Big Quote -->
+  <div class="big-quote">
+    <p>"시장이 극도의 불확실성 속에 있을 때<br>필요한 것은 새로운 종목 분석이 아니라<br>자기 인식의 재정비다"</p>
+    <div class="attr">2026년 3월, 투자자에게 던지는 질문</div>
+  </div>
+
+  <!-- 1. 허영 목표 vs 시스템 -->
+  <div class="card">
+    <h2><span class="num">1</span> 허영 목표 vs 시스템 설계</h2>
+    <p class="body-text">
+      Manson은 목표 실패의 원인을 두 가지로 진단한다. <strong>진짜 원하는 것이 아닌 허영 목표</strong>일 때, 그리고 의욕만 있고 <strong>실행 시스템이 없을 때</strong>.
+    </p>
+    <div class="distinction-box">
+      <div class="dist-item dist-loud">
+        <div class="dist-label">허영 목표</div>
+        "올해 수익률 50%"<br>
+        <small>첫 급락에서 무너진다</small>
+      </div>
+      <div class="dist-item dist-quiet">
+        <div class="dist-label">시스템 기반 목표</div>
+        매매 규칙 + 리밸런싱 일정 + 손절 기준<br>
+        <small>어떤 시장에서도 작동한다</small>
+      </div>
+    </div>
+    <div class="quote-block">
+      <p>"불확실성 속에서도 흔들리지 않는 포트폴리오를 운영하고 싶다" -- 이것이 감정 기반의 더 나은 투자 목표다. 특정 종목에 집착하지 않게 만들어 준다.</p>
+    </div>
+  </div>
+
+  <!-- 2. 고통의 선택 -->
+  <div class="card">
+    <h2><span class="num">2</span> 감수할 수 있는 고통을 선택하라</h2>
+    <p class="body-text">
+      성공은 보상보다 <strong>대가를 버틸 수 있느냐</strong>에 달려 있다. MDD -30%를 감수할 수 없다면 고성장 기술주 집중 투자는 자신에게 맞지 않는 전략이다.
+    </p>
+    <div class="quote-block">
+      <p>"리스크는 손실 가능성이 아니라 손실을 감수할 준비가 되었느냐다."</p>
+      <div class="q-attr">- Howard Marks</div>
+    </div>
+  </div>
+
+  <!-- 3. 직관 vs 충동 -->
+  <div class="card">
+    <h2><span class="num">3</span> 직관과 충동의 구분</h2>
+    <div class="distinction-box">
+      <div class="dist-item dist-quiet">
+        <div class="dist-label">진짜 직관 = 조용하다</div>
+        수개월간 리서치하고 기업을 깊이 이해한 뒤<br>자연스럽게 형성되는 확신
+      </div>
+      <div class="dist-item dist-loud">
+        <div class="dist-label">충동 = 시끄럽다</div>
+        "이 종목 느낌이 좋다"<br>
+        "지금 안 사면 영원히 못 산다" (FOMO)
+      </div>
+    </div>
+    <p class="body-text" style="margin-top:12px;">
+      "이번엔 다르다", "지금 안 사면 영원히 못 산다"는 FOMO의 전형적 형태다. 이 목소리를 없앨 수 없지만, <strong>거리 두고 관찰하는 습관</strong>이 충동 매수를 방지한다. Buffett: "확신이 들 때까지 기다려라."
+    </p>
+  </div>
+
+  <!-- 4. 열정/목적/의미 -->
+  <div class="card">
+    <h2><span class="num">4</span> 열정, 목적, 의미는 같은 말이 아니다</h2>
+    <table class="comp-table">
+      <thead>
+        <tr><th>구분</th><th>정의</th><th>투자 대응</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>열정</strong></td>
+          <td>그 자체로 하고 싶은 것</td>
+          <td>차트 분석, 기업 리서치를 즐기는 것</td>
+        </tr>
+        <tr>
+          <td><strong>목적</strong></td>
+          <td>힘들어도 해야 하는 것</td>
+          <td>손절 규칙 준수, 리밸런싱 실행</td>
+        </tr>
+        <tr>
+          <td><strong>의미</strong></td>
+          <td>열정+목적을 살다 보면 생기는 것</td>
+          <td>장기 복리 수익, 재정적 자유</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 5. 나쁜 조언 필터 -->
+  <div class="card">
+    <h2><span class="num">5</span> 나쁜 투자 정보의 4가지 특징</h2>
+    <div class="bad-advice-grid">
+      <div class="bad-advice-item">
+        <span class="bad-x">X</span>
+        불안을 자극해 비싼 상품을 판다
+      </div>
+      <div class="bad-advice-item">
+        <span class="bad-x">X</span>
+        과도한 확신을 보인다
+      </div>
+      <div class="bad-advice-item">
+        <span class="bad-x">X</span>
+        복잡한 문제에 지나치게 단순한 해답을 준다
+      </div>
+      <div class="bad-advice-item">
+        <span class="bad-x">X</span>
+        반대 증거 앞에서 생각을 바꾸지 않는다
+      </div>
+    </div>
+    <p class="body-text" style="margin-top:8px;">
+      "이 종목 무조건 간다"는 리포트보다 "이런 조건이면 유리하고, 이런 리스크가 있다"는 분석이 신뢰할 만하다.
+    </p>
+  </div>
+
+  <!-- 6. 핵심 원칙들 -->
+  <div class="card">
+    <h2><span class="num">6</span> 투자에 적용되는 핵심 원칙들</h2>
+
+    <div class="principle-full">
+      <div class="p-title"><span class="p-num">4</span> 자기효능감</div>
+      핵심은 낙관론이 아니라 <strong>"나는 이걸 감당할 수 있다"</strong>는 믿음이다. 과거 위기를 견뎌본 경험, 충분한 현금 비중, 사전에 정해둔 매매 규칙이 투자자의 자기효능감을 구성한다.
+    </div>
+
+    <div class="principle-grid">
+      <div class="principle-card">
+        <div class="p-manson">#8 가짜 층을 벗기기</div>
+        <div class="p-invest">남의 포트폴리오를 따라하거나 유행 테마에 편승하는 것은 투자에서의 "가면"이다. 자신의 리스크 허용도에 맞는 전략을 찾아야 한다.</div>
+      </div>
+      <div class="principle-card">
+        <div class="p-manson">#9 미루기 = 감정 문제</div>
+        <div class="p-invest">리밸런싱을 미루는 이유는 귀찮아서가 아니라 손실 확정의 감정이 두렵기 때문. "가장 큰 종목 하나만 점검"으로 단위를 줄여라.</div>
+      </div>
+      <div class="principle-card">
+        <div class="p-manson">#11 사람 맞추기</div>
+        <div class="p-invest">컨센서스를 따라가는 투자는 편하지만 초과수익을 만들지 못한다. Druckenmiller: "군중과 반대로 갈 각오."</div>
+      </div>
+      <div class="principle-card">
+        <div class="p-manson">#12 목표 직전의 자기파괴</div>
+        <div class="p-invest">물타기의 진짜 이유는 평단가가 아니라 손실 인정이 정체성을 위협하기 때문이다. 행동의 심리적 이익을 직시하라.</div>
+      </div>
+      <div class="principle-card">
+        <div class="p-manson">#13 선택적 주의</div>
+        <div class="p-invest">특정 섹터를 깊이 공부하면 관련 기회가 "보이기 시작"한다. Top-Down 분석에서 섹터를 먼저 정하는 것이 효과적인 이유.</div>
+      </div>
+      <div class="principle-card">
+        <div class="p-manson">#15 변화에는 고통이 동반</div>
+        <div class="p-invest">대부분의 투자자는 큰 손실 후에야 리스크 관리를 체감한다. MDD를 겪기 전에 시스템을 구축하는 것이 생존의 조건.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7. 1년 vs 10년 -->
+  <div class="card">
+    <h2><span class="num">7</span> 1년은 과대평가, 10년은 과소평가</h2>
+    <p class="body-text">
+      복리의 마법은 시간에 비례한다. 1년 수익률에 집착하면 단기 매매에 빠지고, 10년 복리를 생각하면 좋은 기업을 오래 보유하는 전략으로 자연스럽게 이동한다.
+    </p>
+    <div class="quote-block">
+      <p>"10년 보유할 생각이 없으면 10분도 보유하지 마라."</p>
+      <div class="q-attr">- Warren Buffett</div>
+    </div>
+  </div>
+
+  <!-- Action Summary -->
+  <div class="action-card">
+    <h2>투자자를 위한 5가지 행동 원칙</h2>
+    <table class="action-table">
+      <thead>
+        <tr><th>#</th><th>Manson 원칙</th><th>투자 행동 지침</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="a-num">1</span></td>
+          <td>감수할 수 있는 고통을 선택하라</td>
+          <td>MDD 허용치를 먼저 정의하고 그에 맞는 전략을 설계할 것</td>
+        </tr>
+        <tr>
+          <td><span class="a-num">2</span></td>
+          <td>직관과 충동을 구분하라</td>
+          <td>매수 충동이 들 때 <strong>24시간 대기 규칙</strong> 적용</td>
+        </tr>
+        <tr>
+          <td><span class="a-num">3</span></td>
+          <td>시스템 없는 목표는 무너진다</td>
+          <td>리밸런싱 일정, 손절 기준, 매매 규칙을 <strong>문서화</strong></td>
+        </tr>
+        <tr>
+          <td><span class="a-num">4</span></td>
+          <td>1년은 과대평가, 10년은 과소평가</td>
+          <td>단기 수익률 집착을 버리고 <strong>복리 관점</strong>으로 운영</td>
+        </tr>
+        <tr>
+          <td><span class="a-num">5</span></td>
+          <td>나쁜 조언의 4가지 특징을 필터로 사용</td>
+          <td>과도한 확신, 불안 자극, 단순 해답, 반증 무시 <strong>걸러낼 것</strong></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    본 아티클은 공개 리서치 자료를 기반으로 정리한 참고 자료이며, 투자 권유를 목적으로 하지 않습니다.<br>
+    투자 판단은 본인의 책임하에 이루어져야 합니다.<br><br>
+    Sources: Mark Manson "No Bullsh*t Guide To Real Change In 2026" | Valley AI (2026.03.10)<br>
+    Macro Cockpit | 2026.03.12 작성
+  </div>
+
+</div>
+</body>
+</html>

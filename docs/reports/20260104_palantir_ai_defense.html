@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>팔란티어: AI 에이전트 시대의 월드 모델 구축자</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background: #F0F0F5;
+    color: #2D2D2D;
+    padding: 20px;
+  }
+
+  .container {
+    max-width: 720px;
+    margin: 0 auto;
+  }
+
+  /* Header */
+  .header {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    color: white;
+    padding: 40px 30px;
+    border-radius: 16px;
+    margin-bottom: 16px;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 140px; height: 140px;
+    background: rgba(99,102,241,0.25);
+    border-radius: 50%;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    bottom: -20px; left: 30%;
+    width: 80px; height: 80px;
+    background: rgba(99,102,241,0.12);
+    border-radius: 50%;
+  }
+  .header .tag {
+    display: inline-block;
+    background: #6366F1;
+    color: white;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 20px;
+    margin-bottom: 12px;
+    letter-spacing: 1px;
+  }
+  .header h1 {
+    font-size: 26px;
+    font-weight: 900;
+    line-height: 1.3;
+    margin-bottom: 8px;
+  }
+  .header .subtitle {
+    font-size: 14px;
+    opacity: 0.7;
+    font-weight: 300;
+  }
+
+  /* Big Quote */
+  .big-quote {
+    background: linear-gradient(135deg, #6366F1, #4F46E5);
+    color: white;
+    padding: 28px 30px;
+    border-radius: 16px;
+    margin-bottom: 16px;
+    text-align: center;
+  }
+  .big-quote p {
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 1.4;
+  }
+  .big-quote .attr {
+    font-size: 12px;
+    opacity: 0.7;
+    margin-top: 8px;
+  }
+
+  /* Card */
+  .card {
+    background: white;
+    border-radius: 16px;
+    padding: 28px;
+    margin-bottom: 16px;
+    border: 1px solid #E0E0EA;
+  }
+  .card h2 {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .card h2 .num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px; height: 28px;
+    background: #1a1a2e;
+    color: white;
+    border-radius: 50%;
+    font-size: 13px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  /* Stat grid */
+  .stat-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  @media (max-width: 480px) {
+    .stat-grid { grid-template-columns: 1fr; }
+  }
+  .stat-box {
+    padding: 16px;
+    border-radius: 12px;
+    background: #f5f5fa;
+  }
+  .stat-box .s-label {
+    font-size: 11px;
+    font-weight: 500;
+    color: #888;
+    margin-bottom: 4px;
+  }
+  .stat-box .s-value {
+    font-size: 22px;
+    font-weight: 900;
+    color: #1a1a2e;
+  }
+  .stat-box .s-desc {
+    font-size: 11px;
+    color: #999;
+    margin-top: 2px;
+  }
+  .stat-box.accent {
+    background: linear-gradient(135deg, #1a1a2e, #16213e);
+    color: white;
+  }
+  .stat-box.accent .s-label { color: rgba(255,255,255,0.6); }
+  .stat-box.accent .s-value { color: #818CF8; }
+  .stat-box.accent .s-desc { color: rgba(255,255,255,0.5); }
+
+  /* Quote block */
+  .quote-block {
+    background: #f8f7fc;
+    border-left: 4px solid #6366F1;
+    padding: 18px 20px;
+    margin: 14px 0;
+    border-radius: 0 12px 12px 0;
+  }
+  .quote-block p {
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.6;
+    font-style: italic;
+  }
+  .quote-block .q-attr {
+    font-size: 11px;
+    color: #999;
+    margin-top: 6px;
+    font-style: normal;
+  }
+
+  /* Bullet list */
+  .bullet-list {
+    list-style: none;
+    padding: 0;
+  }
+  .bullet-list li {
+    position: relative;
+    padding-left: 18px;
+    margin-bottom: 10px;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  .bullet-list li::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 8px;
+    width: 8px; height: 8px;
+    background: #6366F1;
+    border-radius: 50%;
+  }
+
+  /* Layer diagram */
+  .layer-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin: 14px 0;
+  }
+  .layer-item {
+    display: flex;
+    align-items: center;
+    padding: 14px 16px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 500;
+    gap: 10px;
+  }
+  .layer-item .l-icon {
+    width: 32px; height: 32px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+  .layer-item .l-title {
+    font-weight: 700;
+    font-size: 14px;
+  }
+  .layer-item .l-desc {
+    font-size: 12px;
+    opacity: 0.8;
+    margin-top: 2px;
+  }
+  .layer-5 { background: #1a1a2e; color: white; }
+  .layer-4 { background: #16213e; color: white; }
+  .layer-3 { background: #0f3460; color: white; }
+  .layer-2 { background: #4338CA; color: white; }
+  .layer-1 { background: #6366F1; color: white; }
+
+  /* Analysis grid */
+  .analysis-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 14px;
+  }
+  @media (max-width: 480px) {
+    .analysis-grid { grid-template-columns: 1fr; }
+  }
+  .analysis-box {
+    padding: 16px;
+    border-radius: 12px;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+  .analysis-box .a-label {
+    font-weight: 700;
+    font-size: 12px;
+    margin-bottom: 8px;
+    display: block;
+  }
+  .analysis-box.bull {
+    background: #f0f0ff;
+    border: 1px solid #c7d2fe;
+  }
+  .analysis-box.bull .a-label { color: #4338CA; }
+  .analysis-box.bear {
+    background: #fef5f5;
+    border: 1px solid #f0d0d0;
+  }
+  .analysis-box.bear .a-label { color: #c0392b; }
+
+  .body-text {
+    font-size: 14px;
+    line-height: 1.7;
+    color: #444;
+    margin-bottom: 14px;
+  }
+
+  .divider {
+    height: 1px;
+    background: #E0E0EA;
+    margin: 14px 0;
+  }
+
+  /* Gauge */
+  .gauge-wrap {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px;
+    background: #f5f5fa;
+    border-radius: 12px;
+    margin: 14px 0;
+  }
+  .gauge-bar {
+    flex: 1;
+    height: 12px;
+    background: #e0e0ea;
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  .gauge-fill {
+    height: 100%;
+    border-radius: 6px;
+    background: linear-gradient(90deg, #4338CA, #6366F1, #818CF8);
+  }
+  .gauge-label {
+    font-size: 12px;
+    font-weight: 500;
+    color: #666;
+    min-width: 80px;
+  }
+  .gauge-value {
+    font-size: 18px;
+    font-weight: 900;
+    color: #4338CA;
+    min-width: 50px;
+    text-align: right;
+  }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    padding: 20px;
+    font-size: 11px;
+    color: #999;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- Header -->
+  <div class="header">
+    <span class="tag">PALANTIR / AI AGENT / DEFENSE</span>
+    <h1>팔란티어: AI 에이전트 시대의<br>월드 모델 구축자</h1>
+    <div class="subtitle">AI Platform Deep Dive | 2026.01.04</div>
+  </div>
+
+  <!-- Big Quote -->
+  <div class="big-quote">
+    <p>"AI 에이전트가 현실 세계를 이해하려면<br>월드 모델이 필요하다.<br>팔란티어는 그것을 만든다."</p>
+    <div class="attr">AI 에이전트 시대의 핵심 투자 테제</div>
+  </div>
+
+  <!-- 1. 핵심 수치 -->
+  <div class="card">
+    <h2><span class="num">1</span> 핵심 수치 한눈에 보기</h2>
+    <div class="stat-grid">
+      <div class="stat-box accent">
+        <div class="s-label">Rule of 40</div>
+        <div class="s-value">114%</div>
+        <div class="s-desc">SaaS 최상위권 성장 효율성</div>
+      </div>
+      <div class="stat-box accent">
+        <div class="s-label">Forrester TEI ROI</div>
+        <div class="s-value">315%</div>
+        <div class="s-desc">도입 기업 투자 대비 수익률</div>
+      </div>
+      <div class="stat-box">
+        <div class="s-label">NPV (순현재가치)</div>
+        <div class="s-value" style="font-size:18px;">$2.62억</div>
+        <div class="s-desc">도입 기업 경제적 가치</div>
+      </div>
+      <div class="stat-box">
+        <div class="s-label">분석가 목표주가</div>
+        <div class="s-value" style="font-size:18px;">$220</div>
+        <div class="s-desc">AI 에이전트 시대 프리미엄</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. 월드 모델 플랫폼 -->
+  <div class="card">
+    <h2><span class="num">2</span> 왜 "월드 모델" 플랫폼인가</h2>
+    <p class="body-text">
+      AI 에이전트가 단순한 챗봇을 넘어 실질적인 업무 자동화의 핵심으로 부상하면서,
+      AI가 현실 세계의 복잡한 관계와 맥락을 이해할 수 있는 <strong>월드 모델(World Model)</strong>의 중요성이 급부상하고 있다.
+    </p>
+
+    <div class="quote-block">
+      <p>"월드 모델이란 AI가 현실 세계의 복잡한 관계와 맥락을 이해할 수 있도록 데이터를 구조화하는 프레임워크다."</p>
+    </div>
+
+    <p class="body-text">
+      팔란티어의 <strong>Foundry</strong>와 <strong>Gotham</strong> 플랫폼은 수십 년간 정부 기관과 대기업의 데이터를 통합하고 분석해온 경험을 바탕으로,
+      이 월드 모델을 가장 정교하게 구현할 수 있는 인프라를 갖추고 있다.
+    </p>
+  </div>
+
+  <!-- 3. 플랫폼 스택 -->
+  <div class="card">
+    <h2><span class="num">3</span> 팔란티어 플랫폼 체계</h2>
+    <div class="layer-stack">
+      <div class="layer-item layer-5">
+        <div class="l-icon">A</div>
+        <div>
+          <div class="l-title">AIP (Artificial Intelligence Platform)</div>
+          <div class="l-desc">AI 에이전트 운영 / 상업 부문 확산 가속</div>
+        </div>
+      </div>
+      <div class="layer-item layer-4">
+        <div class="l-icon">F</div>
+        <div>
+          <div class="l-title">Foundry</div>
+          <div class="l-desc">기업 데이터 통합 및 의사결정 지원</div>
+        </div>
+      </div>
+      <div class="layer-item layer-3">
+        <div class="l-icon">G</div>
+        <div>
+          <div class="l-title">Gotham</div>
+          <div class="l-desc">국방/정보기관 전용 분석 플랫폼</div>
+        </div>
+      </div>
+      <div class="layer-item layer-2">
+        <div class="l-icon">W</div>
+        <div>
+          <div class="l-title">World Model</div>
+          <div class="l-desc">현실 세계 관계/맥락 데이터 구조화</div>
+        </div>
+      </div>
+      <div class="layer-item layer-1">
+        <div class="l-icon">D</div>
+        <div>
+          <div class="l-title">Data Integration</div>
+          <div class="l-desc">수십 년간 축적된 정부/기업 데이터</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. 양축 성장 -->
+  <div class="card">
+    <h2><span class="num">4</span> 정부 + 상업, 양축 성장 엔진</h2>
+    <p class="body-text">
+      팔란티어의 성장 구조에서 핵심은 <strong>정부(Government)와 상업(Commercial) 부문의 동시 성장</strong>이다.
+      국방 및 정보기관에서 축적한 기술력과 신뢰가 상업 부문 AIP 확산의 기반이 되고 있다.
+    </p>
+
+    <div class="analysis-grid">
+      <div class="analysis-box bull">
+        <span class="a-label">Government</span>
+        <strong>견고한 매출 기반</strong><br>
+        국방/정보기관의 장기 계약이 안정적 수익 제공
+        <div class="divider"></div>
+        <strong>높은 전환 비용</strong><br>
+        기존 도입 기관의 이탈 가능성 극히 낮음
+      </div>
+      <div class="analysis-box bull" style="background:#f5f0ff; border-color:#d4c5f9;">
+        <span class="a-label" style="color:#6366F1;">Commercial</span>
+        <strong>AIP 확산 가속</strong><br>
+        기업 AI 에이전트 도입 수요 폭발적 증가
+        <div class="divider"></div>
+        <strong>ROI 315% 입증</strong><br>
+        Forrester 검증 경제적 가치로 레퍼런스 확보
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. Rule of 40 게이지 -->
+  <div class="card">
+    <h2><span class="num">5</span> SaaS 효율성 지표: Rule of 40</h2>
+    <p class="body-text">
+      Rule of 40은 SaaS 기업의 질적 수준을 평가하는 대표 지표로, 매출 성장률 + 영업이익률의 합으로 산출된다.
+      40%를 넘으면 우수, 60% 이상이면 최상위급으로 평가된다.
+    </p>
+    <div class="gauge-wrap">
+      <div class="gauge-label">Rule of 40</div>
+      <div class="gauge-bar">
+        <div class="gauge-fill" style="width: 100%;"></div>
+      </div>
+      <div class="gauge-value">114%</div>
+    </div>
+    <div style="display:flex; justify-content:space-between; font-size:11px; color:#999; margin-top:-8px; padding:0 8px;">
+      <span>0%</span>
+      <span style="color:#6366F1; font-weight:700;">40% 기준선</span>
+      <span>100%+</span>
+    </div>
+    <div class="quote-block" style="margin-top:16px;">
+      <p>"114%는 전체 SaaS 기업 중 최상위권에 해당하는 수치로, 높은 성장률과 수익성을 동시에 확보하고 있음을 의미한다."</p>
+    </div>
+  </div>
+
+  <!-- 6. 투자 시사점 -->
+  <div class="card">
+    <h2><span class="num">6</span> 투자 시사점</h2>
+    <div class="analysis-grid">
+      <div class="analysis-box bull">
+        <span class="a-label">Bull Case</span>
+        <strong>AI 에이전트 시대 독보적 위치</strong><br>
+        월드 모델 구축 능력에서 경쟁사 대비 수십 년의 데이터 격차 보유
+        <div class="divider"></div>
+        <strong>Rule of 40: 114%</strong><br>
+        성장과 수익성의 동시 달성. SaaS 최상위 효율성
+        <div class="divider"></div>
+        <strong>양축 성장 구조</strong><br>
+        정부 안정성 + 상업 폭발적 성장의 시너지
+      </div>
+      <div class="analysis-box bear">
+        <span class="a-label">Bear Case</span>
+        <strong>밸류에이션 부담</strong><br>
+        시장이 성장을 상당 부분 선반영. 기대치 미달 시 급락 가능
+        <div class="divider"></div>
+        <strong>정부 예산 변동 리스크</strong><br>
+        국방 예산 삭감이나 정권 교체에 따른 계약 변동 상존
+        <div class="divider"></div>
+        <strong>빅테크 경쟁 심화</strong><br>
+        Microsoft, Google의 AI 플랫폼 고도화가 상업 부문 확장에 위협
+      </div>
+    </div>
+  </div>
+
+  <!-- 7. 액션 아이템 -->
+  <div class="card" style="background: linear-gradient(135deg, #1a1a2e, #0f3460); color: white; border: none;">
+    <h2 style="color:white;"><span class="num" style="background:#6366F1;">7</span> 핵심 체크포인트</h2>
+    <ul class="bullet-list">
+      <li style="color:#ddd;">현 시점에서는 <strong style="color:#818CF8;">추가 매수보다 보유 유지</strong> 전략이 합리적</li>
+      <li style="color:#ddd;">향후 분기 실적에서 <strong style="color:#818CF8;">AIP 상업 부문 침투율</strong> 확인 필요</li>
+      <li style="color:#ddd;"><strong style="color:#818CF8;">정부 계약 갱신율</strong> 추이가 안정성의 핵심 바로미터</li>
+      <li style="color:#ddd;">분석가 목표주가 <strong style="color:#818CF8;">$220</strong> 대비 현재 가격 수준 지속 모니터링</li>
+    </ul>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    본 아티클은 공개 자료를 기반으로 정리한 참고 자료이며, 투자 권유를 목적으로 하지 않습니다.<br>
+    투자 판단은 본인의 책임하에 이루어져야 합니다.<br><br>
+    Macro Cockpit | 2026.01.04 작성
+  </div>
+
+</div>
+</body>
+</html>

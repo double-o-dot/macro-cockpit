@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>채권-원유-주식 삼각 리스크: 인플레이션 재점화</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background: #F2EDE8;
+    color: #2D2D2D;
+    padding: 20px;
+  }
+
+  .container {
+    max-width: 720px;
+    margin: 0 auto;
+  }
+
+  /* Header */
+  .header {
+    background: linear-gradient(135deg, #1A0A00 0%, #4A2000 50%, #D97706 200%);
+    color: white;
+    padding: 40px 30px;
+    border-radius: 16px;
+    margin-bottom: 16px;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 140px; height: 140px;
+    background: rgba(217,119,6,0.25);
+    border-radius: 50%;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    bottom: -20px; left: 30%;
+    width: 80px; height: 80px;
+    background: rgba(217,119,6,0.12);
+    border-radius: 50%;
+  }
+  .header .tag {
+    display: inline-block;
+    background: #D97706;
+    color: white;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 20px;
+    margin-bottom: 12px;
+    letter-spacing: 1px;
+  }
+  .header h1 {
+    font-size: 22px;
+    font-weight: 900;
+    line-height: 1.35;
+    margin-bottom: 8px;
+  }
+  .header .subtitle {
+    font-size: 14px;
+    opacity: 0.7;
+    font-weight: 300;
+  }
+
+  /* Big Quote */
+  .big-quote {
+    background: linear-gradient(135deg, #D97706, #92400E);
+    color: white;
+    padding: 28px 30px;
+    border-radius: 16px;
+    margin-bottom: 16px;
+    text-align: center;
+  }
+  .big-quote p {
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.4;
+  }
+  .big-quote .attr {
+    font-size: 12px;
+    opacity: 0.7;
+    margin-top: 8px;
+  }
+
+  /* Card */
+  .card {
+    background: white;
+    border-radius: 16px;
+    padding: 28px;
+    margin-bottom: 16px;
+    border: 1px solid #E0D5C5;
+  }
+  .card h2 {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .card h2 .num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px; height: 28px;
+    background: #1A0A00;
+    color: white;
+    border-radius: 50%;
+    font-size: 13px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .card h3 {
+    font-size: 14px;
+    font-weight: 700;
+    margin: 16px 0 10px;
+    color: #92400E;
+  }
+
+  /* Stat grid */
+  .stat-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .stat-grid.triple {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+  @media (max-width: 480px) {
+    .stat-grid { grid-template-columns: 1fr; }
+    .stat-grid.triple { grid-template-columns: 1fr; }
+  }
+  .stat-box {
+    padding: 16px;
+    border-radius: 12px;
+    background: #faf5f0;
+  }
+  .stat-box .s-label {
+    font-size: 11px;
+    font-weight: 500;
+    color: #888;
+    margin-bottom: 4px;
+  }
+  .stat-box .s-value {
+    font-size: 22px;
+    font-weight: 900;
+    color: #1A0A00;
+  }
+  .stat-box .s-desc {
+    font-size: 11px;
+    color: #999;
+    margin-top: 2px;
+  }
+  .stat-box.fire {
+    background: linear-gradient(135deg, #1A0A00, #4A2000);
+    color: white;
+  }
+  .stat-box.fire .s-label { color: rgba(255,255,255,0.6); }
+  .stat-box.fire .s-value { color: #FBBF24; }
+  .stat-box.fire .s-desc { color: rgba(255,255,255,0.5); }
+
+  /* Triangle diagram */
+  .triangle-box {
+    background: linear-gradient(135deg, #1A0A00, #4A2000);
+    color: white;
+    border-radius: 16px;
+    padding: 28px;
+    margin-bottom: 16px;
+    text-align: center;
+  }
+  .triangle-box h2 {
+    color: white;
+    justify-content: center;
+    margin-bottom: 16px;
+  }
+  .tri-nodes {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+  }
+  .tri-node {
+    padding: 14px 20px;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 700;
+    min-width: 130px;
+    text-align: center;
+  }
+  .tri-bond { background: rgba(59,130,246,0.3); color: #93C5FD; border: 1px solid rgba(59,130,246,0.4); }
+  .tri-oil { background: rgba(217,119,6,0.3); color: #FCD34D; border: 1px solid rgba(217,119,6,0.4); }
+  .tri-equity { background: rgba(239,68,68,0.3); color: #FCA5A5; border: 1px solid rgba(239,68,68,0.4); }
+  .tri-center {
+    margin-top: 8px;
+    padding: 10px 24px;
+    background: rgba(251,191,36,0.2);
+    border: 1px solid rgba(251,191,36,0.4);
+    border-radius: 20px;
+    display: inline-block;
+    font-size: 14px;
+    font-weight: 900;
+    color: #FCD34D;
+  }
+  .tri-desc {
+    font-size: 12px;
+    opacity: 0.7;
+    margin-top: 10px;
+  }
+
+  /* Scenario table */
+  .comp-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 14px 0;
+    font-size: 13px;
+  }
+  .comp-table th {
+    background: #1A0A00;
+    color: white;
+    padding: 10px 12px;
+    text-align: left;
+    font-weight: 600;
+  }
+  .comp-table th:first-child { border-radius: 8px 0 0 0; }
+  .comp-table th:last-child { border-radius: 0 8px 0 0; }
+  .comp-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid #e8e0d5;
+  }
+  .comp-table tr:nth-child(even) td { background: #faf7f2; }
+  .comp-table .highlight-row td { background: #FEF3C7; font-weight: 600; }
+
+  /* Quote block */
+  .quote-block {
+    background: #faf7f0;
+    border-left: 4px solid #D97706;
+    padding: 18px 20px;
+    margin: 14px 0;
+    border-radius: 0 12px 12px 0;
+  }
+  .quote-block p {
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.6;
+    font-style: italic;
+  }
+  .quote-block .q-attr {
+    font-size: 11px;
+    color: #999;
+    margin-top: 6px;
+    font-style: normal;
+  }
+
+  /* Bullet list */
+  .bullet-list {
+    list-style: none;
+    padding: 0;
+  }
+  .bullet-list li {
+    position: relative;
+    padding-left: 18px;
+    margin-bottom: 10px;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  .bullet-list li::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 8px;
+    width: 8px; height: 8px;
+    background: #D97706;
+    border-radius: 50%;
+  }
+
+  /* Stance cards */
+  .stance-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 14px;
+  }
+  @media (max-width: 480px) {
+    .stance-grid { grid-template-columns: 1fr; }
+  }
+  .stance-card {
+    padding: 16px;
+    border-radius: 12px;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+  .stance-card .stance-name {
+    font-weight: 900;
+    font-size: 12px;
+    margin-bottom: 6px;
+  }
+  .stance-hawk { background: #FEF3C7; border: 1px solid #FCD34D; }
+  .stance-hawk .stance-name { color: #92400E; }
+  .stance-dove { background: #EFF6FF; border: 1px solid #93C5FD; }
+  .stance-dove .stance-name { color: #1E40AF; }
+
+  /* Analysis grid */
+  .analysis-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 14px;
+  }
+  @media (max-width: 480px) {
+    .analysis-grid { grid-template-columns: 1fr; }
+  }
+  .analysis-box {
+    padding: 16px;
+    border-radius: 12px;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+  .analysis-box .a-label {
+    font-weight: 700;
+    font-size: 12px;
+    margin-bottom: 8px;
+    display: block;
+  }
+  .analysis-box.risk {
+    background: #FEF2F2;
+    border: 1px solid #FECACA;
+  }
+  .analysis-box.risk .a-label { color: #DC2626; }
+  .analysis-box.watch {
+    background: #FEF3C7;
+    border: 1px solid #FDE68A;
+  }
+  .analysis-box.watch .a-label { color: #92400E; }
+
+  .body-text {
+    font-size: 14px;
+    line-height: 1.7;
+    color: #444;
+    margin-bottom: 14px;
+  }
+
+  .divider {
+    height: 1px;
+    background: #E0D5C5;
+    margin: 14px 0;
+  }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    padding: 20px;
+    font-size: 11px;
+    color: #999;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- Header -->
+  <div class="header">
+    <span class="tag">MACRO / ENERGY / FIXED INCOME</span>
+    <h1>이란 전쟁과 인플레이션 재점화:<br>채권-원유-주식 삼각 리스크의 교차점</h1>
+    <div class="subtitle">Bond-Oil-Equity Triple Risk | 2026.03.12</div>
+  </div>
+
+  <!-- Triangle Diagram -->
+  <div class="triangle-box">
+    <h2>삼각 리스크 구조</h2>
+    <div class="tri-nodes">
+      <div class="tri-node tri-bond">채권<br><small>금리 급등 / 디레버리징</small></div>
+      <div class="tri-node tri-oil">원유<br><small>호르무즈 봉쇄 / $130</small></div>
+      <div class="tri-node tri-equity">주식<br><small>사모대출 부실 / 변동성</small></div>
+    </div>
+    <div class="tri-center">인플레이션 재점화</div>
+    <div class="tri-desc">세 가지 거대한 힘이 하나의 교차점에서 충돌 중</div>
+  </div>
+
+  <!-- 1. CPI -->
+  <div class="card">
+    <h2><span class="num">1</span> 2월 CPI: 안정의 허상</h2>
+    <p class="body-text">
+      2월 CPI는 시장 예상에 부합하는 안정세를 기록했다. 그러나 WSJ의 닉 티미라오스 기자는 이 데이터에 세 가지 주석이 필요하다고 지적했다.
+    </p>
+    <table class="comp-table">
+      <thead>
+        <tr><th>#</th><th>주석</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>1</strong></td><td>이란 전쟁 여파가 발생하기 <strong>전</strong> 데이터</td></tr>
+        <tr><td><strong>2</strong></td><td>유리한 데이터 보정이 <strong>3월부터 사라짐</strong></td></tr>
+        <tr><td><strong>3</strong></td><td>근원 PCE 물가는 CPI보다 <strong>훨씬 더 높은 수준</strong></td></tr>
+      </tbody>
+    </table>
+
+    <div class="stat-grid" style="margin-top:14px;">
+      <div class="stat-box fire">
+        <div class="s-label">ING 전망: 2분기 CPI</div>
+        <div class="s-value">3%+</div>
+        <div class="s-desc">연말까지 3% 아래 하회 어려울 수 있음</div>
+      </div>
+      <div class="stat-box">
+        <div class="s-label">식품+에너지 CPI 비중</div>
+        <div class="s-value">20%</div>
+        <div class="s-desc">그러나 인플레 기대에 미치는 영향은 비중 이상</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. 유가 시나리오 -->
+  <div class="card">
+    <h2><span class="num">2</span> 유가: 호르무즈 봉쇄와 $130 시나리오</h2>
+
+    <table class="comp-table">
+      <thead>
+        <tr><th>시나리오</th><th>유가 전망</th></tr>
+      </thead>
+      <tbody>
+        <tr class="highlight-row"><td>전쟁 4월 중순까지 지속</td><td><strong>$130</strong></td></tr>
+        <tr><td>분쟁 5월까지 지속</td><td><strong>$150 이상</strong></td></tr>
+        <tr><td>트럼프 "전쟁 곧 끝날 것" 발언 후</td><td>일시 하락 &rarr; 12분 만에 $87&rarr;<strong>$91</strong> 복귀</td></tr>
+      </tbody>
+    </table>
+
+    <div class="quote-block">
+      <p>"호르무즈 해협 봉쇄로 인한 중동 수출 차질이 하루 2,000만 배럴에 달한다. 한 달간 막히면 6억 배럴. 비축유 4억 배럴 방출은 미미한 효과만 미친다."</p>
+      <div class="q-attr">- Jeff Currie, 칼라일 원자재 헤드</div>
+    </div>
+
+    <p class="body-text">
+      2026년의 유가 상승 속도가 2022년 우크라이나 침공 때보다 <strong>더 빠른 것</strong>으로 확인된다.
+    </p>
+  </div>
+
+  <!-- 3. 채권시장 -->
+  <div class="card">
+    <h2><span class="num">3</span> 채권시장: 금리 급등과 회사채 홍수</h2>
+
+    <div class="stat-grid triple">
+      <div class="stat-box fire">
+        <div class="s-label">국채 10년물</div>
+        <div class="s-value" style="font-size:18px;">4.21%</div>
+        <div class="s-desc">+7.4bp</div>
+      </div>
+      <div class="stat-box fire">
+        <div class="s-label">국채 2년물</div>
+        <div class="s-value" style="font-size:18px;">3.636%</div>
+        <div class="s-desc">+6.7bp</div>
+      </div>
+      <div class="stat-box fire">
+        <div class="s-label">하루 회사채 발행</div>
+        <div class="s-value" style="font-size:18px;">$660억</div>
+        <div class="s-desc">역대 최대</div>
+      </div>
+    </div>
+
+    <ul class="bullet-list" style="margin-top:14px;">
+      <li>채권 트레이더들이 국채 가격 하락(금리 상승)에 베팅하는 쪽으로 전략 전환</li>
+      <li>Fed 금리 인하 기대 축소 + 인플레이션 심화 위험 반영 디레버리징 진행</li>
+      <li>세일즈포스 $250억 포함, 아마존, 하니웰에어로스페이스 등 대규모 회사채 발행</li>
+    </ul>
+  </div>
+
+  <!-- 4. 사모대출 -->
+  <div class="card">
+    <h2><span class="num">4</span> 사모대출 시장: 2008년의 그림자</h2>
+
+    <div class="stat-grid">
+      <div class="stat-box fire">
+        <div class="s-label">사모대출 시장 규모</div>
+        <div class="s-value">$1.8조</div>
+        <div class="s-desc">부실 징후 확산 중</div>
+      </div>
+      <div class="stat-box fire">
+        <div class="s-label">클라리온 1Q 환매 요구</div>
+        <div class="s-value">14%</div>
+        <div class="s-desc">전체 펀드의 14%</div>
+      </div>
+      <div class="stat-box">
+        <div class="s-label">주요 운용사 주가 하락</div>
+        <div class="s-value" style="font-size:18px;">-2~4%</div>
+        <div class="s-desc">블랙스톤, 아레스, KKR</div>
+      </div>
+      <div class="stat-box">
+        <div class="s-label">BDC 배당</div>
+        <div class="s-value" style="font-size:16px;">일부 블랙 배당</div>
+        <div class="s-desc">최초 배당 미지급 사례</div>
+      </div>
+    </div>
+
+    <div class="quote-block" style="margin-top:14px;">
+      <p>"JP모건이 사모대출 펀드에 준 대출에 대해 담보자산 가치를 하향 조정했다. 2007년 뉴센추리파이낸셜의 서브프라임 CDO 상각이 줄파산의 시작이었다."</p>
+      <div class="q-attr">- Financial Times (2026.03.12)</div>
+    </div>
+  </div>
+
+  <!-- 5. 오라클 -->
+  <div class="card">
+    <h2><span class="num">5</span> 오라클(ORCL): 클라우드와 AI 자본지출의 양면</h2>
+
+    <div class="stat-grid">
+      <div class="stat-box">
+        <div class="s-label">매출 (YoY)</div>
+        <div class="s-value" style="font-size:18px;">$172억</div>
+        <div class="s-desc">+22% 성장</div>
+      </div>
+      <div class="stat-box">
+        <div class="s-label">클라우드 인프라 매출</div>
+        <div class="s-value" style="font-size:18px;">+84%</div>
+        <div class="s-desc">15년 만에 매출+순이익 모두 20%+ 성장</div>
+      </div>
+      <div class="stat-box">
+        <div class="s-label">조정 EPS</div>
+        <div class="s-value" style="font-size:18px;">$1.79</div>
+        <div class="s-desc">+21% YoY</div>
+      </div>
+      <div class="stat-box">
+        <div class="s-label">AI 자본지출 계획</div>
+        <div class="s-value" style="font-size:18px;">$500억</div>
+        <div class="s-desc">막대한 부채 조달 우려</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6. 기술적 분석 -->
+  <div class="card">
+    <h2><span class="num">6</span> 기술적 추세: 핵심 지지선</h2>
+    <div class="analysis-grid">
+      <div class="analysis-box watch">
+        <span class="a-label">나스닥 Harmonic 패턴</span>
+        Butterfly 패턴 "D"점 형성 가능성. Fibonacci와 Harmonic 겹치는 구간에서 <strong>양방향 변동성</strong> 예상. 단기 2~3% 숏스퀴즈 가능.
+      </div>
+      <div class="analysis-box risk">
+        <span class="a-label">TLT 핵심 지지선</span>
+        <strong>$85.25 지지선</strong>이 핵심 테스트 포인트. 이 수준에서 지지되면 매력적 가격대 형성. 깨면 추가 하락 불가피.
+      </div>
+    </div>
+  </div>
+
+  <!-- 7. 전쟁 변수 -->
+  <div class="card">
+    <h2><span class="num">7</span> 전쟁 종결 가능성과 변수</h2>
+
+    <div class="stance-grid">
+      <div class="stance-card stance-dove">
+        <div class="stance-name">트럼프</div>
+        "더 이상 공격 대상이 남아있지 않아서 전쟁은 곧 끝날 것"
+      </div>
+      <div class="stance-card stance-hawk">
+        <div class="stance-name">이스라엘 카츠 국방장관</div>
+        "전쟁에 시간제한 없으며, 결정적 승리를 거둘 때까지 계속"
+      </div>
+      <div class="stance-card stance-hawk">
+        <div class="stance-name">이란 페제시키안</div>
+        "정당한 권리 인정, 배상금, 재발 방지 국제적 보장" 요구
+      </div>
+      <div class="stance-card stance-dove">
+        <div class="stance-name">미 외교협회 하스 회장</div>
+        "일방적으로 시작했지만, 일방적으로 끝낼 수는 없다"
+      </div>
+    </div>
+
+    <div class="quote-block" style="margin-top:14px;">
+      <p>"갑자기 휴전이나 긍정적 소식이 나오면 공매도 청산으로 지수가 단숨에 2~3% 상승할 수 있다. 그러나 조속히 분쟁 해결 신호를 받지 못하면 시장은 추가 스트레스를 받을 것이다."</p>
+      <div class="q-attr">- Goldman Sachs 트레이딩 데스크 (2026.03.12)</div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    본 아티클은 공개 리서치 자료를 기반으로 정리한 참고 자료이며, 투자 권유를 목적으로 하지 않습니다.<br>
+    투자 판단은 본인의 책임하에 이루어져야 합니다.<br><br>
+    Sources: WSJ, Bloomberg, FT, ING, Goldman Sachs, Citigroup | Valley AI (2026.03.12)<br>
+    Macro Cockpit | 2026.03.12 작성
+  </div>
+
+</div>
+</body>
+</html>

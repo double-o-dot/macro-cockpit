@@ -2,40 +2,238 @@
   "status": "ok",
   "data": [
     {
+      "id": "20260312_triple_risk",
+      "title": "이란 전쟁과 인플레이션 재점화: 채권-원유-주식 삼각 리스크",
+      "date": "2026-03-12",
+      "source": "",
+      "description": "2월 CPI 안정은 허상. 유가 $130 시나리오, 사모대출 $1.8조 부실, TLT $85.25 지지선 테스트. 매크로·크레딧·기술적 분석 삼각 프레임워크.",
+      "file": "20260312_triple_risk_inflation_reignition.html",
+      "tags": ["Macro", "Energy", "Fixed Income"]
+    },
+    {
+      "id": "20260312_mark_manson",
+      "title": "감수할 수 있는 어려움을 선택하라: 투자자를 위한 15가지 행동 원칙",
+      "date": "2026-03-12",
+      "source": "",
+      "description": "Mark Manson의 변화 원칙을 투자 의사결정에 재해석. MDD 허용치 정의, 직관과 충동 구분, 1년 과대평가/10년 과소평가.",
+      "file": "20260312_investor_psychology_mark_manson.html",
+      "tags": ["Mindset", "투자철학"]
+    },
+    {
+      "id": "20260311_wall_street_macro",
+      "title": "GS·JPM·BofA 매크로 종합: 월가 IB 3사의 시장 진단",
+      "date": "2026-03-11",
+      "source": "",
+      "description": "골드만삭스·JP모건·뱅크오브아메리카의 매크로 전망 종합. 유가·금리·자금흐름 분석과 섹터 로테이션 시사점.",
+      "file": "20260311_wall_street_macro_synthesis.html",
+      "tags": ["Macro", "Wall Street"]
+    },
+    {
       "id": "20260311_jensen_huang",
       "title": "젠슨 황: $7,000억은 시작일 뿐, 수조 달러가 더 필요하다",
       "date": "2026-03-11",
       "source": "",
-      "description": "NVIDIA CEO 젠슨 황의 AI 인프라 투자 전망. GTC 2026 프리뷰, Vera Rubin GPU 로드맵, HBM4 공급 경쟁, 투자 시사점 종합 분석.",
+      "description": "NVIDIA CEO 젠슨 황의 AI 인프라 투자 전망. GTC 2026 프리뷰, Vera Rubin GPU 로드맵, HBM4 공급 경쟁.",
       "file": "20260311_jensen_huang_ai_infra.html",
-      "tags": ["AI", "NVIDIA", "Infrastructure", "GTC 2026"]
+      "tags": ["AI", "NVIDIA", "Infrastructure"]
+    },
+    {
+      "id": "20260311_private_credit",
+      "title": "사모펀드 환매 위기: 하이일드 스프레드가 보내는 경고",
+      "date": "2026-03-11",
+      "source": "",
+      "description": "하이일드 스프레드 3.19, DPST 35% 하락, Blue Owl Capital 2022년 저점. 사모펀드 환매 리스크와 관망 전략.",
+      "file": "20260311_private_credit_crisis_watch.html",
+      "tags": ["Macro", "Credit Risk"]
+    },
+    {
+      "id": "20260311_negative_convexity",
+      "title": "음의 볼록성과 복리의 함정: 자본 보존이 먼저다",
+      "date": "2026-03-11",
+      "source": "",
+      "description": "-50% 손실 → +100% 회복 필요. 복리의 비대칭성과 자본 보존 전략, 실전 리밸런싱 프레임워크.",
+      "file": "20260311_negative_convexity_capital_preservation.html",
+      "tags": ["투자철학", "Risk Management"]
+    },
+    {
+      "id": "20260310_hormuz_exit",
+      "title": "호르무즈 명분 감옥: 트럼프와 모즈타바의 세 가지 출구",
+      "date": "2026-03-10",
+      "source": "",
+      "description": "양측 모두 공개적 후퇴 불가. 라리자니 경로, 장기 소모전, 레짐 균열 시나리오. 유가 하락의 원인을 구분하라.",
+      "file": "20260310_hormuz_exit_scenarios.html",
+      "tags": ["Geopolitics", "Energy", "Iran"]
     },
     {
       "id": "20260310_gloria_memo",
-      "title": "Gloria Memo - 이란전쟁의 진짜 구조",
+      "title": "이란 전쟁의 본질: 미중 에너지 패권과 호르무즈 레버리지",
       "date": "2026-03-10",
       "source": "",
-      "description": "이 전쟁은 오로지 중국만 보고 하는 전쟁. 호르무즈 봉쇄 → 에너지 레버리지 → 4월 미중협상. 3/31 방중 타임라인, 섹터별 대응.",
+      "description": "이 전쟁은 오로지 중국만 보고 하는 전쟁. 호르무즈 봉쇄 → 에너지 레버리지 → 3/31 미중 협상 변곡점.",
       "file": "20260310_gloria_memo_infographic.html",
       "tags": ["Geopolitics", "Energy", "China"]
     },
     {
-      "id": "20260309_hormuz_oil",
-      "title": "호르무즈 해협 봉쇄 - 역사적 원유 공급 충격 분석",
+      "id": "20260309_cathie_wood",
+      "title": "캐시 우드의 AI 골디락스: 생산성 혁명이 디플레이션을 만든다",
       "date": "2026-03-09",
       "source": "",
-      "description": "호르무즈 물동량 90% 감소, 공급 충격 17.1mb/d(러시아 충격의 17배). 유가 시나리오 분석과 포트폴리오 영향 평가.",
+      "description": "ARK Invest의 낙관론. AI 생산성 향상 → 디플레이션 → 골디락스 시나리오. Claude Code 사례와 사모신용 리스크.",
+      "file": "20260309_cathie_wood_ai_goldilocks.html",
+      "tags": ["AI", "Macro", "ARK"]
+    },
+    {
+      "id": "20260309_iran_kurdish",
+      "title": "이란 전쟁·쿠르드족·AI 방산: 세 가지 렌즈로 본 중동",
+      "date": "2026-03-09",
+      "source": "",
+      "description": "쿠르드족 4개국 패권 구도, 이스라엘 vs 튀르키예, AI 방산 생태계(Anthropic/Palantir/Google).",
+      "file": "20260309_iran_war_kurdish_ai_defense.html",
+      "tags": ["Geopolitics", "AI", "Defense"]
+    },
+    {
+      "id": "20260309_citadel_rebound",
+      "title": "시타델 럽너: 4월 반등을 위한 6가지 조건",
+      "date": "2026-03-09",
+      "source": "",
+      "description": "CTA 매도 마감, 옵션 감마 플립, 자사주 매입 재개 등 6가지 수급 조건. 계절성 확률 61~63%.",
+      "file": "20260309_citadel_april_rebound_conditions.html",
+      "tags": ["Macro", "Options", "Seasonality"]
+    },
+    {
+      "id": "20260309_silver_drain",
+      "title": "글로벌 실물 은 재고 118만 온스 증발: 3대 거래소 동시 유출",
+      "date": "2026-03-09",
+      "source": "",
+      "description": "LBMA·COMEX·SHFE 재고 9.2% 순감소. Free Float 29.7% 유출, 4월 인도 ETF 규제 완화 촉매.",
+      "file": "20260309_silver_inventory_drain.html",
+      "tags": ["Commodities", "Silver"]
+    },
+    {
+      "id": "20260309_rocketlab",
+      "title": "로켓랩: 수직계열화가 만드는 고마진 우주 플랫폼",
+      "date": "2026-03-09",
+      "source": "",
+      "description": "GP마진 35%, 부품→위성→발사 수직계열화. Neutron 2026 초도비행, 뉴트론 재사용으로 SpaceX 대항.",
+      "file": "20260309_rocketlab_vertical_integration.html",
+      "tags": ["Space", "Defense", "RKLB"]
+    },
+    {
+      "id": "20260309_hormuz_oil",
+      "title": "호르무즈 해협 봉쇄: 역사적 원유 공급 충격 17.1mb/d",
+      "date": "2026-03-09",
+      "source": "",
+      "description": "GS 분석. 호르무즈 물동량 90% 감소, 러시아 충격의 17배. VLCC 운임 사상 최고.",
       "file": "20260309_hormuz_oil_crisis.html",
-      "tags": ["Energy", "Oil", "Geopolitics", "Hormuz"]
+      "tags": ["Energy", "Oil", "Geopolitics"]
+    },
+    {
+      "id": "20260308_bloom_energy",
+      "title": "블룸에너지: AI 데이터센터 전력난의 SOFC 해법",
+      "date": "2026-03-08",
+      "source": "",
+      "description": "SOFC 발전효율 85%, 모듈형 설치 90일. 2026년 2GW 생산목표, 오라클·MS 공급 계약.",
+      "file": "20260308_bloom_energy_ai_datacenter.html",
+      "tags": ["Energy", "AI", "SOFC"]
+    },
+    {
+      "id": "20260308_foreign_selloff",
+      "title": "외국인 매도 폭풍: 한국 증시 수급 분석",
+      "date": "2026-03-08",
+      "source": "",
+      "description": "외국인 -11조 매도, 개인 +10조 매수. 환율 연쇄 효과와 반도체 집중 리스크.",
+      "file": "20260308_foreign_selloff_korea_market.html",
+      "tags": ["Korea", "수급", "환율"]
     },
     {
       "id": "20260308_skt_ai",
-      "title": "SKT - AI 풀스택 전략이 여는 기업가치 재평가의 시간",
+      "title": "SKT: AI 풀스택 전략이 여는 기업가치 재평가",
       "date": "2026-03-08",
       "source": "",
-      "description": "국내 1위 이동통신 + AI/AIDC 인프라 + 앤트로픽 지분. SOTP 목표가 100,000원, 상승여력 23.7%. 앤트로픽 IPO 시나리오.",
+      "description": "국내 1위 이동통신 + AI/AIDC 인프라 + 앤트로픽 지분. SOTP 목표가 100,000원.",
       "file": "20260308_skt_ai_fullstack.html",
-      "tags": ["AI", "SKT", "Anthropic", "Telecom"]
+      "tags": ["AI", "SKT", "Telecom"]
+    },
+    {
+      "id": "20260303_bayesian",
+      "title": "베이지안 투자와 손익비 프레임워크",
+      "date": "2026-03-03",
+      "source": "",
+      "description": "승률 60% 트레이더가 돈을 잃는 이유. 베이지안 4단계 업데이트와 실전 복기 체크리스트.",
+      "file": "20260303_bayesian_investment_framework.html",
+      "tags": ["투자철학", "Framework"]
+    },
+    {
+      "id": "20260226_cme_silver",
+      "title": "CME 은 선물 거래 중단: 가격 억제 메커니즘의 실체",
+      "date": "2026-02-26",
+      "source": "",
+      "description": "은 선물 급등 → CME 거래 중단 → 재개. 가격 억제 도구 4가지와 SLV vs PSLV 비교.",
+      "file": "20260226_cme_silver_futures_halt.html",
+      "tags": ["Commodities", "Silver"]
+    },
+    {
+      "id": "20260225_mortgage",
+      "title": "미국 모기지 규제 완화: 은행 점유율 60%→35%의 의미",
+      "date": "2026-02-25",
+      "source": "",
+      "description": "규제 강화 → 비용 증가 → 비은행 진입. KBWB/XLF ETF 비교와 모기지 시장 구조 변화.",
+      "file": "20260225_us_mortgage_deregulation.html",
+      "tags": ["Macro", "Real Estate"]
+    },
+    {
+      "id": "20260225_burry_palantir",
+      "title": "마이클 버리의 팔란티어 비판: Second-Level Thinking",
+      "date": "2026-02-25",
+      "source": "",
+      "description": "Gotham/Foundry/AIP 세 플랫폼의 해자 분석. 버리의 비판과 투자자 자기점검 프레임워크.",
+      "file": "20260225_michael_burry_palantir.html",
+      "tags": ["PLTR", "투자철학"]
+    },
+    {
+      "id": "20260223_physical_silver",
+      "title": "실물 은 수급 분석: COMEX Paper vs Physical 괴리",
+      "date": "2026-02-23",
+      "source": "",
+      "description": "Paper/Physical 가격 괴리 7.14배. COMEX 실물 재고 감소, 상하이 프리미엄, SLV vs PSLV.",
+      "file": "20260223_physical_silver_supply.html",
+      "tags": ["Commodities", "Silver"]
+    },
+    {
+      "id": "20260221_smallcap",
+      "title": "중소형 제조업 유동성 사이클: 리쇼어링과 AI 인프라 수혜",
+      "date": "2026-02-21",
+      "source": "",
+      "description": "유동성 사이클 3단계, 리쇼어링·재정CAPEX·AI인프라 트리거. ACE ETF 목표가 18,000원.",
+      "file": "20260221_smallcap_manufacturing.html",
+      "tags": ["Korea", "Manufacturing", "ETF"]
+    },
+    {
+      "id": "20260120_iren",
+      "title": "IREN: BTC 채굴에서 AI 데이터센터로의 전략적 피벗",
+      "date": "2026-01-20",
+      "source": "",
+      "description": "SweetWater 1.4GW, kWh당 4.6센트. MS 97억 달러 계약, 네오클라우드 생태계.",
+      "file": "20260120_iren_datacenter_power.html",
+      "tags": ["AI", "Energy", "IREN"]
+    },
+    {
+      "id": "20260110_us_breadth",
+      "title": "미국 증시 수급 점검: 시장 폭 확대의 신호",
+      "date": "2026-01-10",
+      "source": "",
+      "description": "금리 상승 + 스프레드 축소의 이례적 조합. 섹터별 자금 유입과 중소형주 수혜 분석.",
+      "file": "20260110_us_market_breadth.html",
+      "tags": ["Macro", "수급"]
+    },
+    {
+      "id": "20260104_palantir",
+      "title": "팔란티어: AI 에이전트 월드 모델 플랫폼의 성장 논리",
+      "date": "2026-01-04",
+      "source": "",
+      "description": "Rule of 40 114%, ROI 315%. AIP/Foundry/Gotham 플랫폼 스택과 정부+상업 양축 성장.",
+      "file": "20260104_palantir_ai_defense.html",
+      "tags": ["AI", "PLTR", "Defense"]
     }
   ]
 }

@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>은 6.63% 급등 직후 CME가 멈췄다: 거래중단 사태가 드러낸 은 시장의 구조적 취약성</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background: #F0EEEC;
+    color: #2D2D2D;
+    padding: 20px;
+  }
+
+  .container {
+    max-width: 720px;
+    margin: 0 auto;
+  }
+
+  /* Header */
+  .header {
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d30 40%, #8C8C8C 250%);
+    color: white;
+    padding: 40px 30px;
+    border-radius: 16px;
+    margin-bottom: 16px;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 140px; height: 140px;
+    background: rgba(192,192,192,0.20);
+    border-radius: 50%;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    bottom: -20px; left: 30%;
+    width: 80px; height: 80px;
+    background: rgba(200,50,50,0.12);
+    border-radius: 50%;
+  }
+  .header .tag {
+    display: inline-block;
+    background: #C0C0C0;
+    color: #1a1a1a;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 20px;
+    margin-bottom: 12px;
+    letter-spacing: 1px;
+  }
+  .header h1 {
+    font-size: 23px;
+    font-weight: 900;
+    line-height: 1.35;
+    margin-bottom: 8px;
+  }
+  .header .subtitle {
+    font-size: 14px;
+    opacity: 0.7;
+    font-weight: 300;
+  }
+
+  /* Alert banner */
+  .alert-banner {
+    background: linear-gradient(135deg, #B71C1C, #D32F2F);
+    color: white;
+    padding: 24px 30px;
+    border-radius: 16px;
+    margin-bottom: 16px;
+    text-align: center;
+  }
+  .alert-banner .alert-icon {
+    font-size: 28px;
+    margin-bottom: 8px;
+  }
+  .alert-banner p {
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.5;
+  }
+  .alert-banner .alert-sub {
+    font-size: 12px;
+    opacity: 0.8;
+    margin-top: 8px;
+  }
+
+  /* Card */
+  .card {
+    background: white;
+    border-radius: 16px;
+    padding: 28px;
+    margin-bottom: 16px;
+    border: 1px solid #DEDBD8;
+  }
+  .card h2 {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .card h2 .num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px; height: 28px;
+    background: #1a1a1a;
+    color: white;
+    border-radius: 50%;
+    font-size: 13px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  /* Stat grid */
+  .stat-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  @media (max-width: 480px) {
+    .stat-grid { grid-template-columns: 1fr; }
+  }
+  .stat-box {
+    padding: 16px;
+    border-radius: 12px;
+    background: #f5f3f1;
+  }
+  .stat-box .s-label {
+    font-size: 11px;
+    font-weight: 500;
+    color: #888;
+    margin-bottom: 4px;
+  }
+  .stat-box .s-value {
+    font-size: 22px;
+    font-weight: 900;
+    color: #1a1a1a;
+  }
+  .stat-box .s-desc {
+    font-size: 11px;
+    color: #999;
+    margin-top: 2px;
+  }
+  .stat-box.silver {
+    background: linear-gradient(135deg, #1a1a1a, #3d3d40);
+    color: white;
+  }
+  .stat-box.silver .s-label { color: rgba(255,255,255,0.6); }
+  .stat-box.silver .s-value { color: #C0C0C0; }
+  .stat-box.silver .s-desc { color: rgba(255,255,255,0.5); }
+  .stat-box.danger {
+    background: linear-gradient(135deg, #B71C1C, #D32F2F);
+    color: white;
+  }
+  .stat-box.danger .s-label { color: rgba(255,255,255,0.7); }
+  .stat-box.danger .s-value { color: white; }
+  .stat-box.danger .s-desc { color: rgba(255,255,255,0.6); }
+
+  /* Timeline sequence */
+  .event-sequence {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin: 16px 0;
+    position: relative;
+  }
+  .event-item {
+    display: flex;
+    align-items: stretch;
+    min-height: 60px;
+  }
+  .event-line {
+    width: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-shrink: 0;
+  }
+  .event-dot {
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    border: 3px solid;
+    flex-shrink: 0;
+    z-index: 1;
+  }
+  .event-connector {
+    width: 2px;
+    flex: 1;
+    background: #ddd;
+  }
+  .event-content {
+    padding: 4px 0 16px 12px;
+    flex: 1;
+  }
+  .event-time {
+    font-size: 11px;
+    font-weight: 700;
+  }
+  .event-text {
+    font-size: 13px;
+    line-height: 1.5;
+    margin-top: 2px;
+    color: #555;
+  }
+  .dot-surge { border-color: #2e7d32; background: #e8f5e9; }
+  .dot-halt { border-color: #D32F2F; background: #fce4ec; }
+  .dot-resume { border-color: #1B6B93; background: #e3f2fd; }
+  .time-surge { color: #2e7d32; }
+  .time-halt { color: #D32F2F; }
+  .time-resume { color: #1B6B93; }
+
+  /* Quote block */
+  .quote-block {
+    background: #f7f5f3;
+    border-left: 4px solid #8C8C8C;
+    padding: 18px 20px;
+    margin: 14px 0;
+    border-radius: 0 12px 12px 0;
+  }
+  .quote-block p {
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.6;
+    font-style: italic;
+  }
+  .quote-block .q-attr {
+    font-size: 11px;
+    color: #999;
+    margin-top: 6px;
+    font-style: normal;
+  }
+
+  /* Bullet list */
+  .bullet-list {
+    list-style: none;
+    padding: 0;
+  }
+  .bullet-list li {
+    position: relative;
+    padding-left: 18px;
+    margin-bottom: 10px;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  .bullet-list li::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 8px;
+    width: 8px; height: 8px;
+    background: #8C8C8C;
+    border-radius: 50%;
+  }
+
+  /* CME tools list */
+  .tool-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin: 14px 0;
+  }
+  @media (max-width: 480px) {
+    .tool-grid { grid-template-columns: 1fr; }
+  }
+  .tool-item {
+    padding: 14px;
+    border-radius: 12px;
+    background: #f5f3f1;
+    border: 1px solid #DEDBD8;
+    text-align: center;
+  }
+  .tool-item .tool-name {
+    font-size: 13px;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin-bottom: 4px;
+  }
+  .tool-item .tool-desc {
+    font-size: 11px;
+    color: #888;
+    line-height: 1.4;
+  }
+
+  /* Comparison */
+  .compare-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 14px;
+  }
+  @media (max-width: 480px) {
+    .compare-grid { grid-template-columns: 1fr; }
+  }
+  .compare-box {
+    padding: 18px;
+    border-radius: 12px;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+  .compare-box .c-label {
+    font-weight: 700;
+    font-size: 12px;
+    margin-bottom: 8px;
+    display: block;
+  }
+  .compare-slv {
+    background: #f5f3f1;
+    border: 1px solid #DEDBD8;
+  }
+  .compare-slv .c-label { color: #555; }
+  .compare-pslv {
+    background: linear-gradient(135deg, #1a1a1a, #3d3d40);
+    color: white;
+  }
+  .compare-pslv .c-label { color: #C0C0C0; }
+
+  /* Analysis grid */
+  .analysis-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 14px;
+  }
+  @media (max-width: 480px) {
+    .analysis-grid { grid-template-columns: 1fr; }
+  }
+  .analysis-box {
+    padding: 16px;
+    border-radius: 12px;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+  .analysis-box .a-label {
+    font-weight: 700;
+    font-size: 12px;
+    margin-bottom: 8px;
+    display: block;
+  }
+  .analysis-box.action-up {
+    background: #e8f5e9;
+    border: 1px solid #c8e6c9;
+  }
+  .analysis-box.action-up .a-label { color: #2e7d32; }
+  .analysis-box.action-down {
+    background: #fce4ec;
+    border: 1px solid #f0c0c0;
+  }
+  .analysis-box.action-down .a-label { color: #c62828; }
+
+  .body-text {
+    font-size: 14px;
+    line-height: 1.7;
+    color: #444;
+    margin-bottom: 14px;
+  }
+
+  .divider {
+    height: 1px;
+    background: #DEDBD8;
+    margin: 14px 0;
+  }
+
+  /* Source list */
+  .source-list {
+    list-style: none;
+    padding: 0;
+  }
+  .source-list li {
+    font-size: 12px;
+    color: #888;
+    padding: 4px 0;
+    border-bottom: 1px solid #f0ebe5;
+  }
+  .source-list li:last-child { border-bottom: none; }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    padding: 20px;
+    font-size: 11px;
+    color: #999;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- Header -->
+  <div class="header">
+    <span class="tag">SILVER / MARKET STRUCTURE</span>
+    <h1>은 6.63% 급등 직후<br>CME가 멈췄다</h1>
+    <div class="subtitle">거래중단 사태가 드러낸 은 시장의 구조적 취약성 | 2026.02.26</div>
+  </div>
+
+  <!-- Alert Banner -->
+  <div class="alert-banner">
+    <div class="alert-icon">HALT</div>
+    <p>은 +6.63% 급등 직후<br>CME 선물옵션 거래 약 1시간 30분 중단</p>
+    <div class="alert-sub">금, 은, 천연가스 선물옵션 동시 영향 | 공식 원인: "기술적 문제"</div>
+  </div>
+
+  <!-- 1. 사건 개요 -->
+  <div class="card">
+    <h2><span class="num">1</span> 사건 타임라인</h2>
+    <div class="stat-grid" style="margin-bottom: 16px;">
+      <div class="stat-box silver">
+        <div class="s-label">은 장중 급등폭</div>
+        <div class="s-value">+6.63%</div>
+        <div class="s-desc">2026.02.26 장중</div>
+      </div>
+      <div class="stat-box danger">
+        <div class="s-label">거래 중단 시간</div>
+        <div class="s-value">~90분</div>
+        <div class="s-desc">금/은/천연가스 선물옵션</div>
+      </div>
+    </div>
+
+    <div class="event-sequence">
+      <div class="event-item">
+        <div class="event-line">
+          <div class="event-dot dot-surge"></div>
+          <div class="event-connector"></div>
+        </div>
+        <div class="event-content">
+          <div class="event-time time-surge">은 가격 폭발적 상승</div>
+          <div class="event-text">장중 <strong>6.63% 급등</strong>. 은 선물 시장에 매수세 폭주</div>
+        </div>
+      </div>
+      <div class="event-item">
+        <div class="event-line">
+          <div class="event-dot dot-halt"></div>
+          <div class="event-connector"></div>
+        </div>
+        <div class="event-content">
+          <div class="event-time time-halt">CME 거래 중단</div>
+          <div class="event-text">금, 은, 천연가스 선물옵션 거래가 <strong>약 1시간 30분간 중단</strong>. 공식 원인은 '기술적 문제'</div>
+        </div>
+      </div>
+      <div class="event-item">
+        <div class="event-line">
+          <div class="event-dot dot-resume"></div>
+        </div>
+        <div class="event-content">
+          <div class="event-time time-resume">거래 재개</div>
+          <div class="event-text">스톱로스 미작동으로 <strong>숏 포지션 보유자 대규모 손실</strong> 노출 가능성</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. 맥락: CME와 은 가격의 긴장 -->
+  <div class="card">
+    <h2><span class="num">2</span> CME와 은 가격의 오래된 긴장</h2>
+    <p class="body-text">
+      이 사건은 단독으로 보면 기술적 사고에 불과하다. 하지만 맥락 속에서 보면 다른 그림이 그려진다. CME가 은 가격의 급격한 상승을 억제하는 방향으로 작동해 왔다는 분석은 <strong>귀금속 시장에서 오래된 논쟁</strong>이다.
+    </p>
+
+    <p class="body-text" style="font-weight: 600; margin-bottom: 10px;">CME가 활용할 수 있는 가격 억제 도구:</p>
+    <div class="tool-grid">
+      <div class="tool-item">
+        <div class="tool-name">증거금 인상</div>
+        <div class="tool-desc">갑작스러운 인상으로 레버리지 포지션 강제 청산 유도</div>
+      </div>
+      <div class="tool-item">
+        <div class="tool-name">거래 제한</div>
+        <div class="tool-desc">일일 가격 변동 한도 설정 및 거래 중단</div>
+      </div>
+      <div class="tool-item">
+        <div class="tool-name">포지션 한도</div>
+        <div class="tool-desc">개별 참여자의 최대 포지션 규모 제한</div>
+      </div>
+      <div class="tool-item">
+        <div class="tool-name">"기술적 문제"</div>
+        <div class="tool-desc">급등 시점의 시스템 중단 - 우연인가, 의도인가?</div>
+      </div>
+    </div>
+
+    <div class="quote-block">
+      <p>"가격 안정이라는 명목 하에 시행되지만, 실질적으로는 은 가격의 상방을 제한하는 효과를 가져온다."</p>
+      <div class="q-attr">- 귀금속 시장 구조 분석</div>
+    </div>
+  </div>
+
+  <!-- 3. 구조적 취약성 -->
+  <div class="card">
+    <h2><span class="num">3</span> 실물 은 부족과 시스템 리스크</h2>
+    <p class="body-text">
+      실물 은 부족이 심화되는 상황에서, <strong>가격 급등과 시장 인프라의 혼란이 동시에 발생</strong>할 수 있다는 것이 이번 사태의 핵심 시사점이다. 선물 시장에 의존하는 가격 발견 메커니즘이 극단적 상황에서는 제대로 작동하지 않을 수 있음을 보여준다.
+    </p>
+
+    <div class="compare-grid">
+      <div class="compare-box compare-slv">
+        <span class="c-label">SLV (선물 기반)</span>
+        <strong>CME 영향: 직접적</strong><br>
+        선물 기반 ETF는 CME 거래중단 시 가격 추적 오차 발생. 숏 스퀴즈 구간에서 리스크 증폭 가능
+      </div>
+      <div class="compare-box compare-pslv">
+        <span class="c-label">PSLV (실물 기반)</span>
+        <strong style="color: #C0C0C0;">CME 영향: 제한적</strong><br>
+        <span style="color: rgba(255,255,255,0.7);">실물 은 기반으로 CME 선물 거래중단의 직접적 영향은 제한적. 다만 은 가격 자체의 변동성에는 노출</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. 대응 전략 -->
+  <div class="card">
+    <h2><span class="num">4</span> 양방향 대응 전략</h2>
+    <p class="body-text">
+      은 시장의 변동성이 확대되는 구간에서는 <strong>감정이 아닌 시스템으로 대응</strong>해야 한다. 목표 매도가와 추가 매수가를 사전에 설정해두고, 시장의 소음에 흔들리지 않는 것이 핵심이다.
+    </p>
+
+    <div class="analysis-grid">
+      <div class="analysis-box action-up">
+        <span class="a-label">급등 시</span>
+        <strong>일부 차익실현</strong><br>
+        사전에 설정한 목표 매도가에서 기계적으로 일부 물량을 정리한다. 탐욕을 시스템으로 통제한다.
+      </div>
+      <div class="analysis-box action-down">
+        <span class="a-label">급락 시</span>
+        <strong>추가 매수</strong><br>
+        실물 은 부족이라는 구조적 요인이 유효한 한, 급락은 추가 매수 기회가 될 수 있다.
+      </div>
+    </div>
+
+    <div style="margin-top: 16px; padding: 16px; background: #f5f3f1; border-radius: 12px; border: 2px solid #8C8C8C;">
+      <p style="font-size: 14px; font-weight: 700; color: #1a1a1a; margin-bottom: 8px; text-align: center;">핵심 원칙</p>
+      <ul class="bullet-list">
+        <li>목표 매도가와 추가 매수가를 <strong>사전에 설정</strong></li>
+        <li>시장의 소음에 <strong>흔들리지 않는 시스템적 접근</strong></li>
+        <li>PSLV(실물 기반)로 CME <strong>인프라 리스크를 회피</strong></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Sources -->
+  <div class="card">
+    <h2><span class="num">5</span> 참고 자료</h2>
+    <ul class="source-list">
+      <li>CME Group 거래중단 공식 공지 (2026.02.26)</li>
+      <li>은 선물 시장 구조 분석 리포트 (2026.02.26)</li>
+      <li>COMEX 은 재고 데이터</li>
+    </ul>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    본 아티클은 공개 자료를 기반으로 정리한 참고 자료이며, 특정 금융 상품의 매수 또는 매도를 권유하지 않습니다.<br>
+    투자 판단은 본인의 책임하에 이루어져야 합니다.<br><br>
+    Macro Cockpit | 2026.02.26 작성
+  </div>
+
+</div>
+</body>
+</html>
