@@ -4,22 +4,21 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Macro Cockpit - 인사이트</title>
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='14' fill='%23D97757'/></svg>">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='14' fill='%231A7A4C'/></svg>">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
   tailwind.config = {
     theme: {
       extend: {
-        fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
+        fontFamily: {
+          sans: ['Inter', 'system-ui', 'sans-serif'],
+          serif: ['"DM Serif Display"', 'Georgia', 'serif'],
+        },
         colors: {
-          bg:     '#F5F1EB',
-          card:   '#FFFFFF',
-          hero:   { from: '#2A2520', to: '#4A3F35' },
-          warm:   { 50:'#FAF8F5', 100:'#F5F1EB', 200:'#EBE5DC', 300:'#D4CCC0', 400:'#B0A89C', 500:'#8B8580', 600:'#6B6560', 700:'#4A453E', 800:'#2A2520', 900:'#1B1B18' },
-          accent: { 50:'#FEF3ED', 100:'#FDE5D8', DEFAULT:'#D97757', dark:'#B85E42' },
-          up:     '#34C759',
-          down:   '#FF3B30',
+          brand: { 50:'#F0FDF4', 100:'#DCFCE7', 200:'#BBF7D0', 300:'#86EFAC', 400:'#4ADE80', DEFAULT:'#1A7A4C', 600:'#15643E', 700:'#0D4A2D', 800:'#0A3621', 900:'#062215' },
+          up: '#16A34A',
+          down: '#DC2626',
         }
       }
     }
@@ -29,7 +28,7 @@
   <link rel="stylesheet" href="shared/theme.css">
 </head>
 
-<body class="font-sans text-warm-900 antialiased" x-data="insightsApp()" x-init="init()">
+<body class="font-sans text-gray-900 antialiased" x-data="insightsApp()" x-init="init()">
 
 <!-- ==================== DESKTOP TOP NAV ==================== -->
 <nav class="topnav" id="topnav">
@@ -92,129 +91,179 @@
 </nav>
 
 <!-- ==================== MAIN CONTENT ==================== -->
-<main class="page-main">
+<main class="page-main" style="max-width:1120px;">
 
-  <!-- Macro Banner -->
-  <div class="hero p-5 md:p-6 mb-5 animate-fadeUp">
-    <svg class="absolute -top-6 -right-6 opacity-[.06]" width="140" height="140"><circle cx="70" cy="70" r="70" fill="white"/></svg>
-    <svg class="absolute bottom-2 left-[20%] opacity-[.04]" width="80" height="80"><circle cx="40" cy="40" r="40" fill="white"/></svg>
-    <div class="relative z-10">
-      <div class="text-xs text-white/50 font-medium tracking-wide uppercase">Macro Cockpit</div>
-      <div class="text-2xl md:text-3xl font-extrabold mt-1 tracking-tight">Insights & Analysis</div>
-      <div class="text-sm text-white/50 mt-2">투자 인사이트를 공유합니다</div>
-      <!-- Macro indicators row -->
-      <div class="flex gap-3 mt-4 overflow-x-auto hide-scrollbar">
-        <template x-for="m in macroBanner" :key="m.symbol">
-          <div class="bg-white/10 rounded-xl px-3 py-2 backdrop-blur-sm shrink-0">
-            <div class="text-[10px] text-white/40" x-text="m.name"></div>
-            <div class="text-sm font-bold" x-text="m.display"></div>
-            <div class="text-[10px] mt-0.5" :class="m.chg >= 0 ? 'text-green-300' : 'text-red-300'" x-text="(m.chg >= 0 ? '+' : '') + m.chg.toFixed(1) + '%'"></div>
-          </div>
-        </template>
-      </div>
+  <!-- Hero Section -->
+  <section class="mb-8 md:mb-12 animate-fadeUp">
+    <div class="mb-6">
+      <p class="text-xs font-semibold tracking-widest uppercase mb-3" style="color:#1A7A4C;">Macro Cockpit</p>
+      <h1 class="font-serif text-3xl md:text-[44px] leading-tight text-gray-900" style="letter-spacing:-0.02em;">
+        Insights for a<br class="hidden md:block"> Sustainable Portfolio
+      </h1>
+      <p class="text-sm text-gray-400 mt-3">투자 인사이트와 리서치를 공유합니다</p>
     </div>
-  </div>
 
-  <!-- Filter Tags -->
-  <div class="flex items-center gap-2 mb-4 overflow-x-auto hide-scrollbar pb-1">
-    <button class="shrink-0 px-3 py-1.5 rounded-full text-xs font-medium transition-all"
-            :class="activeFilter === 'all' ? 'bg-warm-800 text-white' : 'bg-white text-warm-500 hover:bg-warm-100'"
-            @click="activeFilter = 'all'">
-      전체
-    </button>
-    <template x-for="tag in allTags" :key="tag">
-      <button class="shrink-0 px-3 py-1.5 rounded-full text-xs font-medium transition-all"
-              :class="activeFilter === tag ? 'bg-warm-800 text-white' : 'bg-white text-warm-500 hover:bg-warm-100'"
-              @click="activeFilter = tag"
-              x-text="tag">
-      </button>
-    </template>
-  </div>
-
-  <!-- Article Cards Grid -->
-  <div class="mb-6">
-    <div class="flex items-center justify-between mb-3">
-      <span class="text-sm font-semibold">Infographic Reports</span>
-      <span class="text-[10px] text-warm-400" x-text="filteredReports.length + '개'"></span>
-    </div>
-    <div class="space-y-3 md:grid md:grid-cols-2 md:gap-4 md:space-y-0">
-      <template x-for="r in filteredReports" :key="r.id">
-        <div class="scard p-0 overflow-hidden cursor-pointer group" @click="openReport(r.file, r.title)">
-          <div class="h-2 bg-gradient-to-r from-accent to-orange-400"></div>
-          <div class="p-5">
-            <div class="flex items-center justify-between mb-2">
-              <span class="text-[10px] font-medium text-warm-400" x-text="r.date"></span>
-              <span class="text-[10px] text-warm-400" x-text="r.source || ''"></span>
-            </div>
-            <h3 class="text-sm font-bold mb-2 group-hover:text-accent transition-colors" x-text="r.title"></h3>
-            <p class="text-xs text-warm-500 leading-relaxed mb-3" x-text="r.description"></p>
-            <div class="flex flex-wrap gap-1">
-              <template x-for="tag in (r.tags || [])" :key="tag">
-                <span class="text-[10px] px-1.5 py-0.5 rounded-full bg-accent-50 text-accent font-medium" x-text="tag"></span>
-              </template>
-            </div>
-            <div class="flex items-center gap-1.5 mt-3 pt-3 border-t border-warm-100 text-accent text-xs font-medium">
-              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-              보고서 보기
-            </div>
-          </div>
+    <!-- Macro Indicator Strip -->
+    <div class="flex gap-3 overflow-x-auto hide-scrollbar pb-1" x-show="macroBanner.length > 0">
+      <template x-for="m in macroBanner" :key="m.symbol">
+        <div class="bg-gray-50 rounded-xl px-4 py-2.5 shrink-0 border border-gray-100">
+          <div class="text-[10px] text-gray-400 font-medium" x-text="m.name"></div>
+          <div class="text-sm font-bold text-gray-900" x-text="m.display"></div>
+          <div class="text-[10px] mt-0.5 font-medium"
+               :class="m.chg >= 0 ? 'text-green-600' : 'text-red-500'"
+               x-text="(m.chg >= 0 ? '+' : '') + m.chg.toFixed(1) + '%'"></div>
         </div>
       </template>
     </div>
-    <template x-if="filteredReports.length === 0">
-      <div class="flex flex-col items-center justify-center py-16 text-warm-400">
-        <svg class="w-10 h-10 mb-3 opacity-30" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"/></svg>
-        <p class="text-sm">해당 테마의 리포트가 없습니다</p>
-      </div>
-    </template>
-  </div>
+  </section>
 
-  <!-- PDF Digest Section -->
-  <div class="mb-6" x-show="digestItems.length > 0">
-    <div class="flex items-center justify-between mb-3">
-      <span class="text-sm font-semibold">PDF Insights</span>
-      <span class="text-[10px] text-warm-400" x-text="digestItems.length + '개 분석'"></span>
+  <!-- Two Column Layout -->
+  <div class="flex flex-col md:flex-row gap-8 md:gap-10">
+
+    <!-- Left: Article List -->
+    <div class="flex-1 min-w-0">
+      <div class="flex items-center justify-between mb-5">
+        <h2 class="font-serif text-xl md:text-2xl">Our Trending Articles</h2>
+        <span class="text-xs text-gray-400" x-text="filteredReports.length + '개'"></span>
+      </div>
+
+      <!-- Filter Tags -->
+      <div class="flex items-center gap-2 mb-6 overflow-x-auto hide-scrollbar pb-1">
+        <button class="shrink-0 px-3.5 py-1.5 rounded-full text-xs font-medium transition-all border"
+                :class="activeFilter === 'all' ? 'text-white border-transparent' : 'bg-white text-gray-500 border-gray-200 hover:text-green-700 hover:border-green-300'"
+                :style="activeFilter === 'all' ? 'background:#1A7A4C' : ''"
+                @click="activeFilter = 'all'">
+          전체
+        </button>
+        <template x-for="tag in allTags" :key="tag">
+          <button class="shrink-0 px-3.5 py-1.5 rounded-full text-xs font-medium transition-all border"
+                  :class="activeFilter === tag ? 'text-white border-transparent' : 'bg-white text-gray-500 border-gray-200 hover:text-green-700 hover:border-green-300'"
+                  :style="activeFilter === tag ? 'background:#1A7A4C' : ''"
+                  @click="activeFilter = tag"
+                  x-text="tag">
+          </button>
+        </template>
+      </div>
+
+      <!-- Article List (Editorial Style) -->
+      <div class="divide-y divide-gray-100">
+        <template x-for="(r, idx) in filteredReports" :key="r.id">
+          <article class="py-5 cursor-pointer group" @click="openReport(r.file, r.title)">
+            <div class="flex items-start gap-4">
+              <span class="text-sm font-mono pt-0.5 shrink-0" style="color:rgba(26,122,76,.35);" x-text="String(idx+1).padStart(2,'0')"></span>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-2 mb-1">
+                  <span class="text-[11px] text-gray-400" x-text="r.date"></span>
+                  <template x-if="r.source">
+                    <span class="text-[11px] text-gray-300">&middot;</span>
+                  </template>
+                  <span class="text-[11px] text-gray-400" x-text="r.source || ''"></span>
+                </div>
+                <h3 class="font-serif text-lg md:text-xl leading-snug transition-colors mb-1.5 group-hover:text-green-700" x-text="r.title"></h3>
+                <p class="text-[13px] text-gray-500 leading-relaxed mb-2.5"
+                   style="display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;"
+                   x-text="r.description"></p>
+                <div class="flex flex-wrap gap-1.5">
+                  <template x-for="tag in (r.tags || [])" :key="tag">
+                    <span class="text-[10px] px-2 py-0.5 rounded-full font-medium"
+                          style="background:#F0FDF4;color:#1A7A4C;"
+                          x-text="tag"></span>
+                  </template>
+                </div>
+              </div>
+              <div class="shrink-0 w-8 h-8 rounded-full bg-gray-50 group-hover:bg-green-50 flex items-center justify-center transition-colors mt-1">
+                <svg class="w-4 h-4 text-gray-300 group-hover:text-green-600 transition-colors" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg>
+              </div>
+            </div>
+          </article>
+        </template>
+      </div>
+
+      <!-- Empty State -->
+      <template x-if="filteredReports.length === 0">
+        <div class="flex flex-col items-center justify-center py-16 text-gray-400">
+          <svg class="w-10 h-10 mb-3 opacity-30" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"/></svg>
+          <p class="text-sm">해당 테마의 리포트가 없습니다</p>
+        </div>
+      </template>
     </div>
-    <div class="space-y-3 md:grid md:grid-cols-2 md:gap-4 md:space-y-0">
-      <template x-for="(pdf, idx) in digestItems.slice(0, 5)" :key="idx">
-        <div class="scard p-4">
-          <div class="flex items-center justify-between mb-2">
-            <span class="text-[11px] text-warm-400 truncate flex-1" x-text="pdf.filename"></span>
-            <span class="text-sm font-bold ml-2 whitespace-nowrap"
-                  :class="pdf.usefulness >= 8 ? 'text-accent' : pdf.usefulness >= 6 ? 'text-orange-500' : 'text-warm-400'"
-                  x-text="pdf.usefulness + '/10'"></span>
+
+    <!-- Right: Sidebar -->
+    <aside class="w-full md:w-72 lg:w-80 shrink-0">
+
+      <!-- Featured Article -->
+      <template x-if="reports.length > 0">
+        <div class="rounded-2xl p-6 text-white mb-5 cursor-pointer group"
+             style="background:linear-gradient(145deg,#0D4A2D 0%,#1A7A4C 100%);"
+             @click="openReport(reports[0].file, reports[0].title)">
+          <div class="text-[10px] font-semibold tracking-widest uppercase opacity-60 mb-3">FEATURED</div>
+          <h3 class="font-serif text-xl leading-snug mb-2" x-text="reports[0]?.title"></h3>
+          <p class="text-sm opacity-75 leading-relaxed mb-4"
+             style="display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;"
+             x-text="reports[0]?.description"></p>
+          <div class="flex items-center gap-1.5 text-sm font-medium opacity-90 group-hover:opacity-100 group-hover:gap-2.5 transition-all">
+            Read More
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
           </div>
-          <div class="w-full bg-warm-100 rounded-full h-1 mb-3">
-            <div class="h-1 rounded-full" :class="pdf.usefulness >= 8 ? 'bg-accent' : pdf.usefulness >= 6 ? 'bg-orange-400' : 'bg-warm-300'" :style="'width:' + (pdf.usefulness * 10) + '%'"></div>
-          </div>
-          <p class="text-xs text-warm-600 leading-relaxed mb-2.5 line-clamp-3" x-text="pdf.summary"></p>
-          <div class="flex flex-wrap gap-1 mb-1.5">
-            <template x-for="t in (pdf.key_tickers || []).slice(0, 5)" :key="t">
-              <span class="text-[10px] px-1.5 py-0.5 rounded-full bg-accent-50 text-accent font-medium" x-text="t"></span>
-            </template>
-          </div>
-          <div class="flex flex-wrap gap-1">
-            <template x-for="t in (pdf.themes || []).slice(0, 3)" :key="t">
-              <span class="text-[10px] px-1.5 py-0.5 rounded-full bg-warm-100 text-warm-500" x-text="t"></span>
-            </template>
-          </div>
-          <template x-if="pdf.action_suggestion">
-            <div class="mt-2.5 pt-2.5 border-t border-warm-100">
-              <p class="text-[11px] text-warm-500"><span class="text-accent font-medium">Action:</span> <span x-text="pdf.action_suggestion"></span></p>
+        </div>
+      </template>
+
+      <!-- Market Snapshot -->
+      <div class="rounded-2xl border border-gray-100 p-5 mb-5" x-show="macroBanner.length > 0">
+        <h4 class="text-xs font-semibold text-gray-900 uppercase tracking-wider mb-4">Market Snapshot</h4>
+        <div class="space-y-3">
+          <template x-for="m in macroBanner" :key="m.symbol">
+            <div class="flex items-center justify-between">
+              <span class="text-[13px] text-gray-500" x-text="m.name"></span>
+              <div class="flex items-center gap-2">
+                <span class="text-[13px] font-semibold" x-text="m.display"></span>
+                <span class="text-[11px] font-medium px-1.5 py-0.5 rounded"
+                      :class="m.chg >= 0 ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-600'"
+                      x-text="(m.chg >= 0 ? '+' : '') + m.chg.toFixed(1) + '%'"></span>
+              </div>
             </div>
           </template>
         </div>
-      </template>
-    </div>
+      </div>
+
+      <!-- Quick Links -->
+      <div class="rounded-2xl border border-gray-100 p-5">
+        <h4 class="text-xs font-semibold text-gray-900 uppercase tracking-wider mb-4">Quick Links</h4>
+        <div class="space-y-2.5">
+          <a href="macro.html" class="flex items-center gap-3 text-[13px] text-gray-600 hover:text-green-700 transition-colors group">
+            <div class="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 transition-colors"
+                 style="background:#F0FDF4;" class="group-hover:bg-green-100">
+              <svg class="w-4 h-4" style="color:#1A7A4C;" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75z"/></svg>
+            </div>
+            매크로 대시보드
+          </a>
+          <a href="prices.html" class="flex items-center gap-3 text-[13px] text-gray-600 hover:text-green-700 transition-colors group">
+            <div class="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 transition-colors"
+                 style="background:#F0FDF4;">
+              <svg class="w-4 h-4" style="color:#1A7A4C;" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+            </div>
+            실시간 주식가격
+          </a>
+          <a href="portfolio.html" class="flex items-center gap-3 text-[13px] text-gray-600 hover:text-green-700 transition-colors group">
+            <div class="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 transition-colors"
+                 style="background:#F0FDF4;">
+              <svg class="w-4 h-4" style="color:#1A7A4C;" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/><path d="M9 12l2 2 4-4"/></svg>
+            </div>
+            포트폴리오
+          </a>
+        </div>
+      </div>
+    </aside>
+
   </div>
 
 </main>
 
 <!-- ==================== REPORT OVERLAY ==================== -->
 <div id="report-overlay" x-show="showReport" x-transition.opacity
-     style="position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.6);backdrop-filter:blur(4px);display:flex;flex-direction:column;"
+     style="position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.5);backdrop-filter:blur(4px);display:flex;flex-direction:column;"
      @keydown.escape.window="showReport=false" x-cloak>
-  <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:#2A2520;color:white;flex-shrink:0;">
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:#0D4A2D;color:white;flex-shrink:0;">
     <span style="font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" x-text="reportTitle"></span>
     <div style="display:flex;gap:8px;flex-shrink:0;">
       <a :href="'./reports/' + reportFile" target="_blank" style="background:rgba(255,255,255,.12);color:white;border:none;border-radius:8px;padding:6px 12px;font-size:11px;cursor:pointer;text-decoration:none;display:flex;align-items:center;gap:4px;">
@@ -224,39 +273,30 @@
       <button @click="showReport=false" style="background:rgba(255,255,255,.12);color:white;border:none;border-radius:8px;width:32px;height:32px;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;">&times;</button>
     </div>
   </div>
-  <iframe :src="showReport ? './reports/' + reportFile : ''" style="flex:1;border:none;background:#F5F0EB;"></iframe>
+  <iframe :src="showReport ? './reports/' + reportFile : ''" style="flex:1;border:none;background:white;"></iframe>
 </div>
 
 <style>[x-cloak] { display: none !important; }</style>
 
 <script type="module">
 import { supabase, isLoggedIn, getCurrentUser, signOut } from './shared/supabase-client.js';
-
-// Expose to Alpine
 window._supabaseAuth = { isLoggedIn, getCurrentUser, signOut };
 </script>
 
 <script>
 function insightsApp() {
   return {
-    // Auth
     loggedIn: false,
     userEmail: null,
-
-    // Data
     reports: [],
-    digestItems: [],
     macroBanner: [],
     allTags: [],
     activeFilter: 'all',
-
-    // Report overlay
     showReport: false,
     reportFile: '',
     reportTitle: '',
 
     async init() {
-      // Check auth
       try {
         const loggedIn = await window._supabaseAuth.isLoggedIn();
         if (loggedIn) {
@@ -266,28 +306,18 @@ function insightsApp() {
         }
       } catch (e) {}
 
-      // Fetch all data in parallel
-      const [reportsData, digestData, signalData] = await Promise.all([
+      const [reportsData, signalData] = await Promise.all([
         this.fetchJSON('data/reports.json'),
-        this.fetchJSON('data/digest.json'),
         this.fetchJSON('data/signal.json')
       ]);
 
-      // Reports
       if (reportsData?.status === 'ok' && reportsData.data) {
         this.reports = reportsData.data;
-        // Extract unique tags
         const tagSet = new Set();
         this.reports.forEach(r => (r.tags || []).forEach(t => tagSet.add(t)));
         this.allTags = Array.from(tagSet).sort();
       }
 
-      // Digest
-      if (digestData?.status === 'ok' && digestData.data) {
-        this.digestItems = digestData.data;
-      }
-
-      // Signal - macro banner
       if (signalData?.status === 'ok' && signalData.macro_data) {
         const picks = ['^VIX', 'CL=F', 'BZ=F', 'USDKRW=X', 'DX-Y.NYB', 'GC=F'];
         this.macroBanner = signalData.macro_data

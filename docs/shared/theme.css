@@ -1,5 +1,6 @@
 /* ============================================================
    Macro Cockpit - Design Tokens & Common Styles
+   White + Green Theme
    ============================================================ */
 
 /* Reset */
@@ -7,7 +8,7 @@
 
 /* Base */
 body {
-  background: #F5F1EB;
+  background: #FFFFFF;
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
   color: #1B1B18;
   -webkit-font-smoothing: antialiased;
@@ -34,7 +35,7 @@ body {
 
 /* Skeleton loader */
 .skel {
-  background: linear-gradient(90deg, #EBE5DC 25%, #F5F1EB 50%, #EBE5DC 75%);
+  background: linear-gradient(90deg, #F0FDF4 25%, #FFFFFF 50%, #F0FDF4 75%);
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
   border-radius: 16px;
@@ -52,9 +53,9 @@ body {
   box-shadow: 0 1px 8px rgba(0,0,0,.03);
 }
 
-/* Hero gradient */
+/* Hero gradient - Green */
 .hero {
-  background: linear-gradient(145deg, #2A2520 0%, #4A3F35 60%, #5C4A3E 100%);
+  background: linear-gradient(145deg, #0D4A2D 0%, #1A7A4C 60%, #22915A 100%);
   border-radius: 24px;
   position: relative;
   overflow: hidden;
@@ -62,23 +63,14 @@ body {
 }
 
 /* Signal level styles */
-.sig-danger  { background: #FFF5F5; border-left: 3px solid #FF3B30; }
-.sig-caution { background: #FFFBF0; border-left: 3px solid #FF9500; }
-.sig-calm    { background: #F0FFF4; border-left: 3px solid #34C759; }
-.sig-bullish { background: #F0FFF4; border-left: 3px solid #34C759; }
-.sig-bearish { background: #FFF5F5; border-left: 3px solid #FF3B30; }
+.sig-danger  { background: #FFF5F5; border-left: 3px solid #DC2626; }
+.sig-caution { background: #FFFBF0; border-left: 3px solid #F59E0B; }
+.sig-calm    { background: #F0FDF4; border-left: 3px solid #16A34A; }
+.sig-bullish { background: #F0FDF4; border-left: 3px solid #16A34A; }
+.sig-bearish { background: #FFF5F5; border-left: 3px solid #DC2626; }
 .sig-favorable { background: #F0FDFA; border-left: 3px solid #14B8A6; }
-.sig-neutral { background: #FAF8F5; border-left: 3px solid #D4CCC0; }
-.sig-info    { background: #F0F7FF; border-left: 3px solid #5AC8FA; }
-
-/* Avatar colors */
-.av-0 { background: #D97757; color: #fff; }
-.av-1 { background: #6C8EBF; color: #fff; }
-.av-2 { background: #85CDCA; color: #fff; }
-.av-3 { background: #C38D9E; color: #fff; }
-.av-4 { background: #E8A87C; color: #fff; }
-.av-5 { background: #41B3A3; color: #fff; }
-.av-6 { background: #7B68EE; color: #fff; }
+.sig-neutral { background: #F9FAFB; border-left: 3px solid #D1D5DB; }
+.sig-info    { background: #F0F7FF; border-left: 3px solid #3B82F6; }
 
 /* ==================== TOP NAV (Desktop) ==================== */
 .topnav {
@@ -87,27 +79,28 @@ body {
   left: 0;
   right: 0;
   z-index: 50;
-  background: #2A2520;
-  color: #fff;
+  background: #FFFFFF;
+  color: #1B1B18;
   height: 56px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0 24px;
+  border-bottom: 1px solid #E5E7EB;
 }
 .topnav-logo {
   display: flex;
   align-items: center;
   gap: 10px;
   text-decoration: none;
-  color: #fff;
+  color: #1B1B18;
   flex-shrink: 0;
 }
 .topnav-logo .logo-circle {
   width: 28px;
   height: 28px;
   border-radius: 50%;
-  background: #D97757;
+  background: #1A7A4C;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -121,6 +114,7 @@ body {
   font-size: 15px;
   font-weight: 600;
   letter-spacing: -0.02em;
+  color: #1B1B18;
 }
 .topnav-menu {
   display: flex;
@@ -135,18 +129,19 @@ body {
   border-radius: 10px;
   font-size: 13px;
   font-weight: 500;
-  color: rgba(255,255,255,.55);
+  color: #6B7280;
   text-decoration: none;
   transition: all .15s;
   white-space: nowrap;
 }
 .topnav-menu a:hover {
-  background: rgba(255,255,255,.08);
-  color: rgba(255,255,255,.8);
+  background: #F0FDF4;
+  color: #1A7A4C;
 }
 .topnav-menu a.active {
-  background: rgba(255,255,255,.12);
-  color: #fff;
+  background: #F0FDF4;
+  color: #1A7A4C;
+  font-weight: 600;
 }
 .topnav-menu a svg { width: 16px; height: 16px; opacity: .6; }
 .topnav-auth {
@@ -167,15 +162,15 @@ body {
   gap: 6px;
 }
 .btn-login {
-  background: #D97757;
+  background: #1A7A4C;
   color: #fff;
 }
-.btn-login:hover { background: #B85E42; }
+.btn-login:hover { background: #15643E; }
 .btn-logout {
-  background: rgba(255,255,255,.1);
-  color: rgba(255,255,255,.7);
+  background: #F0FDF4;
+  color: #1A7A4C;
 }
-.btn-logout:hover { background: rgba(255,255,255,.15); color: #fff; }
+.btn-logout:hover { background: #DCFCE7; }
 
 /* ==================== BOTTOM NAV (Mobile) ==================== */
 .bnav {
@@ -185,7 +180,7 @@ body {
   right: 0;
   z-index: 50;
   background: #fff;
-  border-top: 1px solid #EBE5DC;
+  border-top: 1px solid #E5E7EB;
   display: flex;
   justify-content: space-around;
   align-items: center;
@@ -199,12 +194,12 @@ body {
   gap: 2px;
   font-size: 10px;
   font-weight: 500;
-  color: #B0A89C;
+  color: #9CA3AF;
   transition: color .15s;
   text-decoration: none;
   padding: 6px 12px;
 }
-.bnav a.active { color: #D97757; }
+.bnav a.active { color: #1A7A4C; }
 .bnav a .dot {
   width: 4px;
   height: 4px;
@@ -213,7 +208,7 @@ body {
   transition: background .15s;
   margin-top: 1px;
 }
-.bnav a.active .dot { background: #D97757; }
+.bnav a.active .dot { background: #1A7A4C; }
 
 /* ==================== RESPONSIVE ==================== */
 @media (min-width: 768px) {
@@ -257,28 +252,28 @@ body {
 }
 .auth-card p {
   font-size: 13px;
-  color: #8B8580;
+  color: #6B7280;
   margin-bottom: 24px;
 }
 .auth-input {
   width: 100%;
   padding: 12px 16px;
-  border: 1px solid #EBE5DC;
+  border: 1px solid #E5E7EB;
   border-radius: 12px;
   font-size: 14px;
   font-family: 'Inter', system-ui, sans-serif;
-  background: #FAF8F5;
+  background: #F9FAFB;
   outline: none;
   transition: border-color .15s;
   margin-bottom: 12px;
 }
-.auth-input:focus { border-color: #D97757; }
+.auth-input:focus { border-color: #1A7A4C; }
 .auth-btn {
   width: 100%;
   padding: 12px;
   border: none;
   border-radius: 12px;
-  background: #D97757;
+  background: #1A7A4C;
   color: #fff;
   font-size: 14px;
   font-weight: 600;
@@ -287,22 +282,22 @@ body {
   transition: background .15s;
   margin-top: 4px;
 }
-.auth-btn:hover { background: #B85E42; }
+.auth-btn:hover { background: #15643E; }
 .auth-btn:disabled { opacity: .5; cursor: not-allowed; }
 .auth-toggle {
   font-size: 12px;
-  color: #8B8580;
+  color: #6B7280;
   margin-top: 16px;
 }
 .auth-toggle a {
-  color: #D97757;
+  color: #1A7A4C;
   text-decoration: none;
   font-weight: 600;
   cursor: pointer;
 }
 .auth-error {
   font-size: 12px;
-  color: #FF3B30;
+  color: #DC2626;
   margin-bottom: 12px;
   min-height: 18px;
 }
@@ -336,14 +331,14 @@ body {
 }
 .chat-bubble.user {
   align-self: flex-end;
-  background: #D97757;
+  background: #1A7A4C;
   color: #fff;
   border-bottom-right-radius: 6px;
 }
 .chat-bubble.ai {
   align-self: flex-start;
-  background: #fff;
-  color: #2A2520;
+  background: #F9FAFB;
+  color: #1B1B18;
   border-bottom-left-radius: 6px;
   box-shadow: 0 1px 6px rgba(0,0,0,.04);
 }
@@ -351,13 +346,13 @@ body {
   display: flex;
   gap: 8px;
   padding: 12px 0;
-  border-top: 1px solid #EBE5DC;
+  border-top: 1px solid #E5E7EB;
   flex-shrink: 0;
 }
 .chat-input {
   flex: 1;
   padding: 12px 16px;
-  border: 1px solid #EBE5DC;
+  border: 1px solid #E5E7EB;
   border-radius: 24px;
   font-size: 14px;
   font-family: 'Inter', system-ui, sans-serif;
@@ -365,12 +360,12 @@ body {
   outline: none;
   transition: border-color .15s;
 }
-.chat-input:focus { border-color: #D97757; }
+.chat-input:focus { border-color: #1A7A4C; }
 .chat-send {
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  background: #D97757;
+  background: #1A7A4C;
   color: #fff;
   border: none;
   cursor: pointer;
@@ -380,5 +375,5 @@ body {
   flex-shrink: 0;
   transition: background .15s;
 }
-.chat-send:hover { background: #B85E42; }
+.chat-send:hover { background: #15643E; }
 .chat-send:disabled { opacity: .4; cursor: not-allowed; }
