@@ -27,6 +27,26 @@
   </script>
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
   <link rel="stylesheet" href="shared/theme.css">
+  <style>
+    .range-bar {
+      position: relative;
+      height: 4px;
+      background: #EBE5DC;
+      border-radius: 2px;
+      width: 100%;
+    }
+    .range-bar .current-dot {
+      position: absolute;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #D97757;
+      border: 1.5px solid #fff;
+      box-shadow: 0 0 4px rgba(0,0,0,.15);
+    }
+  </style>
 </head>
 
 <body class="font-sans text-warm-900 antialiased" x-data="pricesApp()" x-init="init()">
@@ -135,32 +155,44 @@
     </div>
   </div>
 
-  <!-- Holdings Price Table -->
+  <!-- ==================== HOLDINGS PRICES ==================== -->
   <div class="mb-6">
     <div class="flex items-center justify-between mb-3">
       <span class="text-sm font-semibold">보유종목 가격</span>
-      <span class="text-[10px] text-warm-400" x-text="holdings.length + '종목'"></span>
+      <span class="text-[10px] text-warm-400" x-text="holdingPrices.length + '종목'"></span>
     </div>
 
     <!-- Mobile: Card list -->
     <div class="space-y-2.5 md:hidden">
-      <template x-for="(h, idx) in holdings" :key="h.code">
-        <div class="scard-sm p-3.5 flex items-center gap-3">
-          <div class="w-10 h-10 rounded-full flex items-center justify-center shrink-0"
-               :class="'av-' + (idx % 7)">
-            <span class="text-xs font-bold" x-text="h.ticker.substring(0, 2)"></span>
-          </div>
-          <div class="flex-1 min-w-0">
-            <div class="flex items-center gap-1.5">
-              <span class="text-sm font-semibold" x-text="h.ticker"></span>
-              <span class="text-[10px] text-warm-400 truncate" x-text="h.name"></span>
+      <template x-for="(h, idx) in holdingPrices" :key="h.ticker">
+        <div class="scard-sm p-3.5">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full flex items-center justify-center shrink-0"
+                 :class="'av-' + (idx % 7)">
+              <span class="text-xs font-bold" x-text="h.ticker.substring(0, 2)"></span>
             </div>
-            <div class="text-[11px] text-warm-400 mt-0.5" x-text="h.quantity + '주 · avg ' + (h.currency === 'USD' ? '$' + h.avg_price.toFixed(2) : h.avg_price.toLocaleString() + '원')"></div>
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center gap-1.5">
+                <span class="text-sm font-semibold" x-text="h.ticker"></span>
+                <span class="text-[10px] text-warm-400 truncate" x-text="h.name"></span>
+              </div>
+              <div class="text-[11px] text-warm-400 mt-0.5" x-text="h.quantity + '주 · avg ' + (h.currency === 'USD' ? '$' + h.avg_price.toFixed(2) : h.avg_price.toLocaleString() + '원')"></div>
+            </div>
+            <div class="text-right shrink-0">
+              <div class="text-sm font-semibold whitespace-nowrap" x-text="h.currentDisplay"></div>
+              <div class="text-xs font-medium whitespace-nowrap" :class="h.changePct >= 0 ? 'text-up' : 'text-down'" x-text="h.changeDisplay" x-show="h.hasPrice"></div>
+              <div class="text-[10px] text-warm-300" x-show="!h.hasPrice">가격 미수신</div>
+            </div>
           </div>
-          <div class="text-right shrink-0">
-            <div class="text-sm font-semibold whitespace-nowrap" x-text="h.currentDisplay"></div>
-            <div class="text-xs font-medium whitespace-nowrap" :class="h.pnlPct >= 0 ? 'text-up' : 'text-down'" x-text="h.pnlDisplay" x-show="h.hasPrice"></div>
-            <div class="text-[10px] text-warm-300" x-show="!h.hasPrice">평단가 기준</div>
+          <!-- 52-week range bar -->
+          <div x-show="h.high_52w && h.low_52w" class="mt-3 pt-3 border-t border-warm-100">
+            <div class="flex justify-between text-[10px] text-warm-400 mb-1">
+              <span x-text="'52주 저 ' + formatPrice(h.low_52w)"></span>
+              <span x-text="'52주 고 ' + formatPrice(h.high_52w)"></span>
+            </div>
+            <div class="range-bar">
+              <div class="current-dot" :style="'left:' + h.rangePct + '%'"></div>
+            </div>
           </div>
         </div>
       </template>
@@ -177,10 +209,11 @@
             <th class="text-right py-3 px-4 font-medium">변동률</th>
             <th class="text-right py-3 px-4 font-medium">수량</th>
             <th class="text-right py-3 px-4 font-medium">평가금액</th>
+            <th class="text-center py-3 px-4 font-medium">52주 범위</th>
           </tr>
         </thead>
         <tbody>
-          <template x-for="(h, idx) in holdings" :key="h.code">
+          <template x-for="(h, idx) in holdingPrices" :key="h.ticker">
             <tr class="border-b border-warm-50 hover:bg-warm-50/50 transition-colors">
               <td class="py-3 px-4">
                 <div class="flex items-center gap-2.5">
@@ -195,12 +228,113 @@
               </td>
               <td class="py-3 px-4 text-right font-semibold" x-text="h.currentDisplay"></td>
               <td class="py-3 px-4 text-right text-warm-500" x-text="h.currency === 'USD' ? '$' + h.avg_price.toFixed(2) : h.avg_price.toLocaleString() + '원'"></td>
-              <td class="py-3 px-4 text-right font-medium" :class="h.pnlPct >= 0 ? 'text-up' : 'text-down'">
-                <span x-text="h.pnlDisplay" x-show="h.hasPrice"></span>
+              <td class="py-3 px-4 text-right font-medium" :class="h.changePct >= 0 ? 'text-up' : 'text-down'">
+                <span x-text="h.changeDisplay" x-show="h.hasPrice"></span>
                 <span class="text-warm-300" x-show="!h.hasPrice">-</span>
               </td>
               <td class="py-3 px-4 text-right text-warm-500" x-text="h.quantity + '주'"></td>
               <td class="py-3 px-4 text-right font-semibold" x-text="h.evalDisplay"></td>
+              <td class="py-3 px-4 text-center" style="min-width:120px;">
+                <template x-if="h.high_52w && h.low_52w">
+                  <div>
+                    <div class="flex justify-between text-[9px] text-warm-400 mb-0.5">
+                      <span x-text="formatPrice(h.low_52w)"></span>
+                      <span x-text="formatPrice(h.high_52w)"></span>
+                    </div>
+                    <div class="range-bar">
+                      <div class="current-dot" :style="'left:' + h.rangePct + '%'"></div>
+                    </div>
+                  </div>
+                </template>
+                <template x-if="!h.high_52w || !h.low_52w">
+                  <span class="text-warm-300 text-[10px]">-</span>
+                </template>
+              </td>
+            </tr>
+          </template>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ==================== WATCHLIST ==================== -->
+  <div class="mb-6" x-show="watchlistPrices.length > 0">
+    <div class="flex items-center justify-between mb-3">
+      <span class="text-sm font-semibold">관심 종목</span>
+      <span class="text-[10px] text-warm-400" x-text="watchlistPrices.length + '종목'"></span>
+    </div>
+
+    <!-- Mobile: Card list -->
+    <div class="space-y-2.5 md:hidden">
+      <template x-for="(w, idx) in watchlistPrices" :key="w.ticker">
+        <div class="scard-sm p-3.5 flex items-center gap-3">
+          <div class="w-10 h-10 rounded-full flex items-center justify-center shrink-0 bg-warm-100">
+            <span class="text-xs font-bold text-warm-500" x-text="w.ticker.substring(0, 2)"></span>
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-1.5">
+              <span class="text-sm font-semibold" x-text="w.ticker"></span>
+              <span class="text-[10px] text-warm-400 truncate" x-text="w.name"></span>
+            </div>
+            <div x-show="w.high_52w && w.low_52w" class="mt-1.5">
+              <div class="flex justify-between text-[9px] text-warm-400 mb-0.5">
+                <span x-text="'L ' + formatPrice(w.low_52w)"></span>
+                <span x-text="'H ' + formatPrice(w.high_52w)"></span>
+              </div>
+              <div class="range-bar">
+                <div class="current-dot" :style="'left:' + w.rangePct + '%'"></div>
+              </div>
+            </div>
+          </div>
+          <div class="text-right shrink-0">
+            <div class="text-sm font-semibold whitespace-nowrap" x-text="w.priceDisplay"></div>
+            <div class="text-xs font-medium whitespace-nowrap" :class="w.change_pct >= 0 ? 'text-up' : 'text-down'" x-text="w.changeDisplay"></div>
+          </div>
+        </div>
+      </template>
+    </div>
+
+    <!-- Desktop: Table -->
+    <div class="hidden md:block scard overflow-hidden">
+      <table class="w-full text-sm">
+        <thead>
+          <tr class="border-b border-warm-100 text-warm-400 text-[11px]">
+            <th class="text-left py-3 px-4 font-medium">종목</th>
+            <th class="text-right py-3 px-4 font-medium">현재가</th>
+            <th class="text-right py-3 px-4 font-medium">전일대비</th>
+            <th class="text-right py-3 px-4 font-medium">52주 저</th>
+            <th class="text-right py-3 px-4 font-medium">52주 고</th>
+            <th class="text-center py-3 px-4 font-medium">52주 범위</th>
+          </tr>
+        </thead>
+        <tbody>
+          <template x-for="(w, idx) in watchlistPrices" :key="w.ticker">
+            <tr class="border-b border-warm-50 hover:bg-warm-50/50 transition-colors">
+              <td class="py-3 px-4">
+                <div class="flex items-center gap-2.5">
+                  <div class="w-8 h-8 rounded-full flex items-center justify-center shrink-0 bg-warm-100">
+                    <span class="text-[10px] font-bold text-warm-500" x-text="w.ticker.substring(0, 2)"></span>
+                  </div>
+                  <div>
+                    <div class="font-semibold" x-text="w.ticker"></div>
+                    <div class="text-[10px] text-warm-400" x-text="w.name"></div>
+                  </div>
+                </div>
+              </td>
+              <td class="py-3 px-4 text-right font-semibold" x-text="w.priceDisplay"></td>
+              <td class="py-3 px-4 text-right font-medium" :class="w.change_pct >= 0 ? 'text-up' : 'text-down'" x-text="w.changeDisplay"></td>
+              <td class="py-3 px-4 text-right text-warm-500" x-text="formatPrice(w.low_52w)"></td>
+              <td class="py-3 px-4 text-right text-warm-500" x-text="formatPrice(w.high_52w)"></td>
+              <td class="py-3 px-4 text-center" style="min-width:120px;">
+                <template x-if="w.high_52w && w.low_52w">
+                  <div class="range-bar">
+                    <div class="current-dot" :style="'left:' + w.rangePct + '%'"></div>
+                  </div>
+                </template>
+                <template x-if="!w.high_52w || !w.low_52w">
+                  <span class="text-warm-300 text-[10px]">-</span>
+                </template>
+              </td>
             </tr>
           </template>
         </tbody>
@@ -225,6 +359,9 @@
     </div>
   </div>
 
+  <!-- Last updated footer -->
+  <div class="text-[10px] text-warm-400 text-center mb-4" x-text="'마지막 업데이트: ' + lastUpdated"></div>
+
 </main>
 
 <script type="module">
@@ -237,7 +374,8 @@ function pricesApp() {
   return {
     loggedIn: false,
     userEmail: null,
-    holdings: [],
+    holdingPrices: [],
+    watchlistPrices: [],
     macroIndicators: [],
     signals: [],
     prices: {},
@@ -267,27 +405,84 @@ function pricesApp() {
         this.fetchJSON('data/_meta.json')
       ]);
 
-      // Prices
-      if (pricesData?.status === 'ok' && pricesData.prices) {
-        this.prices = pricesData.prices;
+      // Detect prices.json structure
+      let newPriceFormat = false;
+      let pricesByTicker = {};
+      let pricesByCode = {};
+
+      if (pricesData) {
+        if (pricesData.updated_at && pricesData.holdings) {
+          // New structure
+          newPriceFormat = true;
+          (pricesData.holdings || []).forEach(p => {
+            pricesByTicker[p.ticker] = p;
+          });
+          this.lastUpdated = pricesData.updated_at;
+
+          // Watchlist from new format
+          this.watchlistPrices = (pricesData.watchlist || []).map(w => {
+            const rangePct = (w.high_52w && w.low_52w && w.high_52w !== w.low_52w)
+              ? Math.max(0, Math.min(100, ((w.current_price - w.low_52w) / (w.high_52w - w.low_52w)) * 100))
+              : 50;
+            return {
+              ...w,
+              priceDisplay: w.currency === 'KRW'
+                ? w.current_price.toLocaleString() + '원'
+                : '$' + w.current_price.toFixed(2),
+              changeDisplay: w.change_pct != null ? ((w.change_pct >= 0 ? '+' : '') + w.change_pct.toFixed(1) + '%') : '-',
+              rangePct
+            };
+          });
+        } else if (pricesData.status === 'ok' && pricesData.prices) {
+          // Old structure
+          pricesByCode = pricesData.prices;
+        }
       }
 
       // Holdings with prices
       if (portfolioData?.status === 'ok' && portfolioData.holdings) {
-        this.holdings = portfolioData.holdings.map(h => {
-          const cp = this.prices[h.code];
+        this.holdingPrices = portfolioData.holdings.map(h => {
+          let cp = null;
+          let changePct = null;
+          let high52 = null;
+          let low52 = null;
+
+          // Try new format first (by ticker)
+          if (newPriceFormat && pricesByTicker[h.ticker]) {
+            const pd = pricesByTicker[h.ticker];
+            cp = pd.current_price;
+            changePct = pd.change_pct;
+            high52 = pd.high_52w;
+            low52 = pd.low_52w;
+          }
+          // Fallback to old format (by code)
+          if (cp == null && pricesByCode[h.code]) {
+            cp = pricesByCode[h.code];
+          }
+
           const hasPrice = cp != null;
           const pnlPct = hasPrice ? ((cp - h.avg_price) / h.avg_price * 100) : 0;
           const evalVal = hasPrice ? h.quantity * cp : h.est_value;
+
+          // 52-week range position
+          const rangePct = (high52 && low52 && high52 !== low52 && hasPrice)
+            ? Math.max(0, Math.min(100, ((cp - low52) / (high52 - low52)) * 100))
+            : 50;
+
           return {
             ...h,
             hasPrice,
             currentPrice: cp,
-            pnlPct,
+            changePct: changePct ?? pnlPct,
+            high_52w: high52,
+            low_52w: low52,
+            rangePct,
             currentDisplay: hasPrice
               ? (h.currency === 'USD' ? '$' + cp.toFixed(2) : cp.toLocaleString() + '원')
               : (h.currency === 'USD' ? '$' + h.avg_price.toFixed(2) : h.avg_price.toLocaleString() + '원'),
-            pnlDisplay: hasPrice ? ((pnlPct >= 0 ? '+' : '') + pnlPct.toFixed(1) + '%') : '-',
+            changeDisplay: hasPrice
+              ? ((changePct != null ? changePct : pnlPct) >= 0 ? '+' : '') + (changePct != null ? changePct : pnlPct).toFixed(1) + '%'
+              : '-',
             evalDisplay: hasPrice
               ? (h.currency === 'USD' ? '$' + evalVal.toFixed(2) : evalVal.toLocaleString() + '원')
               : (h.currency === 'USD' ? '$' + h.est_value.toFixed(2) : h.est_value.toLocaleString() + '원')
@@ -305,8 +500,8 @@ function pricesApp() {
         }
       }
 
-      // Meta
-      if (metaData?.built_at) {
+      // Meta (fallback for lastUpdated)
+      if (!this.lastUpdated && metaData?.built_at) {
         this.lastUpdated = metaData.built_at;
       }
     },

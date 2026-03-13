@@ -49,6 +49,20 @@ export async function signUp(email, password) {
 }
 
 /**
+ * Sign in with Google OAuth
+ * @returns {Promise<{data: object|null, error: object|null}>}
+ */
+export async function signInWithGoogle() {
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider: 'google',
+    options: {
+      redirectTo: window.location.origin + window.location.pathname
+    }
+  });
+  return { data, error };
+}
+
+/**
  * Sign out the current user
  * @returns {Promise<{error: object|null}>}
  */

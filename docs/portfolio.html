@@ -28,6 +28,183 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
   <link rel="stylesheet" href="shared/theme.css">
+  <style>
+    /* Google button */
+    .google-btn {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      padding: 12px 16px;
+      background: #fff;
+      border: 1px solid #dadce0;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 500;
+      font-family: 'Inter', system-ui, sans-serif;
+      color: #3c4043;
+      cursor: pointer;
+      transition: background .15s, box-shadow .15s;
+    }
+    .google-btn:hover { background: #f7f8f8; box-shadow: 0 1px 3px rgba(0,0,0,.1); }
+    .google-btn:active { background: #eee; }
+    .google-btn svg { flex-shrink: 0; }
+
+    /* Divider */
+    .auth-divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 20px 0;
+      font-size: 12px;
+      color: #B0A89C;
+    }
+    .auth-divider::before,
+    .auth-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: #EBE5DC;
+    }
+
+    /* Email section collapse */
+    .email-section-toggle {
+      font-size: 12px;
+      color: #B0A89C;
+      cursor: pointer;
+      text-align: center;
+      margin-bottom: 12px;
+      transition: color .15s;
+    }
+    .email-section-toggle:hover { color: #8B8580; }
+
+    /* Modal overlay */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.4);
+      backdrop-filter: blur(4px);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+    .modal-card {
+      background: #fff;
+      border-radius: 24px;
+      padding: 32px 24px;
+      width: 100%;
+      max-width: 440px;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 8px 40px rgba(0,0,0,.12);
+      animation: fadeUp .2s ease;
+    }
+
+    /* Autocomplete dropdown */
+    .autocomplete-dropdown {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: #fff;
+      border: 1px solid #EBE5DC;
+      border-top: none;
+      border-radius: 0 0 12px 12px;
+      max-height: 200px;
+      overflow-y: auto;
+      z-index: 10;
+      box-shadow: 0 4px 12px rgba(0,0,0,.08);
+    }
+    .autocomplete-item {
+      padding: 10px 16px;
+      font-size: 13px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .autocomplete-item:hover { background: #FAF8F5; }
+    .autocomplete-item .ticker-label { font-weight: 600; }
+    .autocomplete-item .name-label { font-size: 11px; color: #8B8580; }
+
+    /* Inline editing */
+    .inline-input {
+      width: 80px;
+      padding: 4px 8px;
+      border: 1px solid #D97757;
+      border-radius: 8px;
+      font-size: 13px;
+      font-family: 'Inter', system-ui, sans-serif;
+      text-align: right;
+      outline: none;
+      background: #FEF3ED;
+    }
+
+    /* Action buttons in table */
+    .action-btn {
+      width: 28px;
+      height: 28px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: all .15s;
+      background: transparent;
+    }
+    .action-btn:hover { background: #F5F1EB; }
+    .action-btn.delete:hover { background: #FFF5F5; color: #FF3B30; }
+
+    /* Confirm dialog */
+    .confirm-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.4);
+      backdrop-filter: blur(4px);
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+    .confirm-card {
+      background: #fff;
+      border-radius: 20px;
+      padding: 28px 24px;
+      width: 100%;
+      max-width: 340px;
+      text-align: center;
+      box-shadow: 0 8px 40px rgba(0,0,0,.12);
+    }
+
+    /* FAB button */
+    .fab-add {
+      position: fixed;
+      bottom: 80px;
+      right: 20px;
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: #D97757;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 4px 16px rgba(217,119,87,.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 40;
+      transition: transform .15s, box-shadow .15s;
+    }
+    .fab-add:hover { transform: scale(1.05); box-shadow: 0 6px 20px rgba(217,119,87,.5); }
+    @media (min-width: 768px) {
+      .fab-add { bottom: 32px; right: 32px; }
+    }
+  </style>
 </head>
 
 <body class="font-sans text-warm-900 antialiased" x-data="portfolioApp()" x-init="init()">
@@ -102,21 +279,41 @@
         <div style="width:48px;height:48px;border-radius:50%;background:#D97757;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;">
           <span style="color:#fff;font-size:20px;font-weight:700;">M</span>
         </div>
-        <h2 x-text="isSignUp ? '회원가입' : '로그인'"></h2>
-        <p x-text="isSignUp ? '새 계정을 만들어주세요' : '포트폴리오를 보려면 로그인하세요'"></p>
-        <div class="auth-error" x-text="authError"></div>
-        <div x-show="authSuccess" style="font-size:12px;color:#34C759;margin-bottom:12px;" x-text="authSuccess"></div>
-        <form @submit.prevent="submitAuth()">
-          <input class="auth-input" type="email" placeholder="이메일" x-model="authEmail" required>
-          <input class="auth-input" type="password" placeholder="비밀번호 (6자 이상)" x-model="authPassword" required minlength="6">
-          <button class="auth-btn" type="submit" :disabled="authLoading">
-            <span x-show="!authLoading" x-text="isSignUp ? '가입하기' : '로그인'"></span>
-            <span x-show="authLoading">처리 중...</span>
-          </button>
-        </form>
-        <div class="auth-toggle">
-          <span x-show="!isSignUp">계정이 없으신가요? <a @click="isSignUp=true; authError=''; authSuccess=''">회원가입</a></span>
-          <span x-show="isSignUp">이미 계정이 있으신가요? <a @click="isSignUp=false; authError=''; authSuccess=''">로그인</a></span>
+        <h2>로그인</h2>
+        <p>포트폴리오를 보려면 로그인하세요</p>
+
+        <!-- Google Login Button (Primary) -->
+        <button class="google-btn" @click="doGoogleLogin()" :disabled="authLoading">
+          <svg width="20" height="20" viewBox="0 0 48 48">
+            <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+            <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+            <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+            <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+          </svg>
+          <span x-text="authLoading ? '처리 중...' : 'Google로 로그인'"></span>
+        </button>
+
+        <!-- Divider -->
+        <div class="auth-divider">또는</div>
+
+        <!-- Email/Password (collapsible) -->
+        <div class="email-section-toggle" @click="showEmailForm = !showEmailForm" x-text="showEmailForm ? '이메일 로그인 접기' : '이메일로 로그인'"></div>
+
+        <div x-show="showEmailForm" x-transition>
+          <div class="auth-error" x-text="authError"></div>
+          <div x-show="authSuccess" style="font-size:12px;color:#34C759;margin-bottom:12px;" x-text="authSuccess"></div>
+          <form @submit.prevent="submitAuth()">
+            <input class="auth-input" type="email" placeholder="이메일" x-model="authEmail" required>
+            <input class="auth-input" type="password" placeholder="비밀번호 (6자 이상)" x-model="authPassword" required minlength="6">
+            <button class="auth-btn" type="submit" :disabled="authLoading">
+              <span x-show="!authLoading" x-text="isSignUp ? '가입하기' : '로그인'"></span>
+              <span x-show="authLoading">처리 중...</span>
+            </button>
+          </form>
+          <div class="auth-toggle">
+            <span x-show="!isSignUp">계정이 없으신가요? <a @click="isSignUp=true; authError=''; authSuccess=''">회원가입</a></span>
+            <span x-show="isSignUp">이미 계정이 있으신가요? <a @click="isSignUp=false; authError=''; authSuccess=''">로그인</a></span>
+          </div>
         </div>
       </div>
     </div>
@@ -140,6 +337,10 @@
               <div class="text-sm font-bold" x-text="holdings.length"></div>
             </div>
             <div class="bg-white/10 rounded-xl px-3 py-2 backdrop-blur-sm">
+              <div class="text-[10px] text-white/40">총 수익률</div>
+              <div class="text-sm font-bold" :class="totalPnlPct >= 0 ? 'text-green-300' : 'text-red-300'" x-text="(totalPnlPct >= 0 ? '+' : '') + totalPnlPct.toFixed(1) + '%'"></div>
+            </div>
+            <div class="bg-white/10 rounded-xl px-3 py-2 backdrop-blur-sm">
               <div class="text-[10px] text-white/40">환율(USD/KRW)</div>
               <div class="text-sm font-bold" x-text="fxRate.toLocaleString() + '원'"></div>
             </div>
@@ -147,48 +348,169 @@
         </div>
       </div>
 
-      <!-- Cash Balance -->
+      <!-- Cash Balance (Editable) -->
       <div class="grid grid-cols-2 gap-3 mb-5">
-        <div class="scard p-4">
-          <div class="text-[11px] text-warm-400 font-medium">KRW 현금</div>
-          <div class="text-lg font-bold mt-1 whitespace-nowrap" x-text="cashKRW.toLocaleString() + '원'"></div>
-        </div>
-        <div class="scard p-4">
-          <div class="text-[11px] text-warm-400 font-medium">USD 현금</div>
-          <div class="text-lg font-bold mt-1 whitespace-nowrap" x-text="'$' + cashUSD.toFixed(2)"></div>
-        </div>
-      </div>
-      <div class="text-[10px] text-warm-400 mb-4 -mt-2" x-show="meta.period_start" x-text="'기간: ' + (meta.period_start || '') + ' ~ ' + (meta.period_end || '')"></div>
-
-      <!-- Holdings Table -->
-      <div class="mb-5">
-        <div class="text-sm font-semibold mb-3">보유 종목</div>
-        <div class="space-y-2.5">
-          <template x-for="(h, idx) in holdings" :key="h.code">
-            <div class="scard p-4">
-              <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-full flex items-center justify-center shrink-0" :class="'av-' + (idx % 7)">
-                  <span class="text-xs font-bold" x-text="h.ticker.substring(0, 2)"></span>
-                </div>
-                <div class="flex-1 min-w-0">
-                  <div class="flex items-center gap-1.5">
-                    <span class="text-sm font-semibold" x-text="h.ticker"></span>
-                    <span class="text-[10px] text-warm-400 truncate" x-text="h.name"></span>
-                  </div>
-                  <div class="text-[11px] text-warm-400" x-text="h.quantity + '주'"></div>
-                </div>
-                <div class="text-right shrink-0">
-                  <div class="text-sm font-semibold whitespace-nowrap" x-text="h.evalDisplay"></div>
-                  <div class="text-xs font-medium whitespace-nowrap" :class="h.pnlPct >= 0 ? 'text-up' : 'text-down'" x-text="h.pnlDisplay" x-show="h.hasPrice"></div>
-                </div>
-              </div>
-              <div class="flex justify-between mt-3 pt-3 border-t border-warm-100 text-[11px] text-warm-400">
-                <span x-text="'평단가 ' + (h.currency === 'USD' ? '$' + h.avg_price.toFixed(2) : h.avg_price.toLocaleString() + '원')"></span>
-                <span x-text="h.hasPrice ? ('현재가 ' + (h.currency === 'USD' ? '$' + h.currentPrice.toFixed(2) : h.currentPrice.toLocaleString() + '원')) : '시세 미제공'" :class="h.hasPrice ? '' : 'text-warm-300'"></span>
-              </div>
+        <div class="scard p-4 cursor-pointer" @click="editCashKRW = true">
+          <div class="text-[11px] text-warm-400 font-medium flex items-center gap-1">
+            KRW 현금
+            <svg class="w-3 h-3 text-warm-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+          </div>
+          <template x-if="!editCashKRW">
+            <div class="text-lg font-bold mt-1 whitespace-nowrap" x-text="cashKRW.toLocaleString() + '원'"></div>
+          </template>
+          <template x-if="editCashKRW">
+            <div class="mt-1" @click.stop>
+              <input type="number" class="inline-input w-full" x-model.number="cashKRW"
+                     @keydown.enter="editCashKRW=false; saveHoldings()" @blur="editCashKRW=false; saveHoldings()" x-ref="cashKrwInput"
+                     x-init="$nextTick(() => $refs.cashKrwInput?.focus())">
             </div>
           </template>
         </div>
+        <div class="scard p-4 cursor-pointer" @click="editCashUSD = true">
+          <div class="text-[11px] text-warm-400 font-medium flex items-center gap-1">
+            USD 현금
+            <svg class="w-3 h-3 text-warm-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+          </div>
+          <template x-if="!editCashUSD">
+            <div class="text-lg font-bold mt-1 whitespace-nowrap" x-text="'$' + cashUSD.toFixed(2)"></div>
+          </template>
+          <template x-if="editCashUSD">
+            <div class="mt-1" @click.stop>
+              <input type="number" step="0.01" class="inline-input w-full" x-model.number="cashUSD"
+                     @keydown.enter="editCashUSD=false; saveHoldings()" @blur="editCashUSD=false; saveHoldings()" x-ref="cashUsdInput"
+                     x-init="$nextTick(() => $refs.cashUsdInput?.focus())">
+            </div>
+          </template>
+        </div>
+      </div>
+
+      <!-- Holdings Section Header -->
+      <div class="flex items-center justify-between mb-3">
+        <div class="text-sm font-semibold">보유 종목</div>
+        <button class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold text-white bg-accent hover:bg-accent-dark transition-colors"
+                @click="openAddModal()">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"/></svg>
+          종목 추가
+        </button>
+      </div>
+
+      <!-- Holdings: Mobile Cards -->
+      <div class="space-y-2.5 md:hidden mb-5">
+        <template x-for="(h, idx) in holdings" :key="h.id || h.code">
+          <div class="scard p-4">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-full flex items-center justify-center shrink-0" :class="'av-' + (idx % 7)">
+                <span class="text-xs font-bold" x-text="h.ticker.substring(0, 2)"></span>
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-1.5">
+                  <span class="text-sm font-semibold" x-text="h.ticker"></span>
+                  <span class="text-[10px] text-warm-400 truncate" x-text="h.name"></span>
+                </div>
+                <div class="text-[11px] text-warm-400" x-text="h.quantity + '주'"></div>
+              </div>
+              <div class="text-right shrink-0">
+                <div class="text-sm font-semibold whitespace-nowrap" x-text="h.evalDisplay"></div>
+                <div class="text-xs font-medium whitespace-nowrap" :class="h.pnlPct >= 0 ? 'text-up' : 'text-down'" x-text="h.pnlDisplay" x-show="h.hasPrice"></div>
+                <div class="text-[10px] text-warm-300" x-show="!h.hasPrice">가격 미수신</div>
+              </div>
+            </div>
+            <div class="flex justify-between items-center mt-3 pt-3 border-t border-warm-100">
+              <div class="text-[11px] text-warm-400">
+                <span x-text="'평단가 ' + (h.currency === 'USD' ? '$' + h.avg_price.toFixed(2) : h.avg_price.toLocaleString() + '원')"></span>
+                <span class="mx-1">|</span>
+                <span x-text="h.hasPrice ? ('현재가 ' + (h.currency === 'USD' ? '$' + h.currentPrice.toFixed(2) : h.currentPrice.toLocaleString() + '원')) : '시세 미제공'" :class="h.hasPrice ? '' : 'text-warm-300'"></span>
+              </div>
+              <div class="flex gap-1">
+                <button class="action-btn" @click="startEdit(idx)" title="편집">
+                  <svg class="w-4 h-4 text-warm-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+                </button>
+                <button class="action-btn delete" @click="confirmDelete(idx)" title="삭제">
+                  <svg class="w-4 h-4 text-warm-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </template>
+      </div>
+
+      <!-- Holdings: Desktop Table -->
+      <div class="hidden md:block scard overflow-hidden mb-5">
+        <table class="w-full text-sm">
+          <thead>
+            <tr class="border-b border-warm-100 text-warm-400 text-[11px]">
+              <th class="text-left py-3 px-4 font-medium">종목</th>
+              <th class="text-right py-3 px-4 font-medium">수량</th>
+              <th class="text-right py-3 px-4 font-medium">평단가</th>
+              <th class="text-right py-3 px-4 font-medium">현재가</th>
+              <th class="text-right py-3 px-4 font-medium">평가금액</th>
+              <th class="text-right py-3 px-4 font-medium">수익률</th>
+              <th class="text-center py-3 px-4 font-medium w-20">액션</th>
+            </tr>
+          </thead>
+          <tbody>
+            <template x-for="(h, idx) in holdings" :key="h.id || h.code">
+              <tr class="border-b border-warm-50 hover:bg-warm-50/50 transition-colors">
+                <td class="py-3 px-4">
+                  <div class="flex items-center gap-2.5">
+                    <div class="w-8 h-8 rounded-full flex items-center justify-center shrink-0" :class="'av-' + (idx % 7)">
+                      <span class="text-[10px] font-bold" x-text="h.ticker.substring(0, 2)"></span>
+                    </div>
+                    <div>
+                      <div class="font-semibold" x-text="h.ticker"></div>
+                      <div class="text-[10px] text-warm-400" x-text="h.name"></div>
+                    </div>
+                  </div>
+                </td>
+                <td class="py-3 px-4 text-right">
+                  <template x-if="editingIdx !== idx">
+                    <span class="cursor-pointer hover:text-accent" @click="startEdit(idx)" x-text="h.quantity + '주'"></span>
+                  </template>
+                  <template x-if="editingIdx === idx">
+                    <input type="number" class="inline-input" x-model.number="editQuantity"
+                           @keydown.enter="applyEdit(idx)" @keydown.escape="cancelEdit()" x-ref="editQtyInput">
+                  </template>
+                </td>
+                <td class="py-3 px-4 text-right">
+                  <template x-if="editingIdx !== idx">
+                    <span class="cursor-pointer hover:text-accent text-warm-500" @click="startEdit(idx)"
+                          x-text="h.currency === 'USD' ? '$' + h.avg_price.toFixed(2) : h.avg_price.toLocaleString() + '원'"></span>
+                  </template>
+                  <template x-if="editingIdx === idx">
+                    <input type="number" step="0.01" class="inline-input" x-model.number="editAvgPrice"
+                           @keydown.enter="applyEdit(idx)" @keydown.escape="cancelEdit()">
+                  </template>
+                </td>
+                <td class="py-3 px-4 text-right font-semibold">
+                  <span x-show="h.hasPrice" x-text="h.currency === 'USD' ? '$' + h.currentPrice.toFixed(2) : h.currentPrice.toLocaleString() + '원'"></span>
+                  <span class="text-warm-300 text-[11px]" x-show="!h.hasPrice">가격 미수신</span>
+                </td>
+                <td class="py-3 px-4 text-right font-semibold" x-text="h.evalDisplay"></td>
+                <td class="py-3 px-4 text-right font-medium" :class="h.pnlPct >= 0 ? 'text-up' : 'text-down'">
+                  <span x-text="h.pnlDisplay" x-show="h.hasPrice"></span>
+                  <span class="text-warm-300" x-show="!h.hasPrice">-</span>
+                </td>
+                <td class="py-3 px-4 text-center">
+                  <div class="flex items-center justify-center gap-1">
+                    <template x-if="editingIdx === idx">
+                      <button class="action-btn" @click="applyEdit(idx)" title="저장" style="color:#34C759;">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>
+                      </button>
+                    </template>
+                    <template x-if="editingIdx !== idx">
+                      <button class="action-btn" @click="startEdit(idx)" title="편집">
+                        <svg class="w-4 h-4 text-warm-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+                      </button>
+                    </template>
+                    <button class="action-btn delete" @click="confirmDelete(idx)" title="삭제">
+                      <svg class="w-4 h-4 text-warm-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12"/></svg>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </template>
+          </tbody>
+        </table>
       </div>
 
       <!-- Total Evaluation -->
@@ -210,22 +532,163 @@
         <canvas id="alloc-chart" height="280"></canvas>
       </div>
 
+      <!-- Data source info -->
+      <div class="text-[10px] text-warm-400 text-center mb-4" x-text="dataSource"></div>
+
+    </div>
+  </template>
+
+  <!-- ==================== ADD STOCK MODAL ==================== -->
+  <template x-if="showAddModal">
+    <div class="modal-overlay" @click.self="showAddModal = false">
+      <div class="modal-card">
+        <div class="flex items-center justify-between mb-5">
+          <h3 class="text-lg font-bold">종목 추가</h3>
+          <button @click="showAddModal = false" class="w-8 h-8 rounded-full hover:bg-warm-100 flex items-center justify-center transition-colors">
+            <svg class="w-5 h-5 text-warm-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12"/></svg>
+          </button>
+        </div>
+
+        <!-- Ticker Search -->
+        <div class="mb-4 relative">
+          <label class="text-[11px] text-warm-400 font-medium block mb-1.5">종목 검색</label>
+          <input class="auth-input mb-0" type="text" placeholder="티커 또는 종목명 (예: NVDA, 삼성전자)"
+                 x-model="addTicker" @input="filterStocks()" @focus="showAutoComplete = addTicker.length > 0 || true" @click.away="showAutoComplete = false"
+                 autocomplete="off">
+          <!-- Autocomplete dropdown -->
+          <div class="autocomplete-dropdown" x-show="showAutoComplete && filteredStocks.length > 0" @click.away="showAutoComplete = false">
+            <template x-for="s in filteredStocks" :key="s.ticker">
+              <div class="autocomplete-item" @click="selectStock(s)">
+                <div>
+                  <span class="ticker-label" x-text="s.ticker"></span>
+                  <span class="name-label ml-2" x-text="s.name"></span>
+                </div>
+                <span class="text-[10px] text-warm-300" x-text="s.currency"></span>
+              </div>
+            </template>
+          </div>
+        </div>
+
+        <!-- Average Price -->
+        <div class="mb-4">
+          <label class="text-[11px] text-warm-400 font-medium block mb-1.5">평균 매입가</label>
+          <input class="auth-input mb-0" type="number" step="0.01" placeholder="매입 단가" x-model.number="addAvgPrice">
+        </div>
+
+        <!-- Quantity -->
+        <div class="mb-4">
+          <label class="text-[11px] text-warm-400 font-medium block mb-1.5">보유 수량</label>
+          <input class="auth-input mb-0" type="number" placeholder="수량" x-model.number="addQuantity">
+        </div>
+
+        <!-- Currency -->
+        <div class="mb-6">
+          <label class="text-[11px] text-warm-400 font-medium block mb-1.5">통화</label>
+          <div class="flex gap-3">
+            <label class="flex items-center gap-2 cursor-pointer">
+              <input type="radio" value="USD" x-model="addCurrency" class="accent-[#D97757]">
+              <span class="text-sm font-medium">USD</span>
+            </label>
+            <label class="flex items-center gap-2 cursor-pointer">
+              <input type="radio" value="KRW" x-model="addCurrency" class="accent-[#D97757]">
+              <span class="text-sm font-medium">KRW</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Add Button -->
+        <button class="auth-btn" @click="addHolding()" :disabled="!addTicker || !addAvgPrice || !addQuantity">
+          포트폴리오에 추가
+        </button>
+      </div>
+    </div>
+  </template>
+
+  <!-- ==================== DELETE CONFIRM DIALOG ==================== -->
+  <template x-if="showDeleteConfirm">
+    <div class="confirm-overlay" @click.self="showDeleteConfirm = false">
+      <div class="confirm-card">
+        <div style="width:44px;height:44px;border-radius:50%;background:#FFF5F5;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;">
+          <svg class="w-5 h-5 text-down" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+        </div>
+        <h3 class="text-base font-bold mb-2">종목 삭제</h3>
+        <p class="text-sm text-warm-500 mb-5" x-text="deleteTarget ? (deleteTarget.ticker + ' (' + deleteTarget.name + ')을(를) 삭제하시겠습니까?') : ''"></p>
+        <div class="flex gap-3">
+          <button class="flex-1 py-2.5 rounded-xl border border-warm-200 text-sm font-medium hover:bg-warm-50 transition-colors" @click="showDeleteConfirm = false">취소</button>
+          <button class="flex-1 py-2.5 rounded-xl bg-down text-white text-sm font-semibold hover:opacity-90 transition-opacity" @click="executeDelete()">삭제</button>
+        </div>
+      </div>
+    </div>
+  </template>
+
+  <!-- ==================== EDIT MODAL (Mobile) ==================== -->
+  <template x-if="showEditModal">
+    <div class="modal-overlay" @click.self="showEditModal = false">
+      <div class="modal-card">
+        <div class="flex items-center justify-between mb-5">
+          <h3 class="text-lg font-bold" x-text="editTarget ? (editTarget.ticker + ' 편집') : '편집'"></h3>
+          <button @click="showEditModal = false; cancelEdit()" class="w-8 h-8 rounded-full hover:bg-warm-100 flex items-center justify-center transition-colors">
+            <svg class="w-5 h-5 text-warm-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12"/></svg>
+          </button>
+        </div>
+        <div class="mb-4">
+          <label class="text-[11px] text-warm-400 font-medium block mb-1.5">보유 수량</label>
+          <input class="auth-input mb-0" type="number" x-model.number="editQuantity">
+        </div>
+        <div class="mb-6">
+          <label class="text-[11px] text-warm-400 font-medium block mb-1.5">평균 매입가</label>
+          <input class="auth-input mb-0" type="number" step="0.01" x-model.number="editAvgPrice">
+        </div>
+        <button class="auth-btn" @click="applyEdit(editingIdx); showEditModal = false;">저장</button>
+      </div>
     </div>
   </template>
 
 </main>
 
+<!-- FAB for mobile -->
+<template x-if="loggedIn">
+  <button class="fab-add md:hidden" @click="openAddModal()" title="종목 추가">
+    <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"/></svg>
+  </button>
+</template>
+
 <script type="module">
-import { supabase, isLoggedIn, getCurrentUser, signIn, signUp, signOut } from './shared/supabase-client.js';
-window._supabaseAuth = { isLoggedIn, getCurrentUser, signIn, signUp, signOut, supabase };
+import { supabase, isLoggedIn, getCurrentUser, signIn, signUp, signOut, signInWithGoogle } from './shared/supabase-client.js';
+window._supabaseAuth = { isLoggedIn, getCurrentUser, signIn, signUp, signOut, signInWithGoogle, supabase };
 </script>
 
 <script>
+// Popular stocks list for autocomplete
+const POPULAR_STOCKS = [
+  { ticker: 'NVDA', name: '엔비디아', code: 'NVDA', currency: 'USD' },
+  { ticker: 'AAPL', name: '애플', code: 'AAPL', currency: 'USD' },
+  { ticker: 'MSFT', name: '마이크로소프트', code: 'MSFT', currency: 'USD' },
+  { ticker: 'GOOGL', name: '알파벳(구글)', code: 'GOOGL', currency: 'USD' },
+  { ticker: 'AMZN', name: '아마존', code: 'AMZN', currency: 'USD' },
+  { ticker: 'TSLA', name: '테슬라', code: 'TSLA', currency: 'USD' },
+  { ticker: 'META', name: '메타(페이스북)', code: 'META', currency: 'USD' },
+  { ticker: 'PLTR', name: '팔란티어', code: 'PLTR', currency: 'USD' },
+  { ticker: 'AMD', name: 'AMD', code: 'AMD', currency: 'USD' },
+  { ticker: 'INTC', name: '인텔', code: 'INTC', currency: 'USD' },
+  { ticker: 'AVGO', name: '브로드컴', code: 'AVGO', currency: 'USD' },
+  { ticker: 'NFLX', name: '넷플릭스', code: 'NFLX', currency: 'USD' },
+  { ticker: 'KBWB', name: '인베스코 금융주 ETF', code: 'KBWB', currency: 'USD' },
+  { ticker: 'XLF', name: '금융 셀렉트 ETF', code: 'XLF', currency: 'USD' },
+  { ticker: 'PSLV', name: '스프롯 실물 은', code: 'PSLV', currency: 'USD' },
+  { ticker: 'KORU', name: 'Direxion 한국 3배', code: 'KORU', currency: 'USD' },
+  { ticker: '005930.KS', name: '삼성전자', code: '005930.KS', currency: 'KRW' },
+  { ticker: '000660.KS', name: 'SK하이닉스', code: '000660.KS', currency: 'KRW' },
+  { ticker: '373220.KS', name: 'LG에너지솔루션', code: '373220.KS', currency: 'KRW' },
+  { ticker: 'ACE FT', name: 'ACE 미국핀테크', code: 'A461300', currency: 'KRW' },
+];
+
 function portfolioApp() {
   return {
     // Auth state
     loggedIn: false,
     userEmail: null,
+    userId: null,
     isSignUp: false,
     authEmail: '',
     authPassword: '',
@@ -233,22 +696,50 @@ function portfolioApp() {
     authSuccess: '',
     authLoading: false,
     showLogin: false,
+    showEmailForm: false,
 
     // Portfolio data
     holdings: [],
+    rawHoldings: [],  // raw data before price enrichment
     cashKRW: 0,
     cashUSD: 0,
+    editCashKRW: false,
+    editCashUSD: false,
     meta: {},
     prices: {},
+    priceMap: {},  // ticker -> price mapping for new structure
     fxRate: 1450,
+    dataSource: '',
 
     // Computed
     totalKRWeval: 0,
     totalUSDeval: 0,
+    totalPnlPct: 0,
     totalDisplay: '-',
     totalSubDisplay: '',
 
     chartInstance: null,
+
+    // Add modal
+    showAddModal: false,
+    addTicker: '',
+    addAvgPrice: null,
+    addQuantity: null,
+    addCurrency: 'USD',
+    showAutoComplete: false,
+    filteredStocks: POPULAR_STOCKS.slice(0, 8),
+
+    // Edit state
+    editingIdx: -1,
+    editQuantity: 0,
+    editAvgPrice: 0,
+    showEditModal: false,
+    editTarget: null,
+
+    // Delete state
+    showDeleteConfirm: false,
+    deleteTarget: null,
+    deleteIdx: -1,
 
     async init() {
       // Check auth
@@ -258,21 +749,40 @@ function portfolioApp() {
           const user = await window._supabaseAuth.getCurrentUser();
           this.loggedIn = true;
           this.userEmail = user?.email;
+          this.userId = user?.id;
           await this.loadPortfolio();
         }
-      } catch (e) {}
+      } catch (e) { console.error('Auth check error:', e); }
 
       // Listen for auth changes
       window._supabaseAuth.supabase.auth.onAuthStateChange((event, session) => {
         if (session?.user) {
           this.loggedIn = true;
           this.userEmail = session.user.email;
+          this.userId = session.user.id;
           this.$nextTick(() => this.loadPortfolio());
         } else {
           this.loggedIn = false;
           this.userEmail = null;
+          this.userId = null;
         }
       });
+    },
+
+    // ==================== AUTH ====================
+    async doGoogleLogin() {
+      this.authLoading = true;
+      this.authError = '';
+      try {
+        const { data, error } = await window._supabaseAuth.signInWithGoogle();
+        if (error) {
+          this.authError = error.message;
+        }
+        // OAuth redirects, so no further action needed on success
+      } catch (e) {
+        this.authError = e.message || '오류가 발생했습니다';
+      }
+      this.authLoading = false;
     },
 
     async submitAuth() {
@@ -291,6 +801,7 @@ function portfolioApp() {
           else {
             this.loggedIn = true;
             this.userEmail = user?.email;
+            this.userId = user?.id;
             this.$nextTick(() => this.loadPortfolio());
           }
         }
@@ -300,69 +811,356 @@ function portfolioApp() {
       this.authLoading = false;
     },
 
-    async loadPortfolio() {
-      const [portfolioData, pricesData] = await Promise.all([
-        this.fetchJSON('data/portfolio.json'),
-        this.fetchJSON('data/prices.json')
-      ]);
+    async doSignOut() {
+      await window._supabaseAuth.signOut();
+      this.loggedIn = false;
+      this.userEmail = null;
+      this.userId = null;
+      this.holdings = [];
+      this.rawHoldings = [];
+    },
 
-      if (pricesData?.status === 'ok' && pricesData.prices) {
-        this.prices = pricesData.prices;
-        this.fxRate = pricesData.prices['__FX__'] || 1450;
+    // ==================== DATA LOADING ====================
+    async loadPortfolio() {
+      // Load prices first
+      const pricesData = await this.fetchJSON('data/prices.json');
+
+      // Handle both old and new prices.json structure
+      if (pricesData) {
+        if (pricesData.updated_at && pricesData.holdings) {
+          // New structure: { updated_at, holdings: [{ticker, current_price, ...}], watchlist: [...] }
+          this.priceMap = {};
+          (pricesData.holdings || []).forEach(p => {
+            this.priceMap[p.ticker] = p;
+          });
+          (pricesData.watchlist || []).forEach(p => {
+            this.priceMap[p.ticker] = p;
+          });
+          this.fxRate = pricesData.fx_rate || 1450;
+        } else if (pricesData.status === 'ok' && pricesData.prices) {
+          // Old structure: { status, prices: { code: price, __FX__: rate } }
+          this.prices = pricesData.prices;
+          this.fxRate = pricesData.prices['__FX__'] || 1450;
+        }
       }
 
-      if (portfolioData?.status === 'ok') {
-        this.cashKRW = portfolioData.cash?.krw || 0;
-        this.cashUSD = portfolioData.cash?.usd || 0;
-        this.meta = portfolioData.meta || {};
+      // Try loading holdings: Supabase -> localStorage -> portfolio.json
+      let holdingsLoaded = false;
 
-        this.holdings = (portfolioData.holdings || []).map(h => {
-          const cp = this.prices[h.code];
-          const hasPrice = cp != null;
-          const pnlPct = hasPrice ? ((cp - h.avg_price) / h.avg_price * 100) : 0;
-          const evalVal = hasPrice ? h.quantity * cp : h.est_value;
-          return {
-            ...h,
-            hasPrice,
-            currentPrice: cp || h.avg_price,
-            pnlPct,
-            pnlDisplay: hasPrice ? ((pnlPct >= 0 ? '+' : '') + pnlPct.toFixed(1) + '%') : '-',
-            evalDisplay: h.currency === 'USD'
-              ? '$' + evalVal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
-              : evalVal.toLocaleString() + '원',
-            evalValue: evalVal
-          };
-        });
+      // 1. Try Supabase
+      if (this.userId) {
+        try {
+          const { data, error } = await window._supabaseAuth.supabase
+            .from('holdings')
+            .select('*')
+            .eq('user_id', this.userId);
+          if (!error && data && data.length > 0) {
+            this.rawHoldings = data.map(row => ({
+              id: row.id,
+              code: row.code || row.ticker,
+              ticker: row.ticker,
+              name: row.name || row.ticker,
+              quantity: row.quantity,
+              avg_price: row.avg_price,
+              est_value: row.quantity * row.avg_price,
+              currency: row.currency || 'USD'
+            }));
+            this.cashKRW = data[0]?.cash_krw ?? this.cashKRW;
+            this.cashUSD = data[0]?.cash_usd ?? this.cashUSD;
+            holdingsLoaded = true;
+            this.dataSource = '데이터: Supabase (클라우드 저장)';
+          }
+        } catch (e) {
+          console.warn('Supabase holdings load failed:', e);
+        }
+      }
 
-        // Compute totals
-        let usd = 0, krw = 0;
-        this.holdings.forEach(h => {
-          if (h.currency === 'USD') usd += h.evalValue;
-          else krw += h.evalValue;
-        });
-        usd += this.cashUSD;
-        krw += this.cashKRW;
-        this.totalUSDeval = usd - this.cashUSD;
-        this.totalKRWeval = krw - this.cashKRW;
+      // 2. Try localStorage
+      if (!holdingsLoaded) {
+        try {
+          const stored = localStorage.getItem('portfolio_holdings');
+          if (stored) {
+            const parsed = JSON.parse(stored);
+            if (parsed.holdings && parsed.holdings.length > 0) {
+              this.rawHoldings = parsed.holdings;
+              this.cashKRW = parsed.cashKRW ?? 0;
+              this.cashUSD = parsed.cashUSD ?? 0;
+              holdingsLoaded = true;
+              this.dataSource = '데이터: 로컬 저장소 (이 기기에만 저장)';
+            }
+          }
+        } catch (e) {
+          console.warn('localStorage load failed:', e);
+        }
+      }
 
-        const totalKRWAll = krw + usd * this.fxRate;
-        if (totalKRWAll >= 100000000) this.totalDisplay = (totalKRWAll / 100000000).toFixed(2) + '억원';
-        else if (totalKRWAll >= 10000) this.totalDisplay = Math.round(totalKRWAll / 10000).toLocaleString() + '만원';
-        else this.totalDisplay = totalKRWAll.toLocaleString() + '원';
+      // 3. Fallback to portfolio.json
+      if (!holdingsLoaded) {
+        const portfolioData = await this.fetchJSON('data/portfolio.json');
+        if (portfolioData?.status === 'ok') {
+          this.rawHoldings = portfolioData.holdings || [];
+          this.cashKRW = portfolioData.cash?.krw || 0;
+          this.cashUSD = portfolioData.cash?.usd || 0;
+          this.meta = portfolioData.meta || {};
+          this.dataSource = '데이터: portfolio.json (기본 데이터)';
+        }
+      }
 
-        this.totalSubDisplay = '$' + usd.toLocaleString('en-US', { maximumFractionDigits: 0 }) + ' + ' + krw.toLocaleString() + '원 · 환율 ' + this.fxRate.toFixed(0) + '원';
+      this.enrichHoldings();
+    },
 
-        // Render chart after DOM update
-        this.$nextTick(() => this.renderChart());
+    enrichHoldings() {
+      this.holdings = this.rawHoldings.map(h => {
+        // Try to get current price from either old or new price structure
+        let cp = null;
+
+        // New structure: match by ticker
+        if (this.priceMap[h.ticker]) {
+          cp = this.priceMap[h.ticker].current_price;
+        }
+        // Old structure: match by code
+        if (cp == null && this.prices[h.code]) {
+          cp = this.prices[h.code];
+        }
+
+        const hasPrice = cp != null;
+        const pnlPct = hasPrice ? ((cp - h.avg_price) / h.avg_price * 100) : 0;
+        const evalVal = hasPrice ? h.quantity * cp : (h.est_value || h.quantity * h.avg_price);
+        return {
+          ...h,
+          hasPrice,
+          currentPrice: cp || h.avg_price,
+          pnlPct,
+          pnlDisplay: hasPrice ? ((pnlPct >= 0 ? '+' : '') + pnlPct.toFixed(1) + '%') : '-',
+          evalDisplay: h.currency === 'USD'
+            ? '$' + evalVal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+            : evalVal.toLocaleString() + '원',
+          evalValue: evalVal
+        };
+      });
+
+      // Compute totals
+      let usd = 0, krw = 0;
+      let costUsd = 0, costKrw = 0;
+      this.holdings.forEach(h => {
+        if (h.currency === 'USD') {
+          usd += h.evalValue;
+          costUsd += h.quantity * h.avg_price;
+        } else {
+          krw += h.evalValue;
+          costKrw += h.quantity * h.avg_price;
+        }
+      });
+
+      this.totalUSDeval = usd;
+      this.totalKRWeval = krw;
+
+      // Total PnL
+      const totalCost = costUsd * this.fxRate + costKrw;
+      const totalEval = usd * this.fxRate + krw;
+      this.totalPnlPct = totalCost > 0 ? ((totalEval - totalCost) / totalCost * 100) : 0;
+
+      // Total display including cash
+      const totalKRWAll = (krw + this.cashKRW) + (usd + this.cashUSD) * this.fxRate;
+      if (totalKRWAll >= 100000000) this.totalDisplay = (totalKRWAll / 100000000).toFixed(2) + '억원';
+      else if (totalKRWAll >= 10000) this.totalDisplay = Math.round(totalKRWAll / 10000).toLocaleString() + '만원';
+      else this.totalDisplay = totalKRWAll.toLocaleString() + '원';
+
+      const usdTotal = usd + this.cashUSD;
+      const krwTotal = krw + this.cashKRW;
+      this.totalSubDisplay = '$' + usdTotal.toLocaleString('en-US', { maximumFractionDigits: 0 }) + ' + ' + krwTotal.toLocaleString() + '원 · 환율 ' + this.fxRate.toFixed(0) + '원';
+
+      // Render chart after DOM update
+      this.$nextTick(() => this.renderChart());
+    },
+
+    // ==================== ADD STOCK ====================
+    openAddModal() {
+      this.showAddModal = true;
+      this.addTicker = '';
+      this.addAvgPrice = null;
+      this.addQuantity = null;
+      this.addCurrency = 'USD';
+      this.filteredStocks = POPULAR_STOCKS.slice(0, 8);
+      this.showAutoComplete = false;
+    },
+
+    filterStocks() {
+      const q = this.addTicker.toLowerCase().trim();
+      if (!q) {
+        this.filteredStocks = POPULAR_STOCKS.slice(0, 8);
+        this.showAutoComplete = true;
+        return;
+      }
+      this.filteredStocks = POPULAR_STOCKS.filter(s =>
+        s.ticker.toLowerCase().includes(q) || s.name.toLowerCase().includes(q)
+      ).slice(0, 8);
+      this.showAutoComplete = true;
+    },
+
+    selectStock(stock) {
+      this.addTicker = stock.ticker;
+      this.addCurrency = stock.currency;
+      this.showAutoComplete = false;
+    },
+
+    async addHolding() {
+      if (!this.addTicker || !this.addAvgPrice || !this.addQuantity) return;
+
+      // Auto-detect currency from ticker
+      const ticker = this.addTicker.trim();
+      if (ticker.endsWith('.KS') || ticker.endsWith('.KQ')) {
+        this.addCurrency = 'KRW';
+      }
+
+      // Find from popular stocks or create new
+      const popular = POPULAR_STOCKS.find(s => s.ticker.toUpperCase() === ticker.toUpperCase());
+      const newHolding = {
+        id: 'local_' + Date.now(),
+        code: popular ? popular.code : ticker,
+        ticker: popular ? popular.ticker : ticker.toUpperCase(),
+        name: popular ? popular.name : ticker.toUpperCase(),
+        quantity: this.addQuantity,
+        avg_price: this.addAvgPrice,
+        est_value: this.addQuantity * this.addAvgPrice,
+        currency: this.addCurrency
+      };
+
+      this.rawHoldings.push(newHolding);
+      this.enrichHoldings();
+      await this.saveHoldings();
+      this.showAddModal = false;
+    },
+
+    // ==================== EDIT ====================
+    startEdit(idx) {
+      const h = this.holdings[idx];
+      this.editingIdx = idx;
+      this.editQuantity = h.quantity;
+      this.editAvgPrice = h.avg_price;
+      this.editTarget = h;
+
+      // On mobile, show edit modal instead of inline
+      if (window.innerWidth < 768) {
+        this.showEditModal = true;
       }
     },
 
+    applyEdit(idx) {
+      if (idx < 0 || idx >= this.rawHoldings.length) return;
+      this.rawHoldings[idx].quantity = this.editQuantity;
+      this.rawHoldings[idx].avg_price = this.editAvgPrice;
+      this.rawHoldings[idx].est_value = this.editQuantity * this.editAvgPrice;
+      this.editingIdx = -1;
+      this.editTarget = null;
+      this.enrichHoldings();
+      this.saveHoldings();
+    },
+
+    cancelEdit() {
+      this.editingIdx = -1;
+      this.editTarget = null;
+    },
+
+    // ==================== DELETE ====================
+    confirmDelete(idx) {
+      this.deleteIdx = idx;
+      this.deleteTarget = this.holdings[idx];
+      this.showDeleteConfirm = true;
+    },
+
+    async executeDelete() {
+      const idx = this.deleteIdx;
+      if (idx < 0 || idx >= this.rawHoldings.length) return;
+
+      const holding = this.rawHoldings[idx];
+
+      // Try to delete from Supabase
+      if (this.userId && holding.id && !String(holding.id).startsWith('local_')) {
+        try {
+          await window._supabaseAuth.supabase
+            .from('holdings')
+            .delete()
+            .eq('id', holding.id);
+        } catch (e) {
+          console.warn('Supabase delete failed:', e);
+        }
+      }
+
+      this.rawHoldings.splice(idx, 1);
+      this.enrichHoldings();
+      await this.saveHoldings();
+      this.showDeleteConfirm = false;
+      this.deleteTarget = null;
+      this.deleteIdx = -1;
+    },
+
+    // ==================== SAVE ====================
+    async saveHoldings() {
+      // 1. Try Supabase
+      if (this.userId) {
+        try {
+          const rows = this.rawHoldings.map(h => ({
+            user_id: this.userId,
+            code: h.code,
+            ticker: h.ticker,
+            name: h.name,
+            quantity: h.quantity,
+            avg_price: h.avg_price,
+            currency: h.currency,
+            cash_krw: this.cashKRW,
+            cash_usd: this.cashUSD,
+          }));
+
+          // Delete all existing and re-insert
+          await window._supabaseAuth.supabase
+            .from('holdings')
+            .delete()
+            .eq('user_id', this.userId);
+
+          if (rows.length > 0) {
+            await window._supabaseAuth.supabase
+              .from('holdings')
+              .insert(rows);
+          }
+          this.dataSource = '데이터: Supabase (클라우드 저장)';
+        } catch (e) {
+          console.warn('Supabase save failed, falling back to localStorage:', e);
+          this.saveToLocalStorage();
+        }
+      } else {
+        this.saveToLocalStorage();
+      }
+
+      // Always also save to localStorage as backup
+      this.saveToLocalStorage();
+    },
+
+    saveToLocalStorage() {
+      try {
+        localStorage.setItem('portfolio_holdings', JSON.stringify({
+          holdings: this.rawHoldings,
+          cashKRW: this.cashKRW,
+          cashUSD: this.cashUSD,
+          updatedAt: new Date().toISOString()
+        }));
+        if (!this.userId) {
+          this.dataSource = '데이터: 로컬 저장소 (이 기기에만 저장)';
+        }
+      } catch (e) {
+        console.warn('localStorage save failed:', e);
+      }
+    },
+
+    // ==================== CHART ====================
     renderChart() {
       const ctx = document.getElementById('alloc-chart');
       if (!ctx) return;
       if (this.chartInstance) this.chartInstance.destroy();
 
-      const colors = ['#D97757', '#6C8EBF', '#85CDCA', '#C38D9E', '#E8A87C', '#41B3A3', '#7B68EE'];
+      if (this.holdings.length === 0) return;
+
+      const colors = ['#D97757', '#6C8EBF', '#85CDCA', '#C38D9E', '#E8A87C', '#41B3A3', '#7B68EE', '#FF6B6B', '#4ECDC4', '#45B7D1'];
       this.chartInstance = new Chart(ctx, {
         type: 'doughnut',
         data: {
@@ -390,13 +1188,7 @@ function portfolioApp() {
       });
     },
 
-    async doSignOut() {
-      await window._supabaseAuth.signOut();
-      this.loggedIn = false;
-      this.userEmail = null;
-      this.holdings = [];
-    },
-
+    // ==================== UTILS ====================
     async fetchJSON(url) {
       try {
         const r = await fetch(url);

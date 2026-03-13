@@ -1,7 +1,7 @@
 // ============================================================
 // Layout Shell - Initializes nav, auth, and page structure
 // ============================================================
-import { supabase, isLoggedIn, getCurrentUser, signIn, signUp, signOut, onAuthStateChange } from './supabase-client.js';
+import { supabase, isLoggedIn, getCurrentUser, signIn, signUp, signOut, signInWithGoogle, onAuthStateChange } from './supabase-client.js';
 import { initNav, updateNavAuth } from './nav.js';
 
 // Global auth state
@@ -131,4 +131,4 @@ export function renderAuthForm() {
 }
 
 // Export for use in pages
-export { signIn, signUp, signOut, isLoggedIn, getCurrentUser };
+export { signIn, signUp, signOut, signInWithGoogle, isLoggedIn, getCurrentUser };

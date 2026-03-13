@@ -1,13 +1,184 @@
 {
-  "status": "ok",
-  "prices": {
-    "US67066G1040": 183.83,
-    "US69608A1088": 139.76,
-    "US25461A3876": 78.23,
-    "CA85207K1075": 29.03,
-    "US46138E6288": 81.33,
-    "US81369Y6059": 60.63,
-    "A461300": 13020,
-    "__FX__": 1497.0
-  }
+  "updated_at": "2026-03-13T15:28:37",
+  "fx_usdkrw": 1492.78,
+  "holdings": [
+    {
+      "ticker": "NVDA",
+      "name": "엔비디아",
+      "currency": "USD",
+      "current_price": 183.14,
+      "prev_close": 186.03,
+      "change_pct": -1.55,
+      "high_52w": 212.17,
+      "low_52w": 86.6,
+      "volume": 155354700
+    },
+    {
+      "ticker": "PLTR",
+      "name": "팔란티어",
+      "currency": "USD",
+      "current_price": 153.5,
+      "prev_close": 151.6,
+      "change_pct": 1.25,
+      "high_52w": 207.52,
+      "low_52w": 66.12,
+      "volume": 54296200
+    },
+    {
+      "ticker": "KORU",
+      "name": "Direxion 한국 3배",
+      "currency": "USD",
+      "current_price": 314.39,
+      "prev_close": 394.04,
+      "change_pct": -20.21,
+      "high_52w": 665.4,
+      "low_52w": 26.87,
+      "volume": 1881300
+    },
+    {
+      "ticker": "PSLV",
+      "name": "스프롯 실물 은",
+      "currency": "USD",
+      "current_price": 27.53,
+      "prev_close": 28.12,
+      "change_pct": -2.1,
+      "high_52w": 38.13,
+      "low_52w": 9.97,
+      "volume": 7236500
+    },
+    {
+      "ticker": "KBWB",
+      "name": "인베스코 금융주 ETF",
+      "currency": "USD",
+      "current_price": 76.38,
+      "prev_close": 78.34,
+      "change_pct": -2.5,
+      "high_52w": 91.44,
+      "low_52w": 50.27,
+      "volume": 3178500
+    },
+    {
+      "ticker": "XLF",
+      "name": "금융 셀렉트 ETF",
+      "currency": "USD",
+      "current_price": 48.83,
+      "prev_close": 49.64,
+      "change_pct": -1.63,
+      "high_52w": 56.52,
+      "low_52w": 41.78,
+      "volume": 67837500
+    },
+    {
+      "ticker": "ACE FT",
+      "name": "ACE 미국핀테크",
+      "currency": "KRW",
+      "current_price": 16780,
+      "prev_close": 17110,
+      "change_pct": -1.93,
+      "high_52w": 17400,
+      "low_52w": 14130,
+      "volume": 103150
+    }
+  ],
+  "watchlist": [
+    {
+      "ticker": "^KS11",
+      "name": "KOSPI",
+      "currency": "USD",
+      "current_price": 5478.87,
+      "prev_close": 5583.25,
+      "change_pct": -1.87,
+      "high_52w": 6347.41,
+      "low_52w": 2284.72,
+      "volume": 855856
+    },
+    {
+      "ticker": "^KQ11",
+      "name": "KOSDAQ",
+      "currency": "USD",
+      "current_price": 1150.59,
+      "prev_close": 1148.4,
+      "change_pct": 0.19,
+      "high_52w": 1215.67,
+      "low_52w": 637.55,
+      "volume": 1264591
+    },
+    {
+      "ticker": "^GSPC",
+      "name": "S&P 500",
+      "currency": "USD",
+      "current_price": 6672.62,
+      "prev_close": 6775.8,
+      "change_pct": -1.52,
+      "high_52w": 7002.28,
+      "low_52w": 4835.04,
+      "volume": 6292170000
+    },
+    {
+      "ticker": "^IXIC",
+      "name": "NASDAQ",
+      "currency": "USD",
+      "current_price": 22311.98,
+      "prev_close": 22716.13,
+      "change_pct": -1.78,
+      "high_52w": 24019.99,
+      "low_52w": 14784.03,
+      "volume": 8490850000
+    },
+    {
+      "ticker": "^DJI",
+      "name": "다우존스",
+      "currency": "USD",
+      "current_price": 46677.85,
+      "prev_close": 47417.27,
+      "change_pct": -1.56,
+      "high_52w": 50512.79,
+      "low_52w": 36611.78,
+      "volume": 535900000
+    },
+    {
+      "ticker": "USDKRW=X",
+      "name": "달러/원",
+      "currency": "USD",
+      "current_price": 1492.78,
+      "prev_close": 1475.34,
+      "change_pct": 1.18,
+      "high_52w": 1506.25,
+      "low_52w": 1322.42,
+      "volume": 0
+    },
+    {
+      "ticker": "GC=F",
+      "name": "금",
+      "currency": "USD",
+      "current_price": 5103.8,
+      "prev_close": 5115.8,
+      "change_pct": -0.23,
+      "high_52w": 5586.2,
+      "low_52w": 2935.2,
+      "volume": 29106
+    },
+    {
+      "ticker": "CL=F",
+      "name": "원유(WTI)",
+      "currency": "USD",
+      "current_price": 95.14,
+      "prev_close": 95.73,
+      "change_pct": -0.62,
+      "high_52w": 119.48,
+      "low_52w": 54.98,
+      "volume": 56337
+    },
+    {
+      "ticker": "BTC-USD",
+      "name": "비트코인",
+      "currency": "USD",
+      "current_price": 71390.47,
+      "prev_close": 70204.88,
+      "change_pct": 1.69,
+      "high_52w": 126198.07,
+      "low_52w": 60074.2,
+      "volume": 45799383040
+    }
+  ]
 }
