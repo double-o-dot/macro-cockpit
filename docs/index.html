@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Macro Cockpit</title>
+  <title>Macro Cockpit - 인사이트</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='14' fill='%23D97757'/></svg>">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
@@ -25,818 +25,311 @@
     }
   }
   </script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
-  <style>
-    * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
-    body { background: #F5F1EB; }
-    .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-    .hide-scrollbar::-webkit-scrollbar { display: none; }
-    .tab-panel { display: none; }
-    .tab-panel.active { display: block; animation: fadeUp .25s ease; }
-    @keyframes fadeUp { from { opacity:0; transform:translateY(8px) } to { opacity:1; transform:translateY(0) } }
-    @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
-    @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-8px)} 75%{transform:translateX(8px)} }
-    .skel { background: linear-gradient(90deg, #EBE5DC 25%, #F5F1EB 50%, #EBE5DC 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 16px; }
-
-    /* Soft card */
-    .scard { background: #fff; border-radius: 20px; box-shadow: 0 2px 12px rgba(0,0,0,.04); }
-    .scard-sm { background: #fff; border-radius: 16px; box-shadow: 0 1px 8px rgba(0,0,0,.03); }
-
-    /* Hero gradient */
-    .hero { background: linear-gradient(145deg, #2A2520 0%, #4A3F35 60%, #5C4A3E 100%); border-radius: 24px; position: relative; overflow: hidden; color: #fff; }
-
-    /* Bottom nav */
-    .bnav { position: fixed; bottom: 0; left: 0; right: 0; z-index: 50; background: #fff; border-top: 1px solid #EBE5DC;
-      display: flex; justify-content: space-around; align-items: center; height: 60px; padding-bottom: env(safe-area-inset-bottom); }
-    .bnav a { display: flex; flex-direction: column; align-items: center; gap: 2px; font-size: 10px; font-weight: 500;
-      color: #B0A89C; transition: color .15s; text-decoration: none; padding: 6px 12px; }
-    .bnav a.active { color: #D97757; }
-    .bnav a .dot { width: 4px; height: 4px; border-radius: 50%; background: transparent; transition: background .15s; margin-top: 1px; }
-    .bnav a.active .dot { background: #D97757; }
-
-    /* Desktop sidebar */
-    .sidebar { display: none; }
-    .nav-link { transition: all .15s; }
-    .nav-link:hover { background: rgba(255,255,255,.08); }
-    .nav-link.active { background: rgba(255,255,255,.12); border-left: 3px solid #D97757; }
-
-    /* Desktop layout */
-    @media (min-width: 768px) {
-      .sidebar { display: flex; }
-      .bnav { display: none !important; }
-      main { margin-left: 224px; }
-      body { padding-bottom: 0; }
-      .mob-only { display: none !important; }
-    }
-    @media (max-width: 767px) {
-      .desk-only { display: none !important; }
-      body { padding-bottom: 68px; }
-    }
-
-    /* Avatar colors */
-    .av-0 { background: #D97757; color: #fff; }
-    .av-1 { background: #6C8EBF; color: #fff; }
-    .av-2 { background: #85CDCA; color: #fff; }
-    .av-3 { background: #C38D9E; color: #fff; }
-    .av-4 { background: #E8A87C; color: #fff; }
-    .av-5 { background: #41B3A3; color: #fff; }
-    .av-6 { background: #7B68EE; color: #fff; }
-
-    /* Signal level styles */
-    .sig-danger  { background: #FFF5F5; border-left: 3px solid #FF3B30; }
-    .sig-caution { background: #FFFBF0; border-left: 3px solid #FF9500; }
-    .sig-calm    { background: #F0FFF4; border-left: 3px solid #34C759; }
-    .sig-bullish { background: #F0FFF4; border-left: 3px solid #34C759; }
-    .sig-bearish { background: #FFF5F5; border-left: 3px solid #FF3B30; }
-    .sig-favorable { background: #F0FDFA; border-left: 3px solid #14B8A6; }
-    .sig-neutral { background: #FAF8F5; border-left: 3px solid #D4CCC0; }
-    .sig-info    { background: #F0F7FF; border-left: 3px solid #5AC8FA; }
-
-    /* PIN keypad */
-    .pin-dot { width: 14px; height: 14px; border-radius: 50%; border: 2px solid #D4CCC0; transition: all .15s; }
-    .pin-dot.filled { background: #D97757; border-color: #D97757; }
-    .pin-key { width: 68px; height: 68px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
-      font-size: 22px; font-weight: 500; cursor: pointer; transition: all .1s;
-      background: white; border: 1px solid #EBE5DC; color: #2A2520; user-select: none; -webkit-user-select: none; }
-    .pin-key:active { background: #F5F1EB; transform: scale(0.93); }
-    .pin-key.fn { background: transparent; border: none; font-size: 13px; color: #6B6560; }
-  </style>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
+  <link rel="stylesheet" href="shared/theme.css">
 </head>
 
-<body class="font-sans text-warm-900 antialiased">
+<body class="font-sans text-warm-900 antialiased" x-data="insightsApp()" x-init="init()">
 
-<!-- ==================== PIN LOCK (Portfolio Only) ==================== -->
-<div id="pin-screen" class="fixed inset-0 z-[100] bg-bg flex flex-col items-center justify-center px-6" style="display:none;">
-  <div class="flex items-center gap-2.5 mb-10">
-    <div class="w-11 h-11 rounded-full bg-accent flex items-center justify-center">
-      <span class="text-white text-lg font-bold">M</span>
-    </div>
-    <span class="text-xl font-semibold tracking-tight">Portfolio Lock</span>
+<!-- ==================== DESKTOP TOP NAV ==================== -->
+<nav class="topnav" id="topnav">
+  <a href="index.html" class="topnav-logo">
+    <div class="logo-circle"><span>M</span></div>
+    <span class="logo-text">Macro Cockpit</span>
+  </a>
+  <div class="topnav-menu">
+    <a href="index.html" class="active" data-nav="insights">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+      인사이트
+    </a>
+    <a href="prices.html" data-nav="prices">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+      주식가격
+    </a>
+    <a href="portfolio.html" data-nav="portfolio">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/><path d="M9 12l2 2 4-4"/></svg>
+      포트폴리오
+    </a>
+    <a href="macro.html" data-nav="macro">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z"/></svg>
+      매크로
+    </a>
   </div>
-  <p id="pin-msg" class="text-sm text-warm-500 mb-6">PIN을 입력하세요</p>
-  <div class="flex gap-4 mb-10" id="pin-dots">
-    <div class="pin-dot"></div><div class="pin-dot"></div>
-    <div class="pin-dot"></div><div class="pin-dot"></div>
+  <div class="topnav-auth">
+    <template x-if="loggedIn">
+      <button class="btn-logout" @click="doSignOut()">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+        <span x-text="userEmail ? userEmail.split('@')[0] : '로그아웃'"></span>
+      </button>
+    </template>
+    <template x-if="!loggedIn">
+      <a href="portfolio.html" class="btn-login">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/></svg>
+        로그인
+      </a>
+    </template>
   </div>
-  <div class="grid grid-cols-3 gap-3" id="pin-pad">
-    <div class="pin-key" data-v="1">1</div><div class="pin-key" data-v="2">2</div><div class="pin-key" data-v="3">3</div>
-    <div class="pin-key" data-v="4">4</div><div class="pin-key" data-v="5">5</div><div class="pin-key" data-v="6">6</div>
-    <div class="pin-key" data-v="7">7</div><div class="pin-key" data-v="8">8</div><div class="pin-key" data-v="9">9</div>
-    <div class="pin-key fn" data-v="clear">Clear</div><div class="pin-key" data-v="0">0</div><div class="pin-key fn" data-v="back">&larr;</div>
-  </div>
-  <button onclick="closePinScreen()" class="mt-6 text-sm text-warm-400 hover:text-warm-600 transition-colors">취소</button>
-  <p id="pin-setup-hint" class="text-xs text-warm-400 mt-4 hidden">첫 접속: 사용할 PIN 4자리를 설정하세요</p>
-</div>
-
-<script>
-// PIN system - Portfolio tab only
-const PIN = {
-  SK: 'mc_pin_hash',
-  pin: '',
-  sf: '',
-  unlocked: false,
-  isSetup: false,
-  init() {
-    this.isSetup = !localStorage.getItem(this.SK);
-    const ts = parseInt(localStorage.getItem('mc_pin_ts') || '0');
-    if (!this.isSetup && Date.now() - ts < 7 * 86400000) this.unlocked = true;
-  },
-  show() {
-    this.pin = ''; this.sf = '';
-    const screen = document.getElementById('pin-screen');
-    const msg = document.getElementById('pin-msg');
-    const hint = document.getElementById('pin-setup-hint');
-    screen.style.display = 'flex';
-    if (this.isSetup) { msg.textContent = 'Portfolio PIN 4자리를 설정하세요'; hint.classList.remove('hidden'); }
-    else { msg.textContent = 'Portfolio PIN을 입력하세요'; hint.classList.add('hidden'); }
-    this.updateDots();
-  },
-  updateDots() {
-    document.querySelectorAll('#pin-dots .pin-dot').forEach((d, i) => d.classList.toggle('filled', i < this.pin.length));
-  },
-  shake() {
-    const c = document.getElementById('pin-dots');
-    c.style.animation = 'none'; c.offsetHeight; c.style.animation = 'shake .4s ease';
-  },
-  async hash(p) {
-    const e = new TextEncoder().encode(p + '_mc');
-    const b = await crypto.subtle.digest('SHA-256', e);
-    return Array.from(new Uint8Array(b)).map(x => x.toString(16).padStart(2, '0')).join('');
-  },
-  async check() {
-    const h = await this.hash(this.pin);
-    const msg = document.getElementById('pin-msg');
-    if (this.isSetup) {
-      if (!this.sf) { this.sf = this.pin; this.pin = ''; this.updateDots(); msg.textContent = 'PIN을 다시 입력하세요'; return; }
-      if (this.pin === this.sf) {
-        localStorage.setItem(this.SK, h); localStorage.setItem('mc_pin_ts', Date.now().toString());
-        this.unlocked = true; this.isSetup = false;
-        document.getElementById('pin-screen').style.display = 'none';
-        switchTab('portfolio');
-      } else { this.sf = ''; this.pin = ''; this.updateDots(); this.shake(); msg.textContent = '불일치. 다시 설정하세요'; }
-      return;
-    }
-    if (h === localStorage.getItem(this.SK)) {
-      localStorage.setItem('mc_pin_ts', Date.now().toString());
-      this.unlocked = true;
-      document.getElementById('pin-screen').style.display = 'none';
-      switchTab('portfolio');
-    } else {
-      this.pin = ''; this.updateDots(); this.shake(); msg.textContent = '잘못된 PIN';
-      setTimeout(() => { msg.textContent = 'Portfolio PIN을 입력하세요'; }, 1500);
-    }
-  }
-};
-PIN.init();
-function closePinScreen() { document.getElementById('pin-screen').style.display = 'none'; switchTab('overview'); }
-document.getElementById('pin-pad').addEventListener('click', e => {
-  const k = e.target.closest('.pin-key'); if (!k) return; const v = k.dataset.v;
-  if (v === 'clear') { PIN.pin = ''; PIN.updateDots(); return; }
-  if (v === 'back') { PIN.pin = PIN.pin.slice(0, -1); PIN.updateDots(); return; }
-  if (PIN.pin.length >= 4) return;
-  PIN.pin += v; PIN.updateDots();
-  if (PIN.pin.length === 4) setTimeout(() => PIN.check(), 200);
-});
-</script>
-
-<!-- ==================== DESKTOP SIDEBAR ==================== -->
-<aside class="sidebar fixed left-0 top-0 h-screen w-56 bg-warm-800 flex-col z-50">
-  <div class="px-5 py-6 border-b border-white/10">
-    <div class="flex items-center gap-2.5">
-      <div class="w-7 h-7 rounded-full bg-accent flex items-center justify-center"><span class="text-white text-xs font-bold">M</span></div>
-      <span class="text-white font-semibold tracking-tight">Macro Cockpit</span>
-    </div>
-  </div>
-  <nav class="flex-1 px-3 py-4 space-y-0.5" id="sidebar-nav">
-    <a class="nav-link active flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-white/80 cursor-pointer" data-tab="overview">
-      <svg class="w-4 h-4 opacity-60" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>Overview</a>
-    <a class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-white/50 cursor-pointer" data-tab="portfolio">
-      <svg class="w-4 h-4 opacity-60" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/><path d="M9 12l2 2 4-4"/></svg>Portfolio</a>
-    <a class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-white/50 cursor-pointer" data-tab="signal">
-      <svg class="w-4 h-4 opacity-60" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>Macro Signal</a>
-    <a class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-white/50 cursor-pointer" data-tab="digest">
-      <svg class="w-4 h-4 opacity-60" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>Insights</a>
-    <a class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-white/50 cursor-pointer" data-tab="reports">
-      <svg class="w-4 h-4 opacity-60" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V9a2 2 0 012-2h2a2 2 0 012 2v9a2 2 0 01-2 2h-2z"/></svg>Reports</a>
-  </nav>
-  <div class="px-5 py-4 border-t border-white/10 text-white/20 text-xs" id="sidebar-meta">v2.0</div>
-</aside>
-
-<!-- ==================== BOTTOM NAV (Mobile) ==================== -->
-<nav class="bnav" id="bottom-nav">
-  <a data-tab="overview" class="active">
-    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
-    Overview<div class="dot"></div></a>
-  <a data-tab="portfolio">
-    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/><path d="M9 12l2 2 4-4"/></svg>
-    Portfolio<div class="dot"></div></a>
-  <a data-tab="signal">
-    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-    Signal<div class="dot"></div></a>
-  <a data-tab="digest">
-    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-    Insights<div class="dot"></div></a>
-  <a data-tab="reports">
-    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V9a2 2 0 012-2h2a2 2 0 012 2v9a2 2 0 01-2 2h-2z"/></svg>
-    Reports<div class="dot"></div></a>
 </nav>
 
-<!-- ==================== MAIN ==================== -->
-<main class="min-h-screen">
-  <header class="sticky top-0 z-40 bg-bg/80 backdrop-blur-md border-b border-warm-200/60 px-4 md:px-8 py-3 flex items-center justify-between">
-    <div>
-      <h1 id="page-title" class="text-base md:text-lg font-semibold">Overview</h1>
-      <p id="page-subtitle" class="text-[11px] text-warm-400 mt-0.5">Investment Dashboard</p>
-    </div>
-    <span id="updated-at" class="text-[10px] text-warm-400"></span>
-  </header>
+<!-- ==================== MOBILE BOTTOM NAV ==================== -->
+<nav class="bnav" id="bottom-nav">
+  <a href="index.html" class="active" data-nav="insights">
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+    인사이트<div class="dot"></div>
+  </a>
+  <a href="prices.html" data-nav="prices">
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+    주식가격<div class="dot"></div>
+  </a>
+  <a href="portfolio.html" data-nav="portfolio">
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/><path d="M9 12l2 2 4-4"/></svg>
+    포트폴리오<div class="dot"></div>
+  </a>
+  <a href="macro.html" data-nav="macro">
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z"/></svg>
+    매크로<div class="dot"></div>
+  </a>
+</nav>
 
-  <div class="px-4 md:px-8 py-5 md:py-6">
-    <div id="overview" class="tab-panel active"><div id="overview-content"><div class="skel h-40 mb-4"></div><div class="skel h-60"></div></div></div>
-    <div id="portfolio" class="tab-panel"><div id="portfolio-content"><div class="skel h-40 mb-4"></div><div class="skel h-60"></div></div></div>
-    <div id="signal" class="tab-panel"><div id="signal-content"><div class="skel h-40 mb-4"></div><div class="skel h-60"></div></div></div>
-    <div id="digest" class="tab-panel">
-      <div id="implications-content" class="mb-5"><div class="skel h-40"></div></div>
-      <div id="digest-content"><div class="skel h-40"></div></div>
-    </div>
-    <div id="reports" class="tab-panel">
-      <div id="reports-content"><div class="skel h-40 mb-4"></div><div class="skel h-60"></div></div>
-    </div>
-  </div>
-</main>
+<!-- ==================== MAIN CONTENT ==================== -->
+<main class="page-main">
 
-<script>
-// ============================================================
-// STATE
-// ============================================================
-const S = { tab:'overview', cache:{}, prices:{} };
-const AVATAR_COLORS = 7;
-const TABS = {
-  overview:  { title:'Overview',     sub:'Investment Dashboard' },
-  portfolio: { title:'Portfolio',    sub:'Holdings & Cash' },
-  signal:    { title:'Macro Signal', sub:'Market Indicators' },
-  digest:    { title:'PDF Insights', sub:'Research Analysis' },
-  reports:   { title:'Reports',      sub:'Infographic Archive' },
-};
-
-// ============================================================
-// NAV
-// ============================================================
-document.querySelectorAll('#sidebar-nav .nav-link, #bottom-nav a').forEach(el=>{
-  el.addEventListener('click',()=>switchTab(el.dataset.tab));
-});
-function switchTab(tab) {
-  // Portfolio tab requires PIN authentication
-  if (tab === 'portfolio' && !PIN.unlocked) { PIN.show(); return; }
-  S.tab = tab;
-  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
-  document.getElementById(tab)?.classList.add('active');
-  document.querySelectorAll('.nav-link').forEach(n=>{n.classList.toggle('active',n.dataset.tab===tab);n.classList.toggle('text-white/80',n.dataset.tab===tab);n.classList.toggle('text-white/50',n.dataset.tab!==tab);});
-  document.querySelectorAll('#bottom-nav a').forEach(n=>n.classList.toggle('active',n.dataset.tab===tab));
-  document.getElementById('page-title').textContent=TABS[tab]?.title||'';
-  document.getElementById('page-subtitle').textContent=TABS[tab]?.sub||'';
-  loadTab(tab);
-}
-
-// ============================================================
-// DATA FETCH (static JSON)
-// ============================================================
-async function fetchAPI(ep) {
-  if (S.cache[ep]) return S.cache[ep];
-  try {
-    const r = await fetch(`./data/${ep}.json`);
-    if (!r.ok) return {status:'empty'};
-    const d = await r.json();
-    if (d.status==='ok') S.cache[ep]=d;
-    return d;
-  } catch(e) { return {status:'error',message:e.message}; }
-}
-async function loadTab(tab) {
-  if (tab==='overview') return loadOverview();
-  if (tab==='portfolio') return fetchAPI('portfolio').then(d=>{renderPortfolio(d);if(!Object.keys(S.prices).length)fetchAPI('prices').then(applyPrices);});
-  if (tab==='signal') return fetchAPI('signal').then(renderSignal);
-  if (tab==='digest') { fetchAPI('implications').then(renderImplications); return fetchAPI('digest').then(renderDigest); }
-  if (tab==='reports') return fetchAPI('reports').then(renderReports);
-}
-async function loadOverview() {
-  const [p,r,d]=await Promise.all([fetchAPI('portfolio'),fetchAPI('review'),fetchAPI('digest')]);
-  renderOverview(p,r,d);
-  fetchAPI('signal').then(renderOverviewSignals);
-  fetchAPI('prices').then(applyPrices);
-  fetchAPI('_meta').then(m=>{if(m&&m.built_at)document.getElementById('updated-at').textContent=m.built_at;});
-}
-
-// ============================================================
-// UTILITIES
-// ============================================================
-function fmtMoney(n,cur){
-  if(n==null)return'-';
-  if(cur==='USD')return'$'+n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
-  return n.toLocaleString('ko-KR')+'원';
-}
-function fmtPct(n){if(n==null)return'-';return(n>0?'+':'')+n.toFixed(1)+'%';}
-function pctCls(n){return n>0?'text-up':n<0?'text-down':'text-warm-500';}
-function sigCls(l){return 'sig-'+(l||'neutral');}
-function sigLabel(l){
-  const m={danger:'위험',caution:'주의',calm:'안정',bullish:'강세',bearish:'약세',favorable:'긍정',neutral:'중립',info:'정보'};
-  return m[l]||'중립';
-}
-function sigDot(l){
-  const m={danger:'bg-down',caution:'bg-orange-400',calm:'bg-up',bullish:'bg-up',bearish:'bg-down',favorable:'bg-teal-500',neutral:'bg-warm-300',info:'bg-blue-400'};
-  return m[l]||'bg-warm-300';
-}
-function emptyBox(msg){return `<div class="flex flex-col items-center justify-center py-16 text-warm-400"><svg class="w-10 h-10 mb-3 opacity-30" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"/></svg><p class="text-sm">${msg}</p></div>`;}
-function errBox(msg){return `<div class="scard p-6 text-center"><p class="text-down text-sm">${msg}</p></div>`;}
-
-// ============================================================
-// OVERVIEW
-// ============================================================
-function renderOverview(p,r,d) {
-  const el=document.getElementById('overview-content');
-  let h='';
-
-  // If portfolio is locked, show public overview instead
-  if(!PIN.unlocked) {
-    // Show Top Insights + Signals only (no portfolio data)
-    if(d&&d.status==='ok'&&d.data&&d.data.length){
-      h+=`<div class="hero p-5 md:p-6 mb-5">
-        <svg class="absolute -top-6 -right-6 opacity-[.06]" width="140" height="140"><circle cx="70" cy="70" r="70" fill="white"/></svg>
-        <div class="relative z-10">
-          <div class="text-xs text-white/50 font-medium tracking-wide uppercase">Macro Cockpit</div>
-          <div class="text-2xl md:text-3xl font-extrabold mt-1 tracking-tight">Insights & Analysis</div>
-          <div class="text-sm text-white/50 mt-2">투자 인사이트를 공유합니다</div>
-        </div>
-      </div>`;
-      h+=`<div class="mb-5"><div class="text-sm font-semibold mb-3">Top Insights</div>
-        <div class="space-y-3 md:grid md:grid-cols-2 md:gap-4 md:space-y-0">`;
-      d.data.slice(0,6).forEach(pdf=>{
-        const themes=(pdf.themes||[]).slice(0,3);
-        h+=`<div class="scard-sm p-4">
-          <div class="flex items-center gap-2 mb-2">
-            <span class="text-xs font-bold text-accent">${pdf.usefulness}/10</span>
-            <span class="text-[10px] text-warm-400 truncate">${pdf.filename}</span>
-          </div>
-          <p class="text-xs text-warm-600 leading-relaxed line-clamp-3 mb-2">${pdf.summary||''}</p>
-          ${themes.length?`<div class="flex flex-wrap gap-1">${themes.map(t=>`<span class="text-[10px] px-1.5 py-0.5 rounded-full bg-warm-100 text-warm-500">${t}</span>`).join('')}</div>`:''}
-        </div>`;
-      });
-      h+=`</div></div>`;
-    }
-    h+=`<div id="overview-signals" class="mb-5"><div class="skel h-32"></div></div>`;
-    el.innerHTML=h;
-    return;
-  }
-
-  if(p.status==='error'){el.innerHTML=errBox(p.message);return;}
-  if(p.status==='empty'){el.innerHTML=emptyBox('Portfolio 데이터 없음');return;}
-
-  const stats=r.status==='ok'?r.data.stats:{};
-  const holdings=p.holdings||[];
-  const cash=p.cash||{};
-  h='';
-
-  // === HERO CARD ===
-  h+=`<div class="hero p-5 md:p-6 mb-5">
+  <!-- Macro Banner -->
+  <div class="hero p-5 md:p-6 mb-5 animate-fadeUp">
     <svg class="absolute -top-6 -right-6 opacity-[.06]" width="140" height="140"><circle cx="70" cy="70" r="70" fill="white"/></svg>
     <svg class="absolute bottom-2 left-[20%] opacity-[.04]" width="80" height="80"><circle cx="40" cy="40" r="40" fill="white"/></svg>
-    <svg class="absolute top-[40%] right-[30%] opacity-[.03]" width="50" height="50"><circle cx="25" cy="25" r="25" fill="white"/></svg>
     <div class="relative z-10">
-      <div class="text-xs text-white/50 font-medium tracking-wide uppercase">Total Portfolio</div>
-      <div id="hero-value" class="text-3xl md:text-4xl font-extrabold mt-1 tracking-tight">-</div>
-      <div id="hero-sub" class="text-sm text-white/50 mt-1"></div>
-      <div class="flex gap-4 mt-4">
-        <div class="bg-white/10 rounded-xl px-3 py-2 backdrop-blur-sm">
-          <div class="text-[10px] text-white/40">종목</div>
-          <div class="text-sm font-bold">${holdings.length}</div>
-        </div>
-        <div class="bg-white/10 rounded-xl px-3 py-2 backdrop-blur-sm">
-          <div class="text-[10px] text-white/40">승률</div>
-          <div class="text-sm font-bold">${stats.win_rate!=null?stats.win_rate+'%':'-'}</div>
-        </div>
-        <div class="bg-white/10 rounded-xl px-3 py-2 backdrop-blur-sm">
-          <div class="text-[10px] text-white/40">현금(USD)</div>
-          <div class="text-sm font-bold">$${(cash.usd||0).toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:0})}</div>
-        </div>
+      <div class="text-xs text-white/50 font-medium tracking-wide uppercase">Macro Cockpit</div>
+      <div class="text-2xl md:text-3xl font-extrabold mt-1 tracking-tight">Insights & Analysis</div>
+      <div class="text-sm text-white/50 mt-2">투자 인사이트를 공유합니다</div>
+      <!-- Macro indicators row -->
+      <div class="flex gap-3 mt-4 overflow-x-auto hide-scrollbar">
+        <template x-for="m in macroBanner" :key="m.symbol">
+          <div class="bg-white/10 rounded-xl px-3 py-2 backdrop-blur-sm shrink-0">
+            <div class="text-[10px] text-white/40" x-text="m.name"></div>
+            <div class="text-sm font-bold" x-text="m.display"></div>
+            <div class="text-[10px] mt-0.5" :class="m.chg >= 0 ? 'text-green-300' : 'text-red-300'" x-text="(m.chg >= 0 ? '+' : '') + m.chg.toFixed(1) + '%'"></div>
+          </div>
+        </template>
       </div>
     </div>
-  </div>`;
+  </div>
 
-  // === KPI SCROLL ===
-  h+=`<div class="flex overflow-x-auto gap-3 mb-5 -mx-1 px-1 pb-1 hide-scrollbar md:grid md:grid-cols-4 md:overflow-visible">`;
-  const kpis=[
-    {label:'실현손익(KRW)', val:stats.total_pnl_krw!=null?(stats.total_pnl_krw>=0?'+':'')+stats.total_pnl_krw.toLocaleString()+'원':'-', sub:stats.avg_hold_days?`평균 ${stats.avg_hold_days}일 보유`:'', accent:stats.total_pnl_krw>=0},
-    {label:'실현손익(USD)', val:stats.total_pnl_usd!=null?(stats.total_pnl_usd>=0?'+$':'-$')+Math.abs(stats.total_pnl_usd).toFixed(2):'-', sub:stats.total_closed?`${stats.total_closed}건 청산`:''},
-    {label:'현금(KRW)', val:(cash.krw||0).toLocaleString()+'원', sub:''},
-    {label:'VIX', val:'-', sub:'', id:'kpi-vix'},
-  ];
-  kpis.forEach(k=>{
-    h+=`<div class="scard-sm shrink-0 min-w-[150px] md:min-w-0 p-4" ${k.id?`id="${k.id}"`:''}>
-      <div class="text-[11px] text-warm-400 font-medium whitespace-nowrap">${k.label}</div>
-      <div class="text-lg font-bold mt-1 whitespace-nowrap ${k.accent?'text-accent':''}">${k.val}</div>
-      ${k.sub?`<div class="text-[10px] text-warm-400 mt-0.5 whitespace-nowrap">${k.sub}</div>`:''}
-    </div>`;
-  });
-  h+=`</div>`;
+  <!-- Filter Tags -->
+  <div class="flex items-center gap-2 mb-4 overflow-x-auto hide-scrollbar pb-1">
+    <button class="shrink-0 px-3 py-1.5 rounded-full text-xs font-medium transition-all"
+            :class="activeFilter === 'all' ? 'bg-warm-800 text-white' : 'bg-white text-warm-500 hover:bg-warm-100'"
+            @click="activeFilter = 'all'">
+      전체
+    </button>
+    <template x-for="tag in allTags" :key="tag">
+      <button class="shrink-0 px-3 py-1.5 rounded-full text-xs font-medium transition-all"
+              :class="activeFilter === tag ? 'bg-warm-800 text-white' : 'bg-white text-warm-500 hover:bg-warm-100'"
+              @click="activeFilter = tag"
+              x-text="tag">
+      </button>
+    </template>
+  </div>
 
-  // === HOLDINGS LIST ===
-  h+=`<div class="mb-5">
+  <!-- Article Cards Grid -->
+  <div class="mb-6">
     <div class="flex items-center justify-between mb-3">
-      <span class="text-sm font-semibold">Holdings</span>
-      <span class="text-[10px] text-warm-400">KRW ${holdings.filter(x=>x.currency==='KRW').length} / USD ${holdings.filter(x=>x.currency==='USD').length}</span>
+      <span class="text-sm font-semibold">Infographic Reports</span>
+      <span class="text-[10px] text-warm-400" x-text="filteredReports.length + '개'"></span>
     </div>
-    <div class="space-y-2.5">`;
-  holdings.forEach((s,i)=>{
-    const cp=S.prices[s.code]; const has=cp!=null;
-    const pnl=has?((cp-s.avg_price)/s.avg_price*100):null;
-    const val=has?fmtMoney(s.quantity*cp,s.currency):fmtMoney(s.est_value,s.currency);
-    h+=`<div class="scard-sm flex items-center gap-3 p-3.5">
-      <div class="w-10 h-10 rounded-full av-${i%AVATAR_COLORS} flex items-center justify-center shrink-0">
-        <span class="text-xs font-bold">${s.ticker.substring(0,2)}</span>
-      </div>
-      <div class="flex-1 min-w-0">
-        <div class="flex items-center gap-1.5">
-          <span class="text-sm font-semibold">${s.ticker}</span>
-          <span class="text-[10px] text-warm-400 truncate">${s.name}</span>
+    <div class="space-y-3 md:grid md:grid-cols-2 md:gap-4 md:space-y-0">
+      <template x-for="r in filteredReports" :key="r.id">
+        <div class="scard p-0 overflow-hidden cursor-pointer group" @click="openReport(r.file, r.title)">
+          <div class="h-2 bg-gradient-to-r from-accent to-orange-400"></div>
+          <div class="p-5">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-[10px] font-medium text-warm-400" x-text="r.date"></span>
+              <span class="text-[10px] text-warm-400" x-text="r.source || ''"></span>
+            </div>
+            <h3 class="text-sm font-bold mb-2 group-hover:text-accent transition-colors" x-text="r.title"></h3>
+            <p class="text-xs text-warm-500 leading-relaxed mb-3" x-text="r.description"></p>
+            <div class="flex flex-wrap gap-1">
+              <template x-for="tag in (r.tags || [])" :key="tag">
+                <span class="text-[10px] px-1.5 py-0.5 rounded-full bg-accent-50 text-accent font-medium" x-text="tag"></span>
+              </template>
+            </div>
+            <div class="flex items-center gap-1.5 mt-3 pt-3 border-t border-warm-100 text-accent text-xs font-medium">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+              보고서 보기
+            </div>
+          </div>
         </div>
-        <div class="text-[11px] text-warm-400 mt-0.5">${s.quantity}주 · avg ${s.currency==='USD'?'$'+s.avg_price.toFixed(2):s.avg_price.toLocaleString()+'원'}</div>
-      </div>
-      <div class="text-right shrink-0">
-        <div class="text-sm font-semibold whitespace-nowrap">${val}</div>
-        ${pnl!=null?`<div class="text-xs font-medium ${pctCls(pnl)} whitespace-nowrap">${fmtPct(pnl)}</div>`
-          :`<div class="text-[10px] text-warm-300">평단가 기준</div>`}
-      </div>
-    </div>`;
-  });
-  h+=`</div></div>`;
-
-  // === SIGNALS placeholder ===
-  h+=`<div id="overview-signals" class="mb-5"><div class="skel h-32"></div></div>`;
-
-  // === PDF Insights Top 3 ===
-  if(d.status==='ok'&&d.data&&d.data.length){
-    h+=`<div class="mb-2"><div class="text-sm font-semibold mb-3">Top Insights</div>
-      <div class="flex overflow-x-auto gap-3 -mx-1 px-1 pb-1 hide-scrollbar md:grid md:grid-cols-3 md:overflow-visible">`;
-    d.data.slice(0,3).forEach(pdf=>{
-      h+=`<div class="scard-sm shrink-0 w-[260px] md:w-auto p-4">
-        <div class="flex items-center gap-2 mb-2">
-          <span class="text-xs font-bold text-accent">${pdf.usefulness}/10</span>
-          <span class="text-[10px] text-warm-400 truncate">${pdf.filename}</span>
-        </div>
-        <p class="text-xs text-warm-600 leading-relaxed line-clamp-2">${pdf.summary||pdf.one_line_summary||''}</p>
-      </div>`;
-    });
-    h+=`</div></div>`;
-  }
-
-  el.innerHTML=h;
-  // Compute hero value
-  computeHeroValue(holdings,cash);
-}
-
-function computeHeroValue(holdings,cash) {
-  const fx=S.prices['__FX__']||1450; // USD/KRW fallback
-  let usd=0,krw=0;
-  (holdings||[]).forEach(s=>{
-    const cp=S.prices[s.code];
-    const v=cp!=null?s.quantity*cp:s.est_value;
-    if(s.currency==='USD')usd+=v; else krw+=v;
-  });
-  usd+=(cash?.usd||0); krw+=(cash?.krw||0);
-  const totalKRW=krw+usd*fx;
-  const hv=document.getElementById('hero-value');
-  const hs=document.getElementById('hero-sub');
-  if(hv){
-    if(totalKRW>=100000000) hv.textContent=(totalKRW/100000000).toFixed(2)+'억원';
-    else if(totalKRW>=10000) hv.textContent=Math.round(totalKRW/10000).toLocaleString()+'만원';
-    else hv.textContent=totalKRW.toLocaleString()+'원';
-  }
-  if(hs){hs.textContent=`$${usd.toLocaleString('en-US',{maximumFractionDigits:0})} + ${krw.toLocaleString()}원 · 환율 ${fx.toFixed(0)}원`;}
-}
-
-function renderOverviewSignals(s) {
-  // VIX KPI
-  const vk=document.getElementById('kpi-vix');
-  if(s.status==='ok'&&s.signals&&vk){
-    const vix=s.signals.find(x=>x.indicator==='VIX');
-    if(vix){
-      const c=vix.level==='danger'?'text-down':vix.level==='caution'?'text-orange-500':'text-up';
-      vk.innerHTML=`<div class="text-[11px] text-warm-400 font-medium">VIX</div>
-        <div class="text-lg font-bold mt-1 ${c}">${vix.value.toFixed(1)}</div>
-        <div class="text-[10px] text-warm-400 mt-0.5">${vix.level==='danger'?'극심한 공포':vix.level==='caution'?'불안정':'안정'}</div>`;
-    }
-  }
-  // Signals panel
-  const panel=document.getElementById('overview-signals');
-  if(!panel)return;
-  if(s.status!=='ok'||!s.signals){panel.innerHTML='';return;}
-  let h=`<div class="text-sm font-semibold mb-3">Signals</div><div class="space-y-2">`;
-  s.signals.forEach(sig=>{
-    h+=`<div class="scard-sm ${sigCls(sig.level)} p-3 flex items-start gap-2.5">
-      <div class="w-2 h-2 rounded-full ${sigDot(sig.level)} mt-1.5 shrink-0"></div>
-      <div class="flex-1 min-w-0">
-        <span class="text-xs font-semibold">${sig.indicator}</span>
-        <p class="text-[11px] text-warm-600 leading-relaxed mt-0.5">${sig.message}</p>
-      </div>
-    </div>`;
-  });
-  h+=`</div>`;
-  panel.innerHTML=h;
-}
-
-// ============================================================
-// PORTFOLIO
-// ============================================================
-function renderPortfolio(d) {
-  const el=document.getElementById('portfolio-content');
-  if(d.status!=='ok'){el.innerHTML=d.status==='empty'?emptyBox('Portfolio 데이터 없음'):errBox(d.message);return;}
-  const holdings=d.holdings||[]; const cash=d.cash||{};
-  let h='';
-
-  // Cash summary
-  h+=`<div class="grid grid-cols-2 gap-3 mb-5">
-    <div class="scard p-4"><div class="text-[11px] text-warm-400 font-medium">KRW 현금</div>
-      <div class="text-lg font-bold mt-1 whitespace-nowrap">${(cash.krw||0).toLocaleString()}원</div></div>
-    <div class="scard p-4"><div class="text-[11px] text-warm-400 font-medium">USD 현금</div>
-      <div class="text-lg font-bold mt-1 whitespace-nowrap">$${(cash.usd||0).toLocaleString('en-US',{minimumFractionDigits:2})}</div></div>
-  </div>`;
-  if(d.meta){
-    h+=`<div class="text-[10px] text-warm-400 mb-4 -mt-2">기간: ${d.meta.period_start} ~ ${d.meta.period_end} · 거래 KRW ${d.tx_counts?.krw||0} / USD ${d.tx_counts?.usd||0}</div>`;
-  }
-
-  // Holdings cards
-  h+=`<div class="text-sm font-semibold mb-3">보유 종목</div><div class="space-y-2.5 mb-5">`;
-  let totalKRW=0,totalUSD=0,costKRW=0,costUSD=0;
-  holdings.forEach((s,i)=>{
-    const cp=S.prices[s.code]; const has=cp!=null;
-    const curVal=has?s.quantity*cp:s.est_value;
-    const pnl=has?((cp-s.avg_price)/s.avg_price*100):null;
-    if(s.currency==='USD'){totalUSD+=curVal;costUSD+=s.est_value;} else{totalKRW+=curVal;costKRW+=s.est_value;}
-
-    h+=`<div class="scard p-4">
-      <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-full av-${i%AVATAR_COLORS} flex items-center justify-center shrink-0">
-          <span class="text-xs font-bold">${s.ticker.substring(0,2)}</span>
-        </div>
-        <div class="flex-1 min-w-0">
-          <div class="flex items-center gap-1.5"><span class="text-sm font-semibold">${s.ticker}</span><span class="text-[10px] text-warm-400 truncate">${s.name}</span></div>
-          <div class="text-[11px] text-warm-400">${s.quantity}주</div>
-        </div>
-        <div class="text-right shrink-0">
-          <div class="text-sm font-semibold whitespace-nowrap">${fmtMoney(curVal,s.currency)}</div>
-          ${pnl!=null?`<div class="text-xs font-medium ${pctCls(pnl)}">${fmtPct(pnl)}</div>`:''}
-        </div>
-      </div>
-      <div class="flex justify-between mt-3 pt-3 border-t border-warm-100 text-[11px] text-warm-400">
-        <span>평단가 ${s.currency==='USD'?'$'+s.avg_price.toFixed(2):s.avg_price.toLocaleString()+'원'}</span>
-        ${has?`<span>현재가 ${s.currency==='USD'?'$'+cp.toFixed(2):cp.toLocaleString()+'원'}</span>`
-          :`<span class="text-warm-300">시세 미제공</span>`}
-      </div>
-    </div>`;
-  });
-  h+=`</div>`;
-
-  // Total
-  h+=`<div class="scard p-4 mb-5">
-    <div class="text-[11px] text-warm-400 font-medium mb-1">합계 평가금액</div>
-    <div class="flex gap-6">
-      ${totalKRW>0?`<div><div class="text-base font-bold">${totalKRW.toLocaleString()}원</div><div class="text-[10px] ${pctCls(((totalKRW-costKRW)/costKRW)*100)}">${costKRW>0?fmtPct(((totalKRW-costKRW)/costKRW)*100):''}</div></div>`:''}
-      ${totalUSD>0?`<div><div class="text-base font-bold">$${totalUSD.toFixed(2)}</div><div class="text-[10px] ${pctCls(((totalUSD-costUSD)/costUSD)*100)}">${costUSD>0?fmtPct(((totalUSD-costUSD)/costUSD)*100):''}</div></div>`:''}
+      </template>
     </div>
-  </div>`;
-
-  // Chart
-  h+=`<div class="scard p-5"><div class="text-sm font-semibold mb-3">Allocation</div><canvas id="alloc-chart" height="220"></canvas></div>`;
-  el.innerHTML=h;
-
-  const ctx=document.getElementById('alloc-chart');
-  if(ctx){
-    const colors=['#D97757','#6C8EBF','#85CDCA','#C38D9E','#E8A87C','#41B3A3','#7B68EE'];
-    new Chart(ctx,{type:'doughnut',data:{labels:holdings.map(x=>x.ticker),datasets:[{data:holdings.map(x=>x.est_value),backgroundColor:colors,borderWidth:0}]},
-      options:{cutout:'68%',plugins:{legend:{position:'bottom',labels:{padding:14,usePointStyle:true,pointStyle:'circle',font:{size:11,family:'Inter'}}}}}});
-  }
-}
-
-// ============================================================
-// MACRO SIGNAL
-// ============================================================
-function renderSignal(d) {
-  const el=document.getElementById('signal-content');
-  if(d.status!=='ok'){el.innerHTML=d.status==='empty'?emptyBox('매크로 데이터 없음'):errBox(d.message);return;}
-
-  const cats={index:'Market Index',volatility:'Volatility',rate:'Interest Rate',currency:'Currency',commodity:'Commodity'};
-  let h='';
-
-  // Data cards by category
-  Object.entries(cats).forEach(([key,label])=>{
-    const items=(d.macro_data||[]).filter(x=>x.category===key&&x.price!=null);
-    if(!items.length)return;
-    h+=`<div class="mb-5">
-      <div class="text-sm font-semibold mb-3">${label}</div>
-      <div class="space-y-2">`;
-    items.forEach(m=>{
-      const trend=m.above_sma20;
-      h+=`<div class="scard-sm p-3.5 flex items-center justify-between">
-        <div class="flex items-center gap-3 min-w-0">
-          <div class="w-8 h-8 rounded-lg ${trend?'bg-emerald-50':'bg-red-50'} flex items-center justify-center shrink-0">
-            <span class="text-xs font-bold ${trend?'text-up':'text-down'}">${trend?'▲':'▼'}</span>
-          </div>
-          <div class="min-w-0">
-            <div class="text-sm font-medium truncate">${m.name}</div>
-            <div class="text-[10px] text-warm-400">SMA20 ${trend?'상회':'하회'}</div>
-          </div>
-        </div>
-        <div class="text-right shrink-0 ml-3">
-          <div class="text-sm font-semibold whitespace-nowrap">${m.price.toLocaleString('en-US',{maximumFractionDigits:2})}</div>
-          <div class="flex gap-2 justify-end mt-0.5">
-            <span class="text-[10px] ${pctCls(m.chg_1d)}">${fmtPct(m.chg_1d)}</span>
-            <span class="text-[10px] ${pctCls(m.chg_1w)} desk-only">${fmtPct(m.chg_1w)}</span>
-            <span class="text-[10px] ${pctCls(m.chg_1m)} desk-only">${fmtPct(m.chg_1m)}</span>
-          </div>
-        </div>
-      </div>`;
-    });
-    h+=`</div></div>`;
-  });
-
-  // Signal Alerts
-  if(d.signals&&d.signals.length){
-    h+=`<div class="text-sm font-semibold mb-3">Signal Alerts</div><div class="space-y-2">`;
-    d.signals.forEach(sig=>{
-      h+=`<div class="scard-sm ${sigCls(sig.level)} p-3.5">
-        <div class="flex items-center gap-2 mb-1">
-          <span class="inline-block w-2 h-2 rounded-full ${sigDot(sig.level)}"></span>
-          <span class="text-xs font-semibold">${sig.indicator}</span>
-          <span class="text-[10px] px-1.5 py-0.5 rounded-full bg-warm-100 text-warm-500 font-medium">${sigLabel(sig.level)}</span>
-        </div>
-        <p class="text-xs text-warm-600 leading-relaxed pl-4">${sig.message}</p>
-      </div>`;
-    });
-    h+=`</div>`;
-  }
-
-  el.innerHTML=h;
-}
-
-// ============================================================
-// IMPLICATIONS
-// ============================================================
-function renderImplications(d) {
-  const el=document.getElementById('implications-content');
-  if(d.status!=='ok'||!d.data){el.innerHTML='';return;}
-  const impl=d.data; const items=impl.implications||[];
-  if(!items.length){el.innerHTML='';return;}
-
-  let h=`<div class="flex items-center justify-between mb-3">
-    <span class="text-sm font-semibold">Portfolio Implications</span>
-    <span class="text-[10px] text-warm-400">${impl.updated_at} · ${impl.source_pdfs?.length||0} PDFs</span>
-  </div><div class="space-y-2.5">`;
-
-  items.forEach(item=>{
-    const tickers=(item.affected||[]).map(t=>`<span class="text-[10px] px-1.5 py-0.5 rounded-full bg-accent-50 text-accent font-medium">${t}</span>`).join(' ');
-    h+=`<div class="scard-sm ${sigCls(item.level)} p-4">
-      <div class="flex items-start gap-2.5">
-        <div class="w-2 h-2 rounded-full ${sigDot(item.level)} mt-1.5 shrink-0"></div>
-        <div class="flex-1 min-w-0">
-          <div class="flex items-center gap-2 flex-wrap mb-1">
-            <span class="text-sm font-semibold">${item.title}</span>
-            <span class="text-[10px] px-1.5 py-0.5 rounded-full bg-warm-100 text-warm-500 font-medium">${sigLabel(item.level)}</span>
-          </div>
-          <div class="flex gap-1 flex-wrap mb-2">${tickers}</div>
-          <p class="text-xs text-warm-600 leading-relaxed">${item.summary}</p>
-          <p class="text-[11px] text-warm-500 mt-2"><span class="font-medium text-accent">Action:</span> ${item.action}</p>
-        </div>
+    <template x-if="filteredReports.length === 0">
+      <div class="flex flex-col items-center justify-center py-16 text-warm-400">
+        <svg class="w-10 h-10 mb-3 opacity-30" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"/></svg>
+        <p class="text-sm">해당 테마의 리포트가 없습니다</p>
       </div>
-    </div>`;
-  });
+    </template>
+  </div>
 
-  h+=`</div>`;
-  el.innerHTML=h;
-}
-
-// ============================================================
-// DIGEST
-// ============================================================
-function renderDigest(d) {
-  const el=document.getElementById('digest-content');
-  if(d.status!=='ok'){el.innerHTML=d.status==='empty'?emptyBox('PDF 분석 데이터 없음'):errBox(d.message);return;}
-  const items=d.data||[];
-  let h=`<div class="flex items-center justify-between mb-3">
-    <span class="text-sm font-semibold">PDF Analysis</span>
-    <span class="text-[10px] text-warm-400">${items.length}개</span>
-  </div><div class="space-y-3 md:grid md:grid-cols-2 md:gap-4 md:space-y-0">`;
-
-  items.forEach(pdf=>{
-    const sc=pdf.usefulness||0;
-    const barW=sc*10;
-    const barCls=sc>=8?'bg-accent':sc>=6?'bg-orange-400':'bg-warm-300';
-    const tickers=(pdf.key_tickers||[]).slice(0,5);
-    const themes=(pdf.themes||[]).slice(0,3);
-
-    h+=`<div class="scard p-4">
-      <div class="flex items-center justify-between mb-2">
-        <span class="text-[11px] text-warm-400 truncate flex-1">${pdf.filename}</span>
-        <span class="text-sm font-bold ${sc>=8?'text-accent':sc>=6?'text-orange-500':'text-warm-400'} ml-2 whitespace-nowrap">${sc}/10</span>
-      </div>
-      <div class="w-full bg-warm-100 rounded-full h-1 mb-3"><div class="${barCls} h-1 rounded-full" style="width:${barW}%"></div></div>
-      <p class="text-xs text-warm-600 leading-relaxed mb-2.5 line-clamp-3">${pdf.summary||pdf.one_line_summary||''}</p>
-      ${tickers.length?`<div class="flex flex-wrap gap-1 mb-1.5">${tickers.map(t=>`<span class="text-[10px] px-1.5 py-0.5 rounded-full bg-accent-50 text-accent font-medium">${t}</span>`).join('')}</div>`:''}
-      ${themes.length?`<div class="flex flex-wrap gap-1">${themes.map(t=>`<span class="text-[10px] px-1.5 py-0.5 rounded-full bg-warm-100 text-warm-500">${t}</span>`).join('')}</div>`:''}
-      ${pdf.action_suggestion?`<div class="mt-2.5 pt-2.5 border-t border-warm-100"><p class="text-[11px] text-warm-500"><span class="text-accent font-medium">Action:</span> ${pdf.action_suggestion}</p></div>`:''}
-    </div>`;
-  });
-  h+=`</div>`;
-  el.innerHTML=h;
-}
-
-// ============================================================
-// PRICES
-// ============================================================
-function applyPrices(pr) {
-  if(!pr||pr.status!=='ok'||!pr.prices) return;
-  S.prices=pr.prices;
-  const p=S.cache.portfolio;
-  if(p&&p.status==='ok'){
-    computeHeroValue(p.holdings,p.cash);
-    if(S.tab==='overview'){
-      const r=S.cache.review||{};const d=S.cache.digest||{};
-      renderOverview(p,r,d);
-      if(S.cache.signal)renderOverviewSignals(S.cache.signal);
-    }
-    if(S.tab==='portfolio')renderPortfolio(p);
-  }
-}
-
-// ============================================================
-// REPORTS
-// ============================================================
-function renderReports(d) {
-  const el=document.getElementById('reports-content');
-  if(d.status!=='ok'||!d.data||!d.data.length){el.innerHTML=emptyBox('리포트 없음');return;}
-  const items=d.data;
-
-  let h=`<div class="flex items-center justify-between mb-4">
-    <span class="text-sm font-semibold">Infographic Reports</span>
-    <span class="text-[10px] text-warm-400">${items.length}개</span>
-  </div><div class="space-y-3 md:grid md:grid-cols-2 md:gap-4 md:space-y-0">`;
-
-  items.forEach(r=>{
-    const tags=(r.tags||[]).map(t=>`<span class="text-[10px] px-1.5 py-0.5 rounded-full bg-accent-50 text-accent font-medium">${t}</span>`).join(' ');
-    h+=`<div class="scard p-0 overflow-hidden cursor-pointer group" onclick="openReport('${r.file}','${r.title.replace(/'/g,"\\'")}')">
-      <div class="h-2 bg-gradient-to-r from-accent to-orange-400"></div>
-      <div class="p-5">
-        <div class="flex items-center justify-between mb-2">
-          <span class="text-[10px] font-medium text-warm-400">${r.date}</span>
-          <span class="text-[10px] text-warm-400">${r.source||''}</span>
-        </div>
-        <h3 class="text-sm font-bold mb-2 group-hover:text-accent transition-colors">${r.title}</h3>
-        <p class="text-xs text-warm-500 leading-relaxed mb-3">${r.description}</p>
-        <div class="flex flex-wrap gap-1">${tags}</div>
-        <div class="flex items-center gap-1.5 mt-3 pt-3 border-t border-warm-100 text-accent text-xs font-medium">
-          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-          보고서 보기
-        </div>
-      </div>
-    </div>`;
-  });
-  h+=`</div>`;
-  el.innerHTML=h;
-}
-
-function openReport(file, title) {
-  // Remove existing overlay if any
-  const old=document.getElementById('report-overlay');
-  if(old)old.remove();
-
-  const overlay=document.createElement('div');
-  overlay.id='report-overlay';
-  overlay.style.cssText='position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.6);backdrop-filter:blur(4px);display:flex;flex-direction:column;animation:fadeUp .2s ease;';
-
-  overlay.innerHTML=`
-    <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:#2A2520;color:white;flex-shrink:0;">
-      <div style="display:flex;align-items:center;gap:10px;min-width:0;">
-        <span style="font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${title}</span>
-      </div>
-      <div style="display:flex;gap:8px;flex-shrink:0;">
-        <a href="./reports/${file}" target="_blank" style="background:rgba(255,255,255,.12);color:white;border:none;border-radius:8px;padding:6px 12px;font-size:11px;cursor:pointer;text-decoration:none;display:flex;align-items:center;gap:4px;">
-          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-          새 탭
-        </a>
-        <button onclick="document.getElementById('report-overlay').remove()" style="background:rgba(255,255,255,.12);color:white;border:none;border-radius:8px;width:32px;height:32px;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;">&times;</button>
-      </div>
+  <!-- PDF Digest Section -->
+  <div class="mb-6" x-show="digestItems.length > 0">
+    <div class="flex items-center justify-between mb-3">
+      <span class="text-sm font-semibold">PDF Insights</span>
+      <span class="text-[10px] text-warm-400" x-text="digestItems.length + '개 분석'"></span>
     </div>
-    <iframe src="./reports/${file}" style="flex:1;border:none;background:#F5F0EB;border-radius:0 0 0 0;"></iframe>
-  `;
-  document.body.appendChild(overlay);
+    <div class="space-y-3 md:grid md:grid-cols-2 md:gap-4 md:space-y-0">
+      <template x-for="(pdf, idx) in digestItems.slice(0, 5)" :key="idx">
+        <div class="scard p-4">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-[11px] text-warm-400 truncate flex-1" x-text="pdf.filename"></span>
+            <span class="text-sm font-bold ml-2 whitespace-nowrap"
+                  :class="pdf.usefulness >= 8 ? 'text-accent' : pdf.usefulness >= 6 ? 'text-orange-500' : 'text-warm-400'"
+                  x-text="pdf.usefulness + '/10'"></span>
+          </div>
+          <div class="w-full bg-warm-100 rounded-full h-1 mb-3">
+            <div class="h-1 rounded-full" :class="pdf.usefulness >= 8 ? 'bg-accent' : pdf.usefulness >= 6 ? 'bg-orange-400' : 'bg-warm-300'" :style="'width:' + (pdf.usefulness * 10) + '%'"></div>
+          </div>
+          <p class="text-xs text-warm-600 leading-relaxed mb-2.5 line-clamp-3" x-text="pdf.summary"></p>
+          <div class="flex flex-wrap gap-1 mb-1.5">
+            <template x-for="t in (pdf.key_tickers || []).slice(0, 5)" :key="t">
+              <span class="text-[10px] px-1.5 py-0.5 rounded-full bg-accent-50 text-accent font-medium" x-text="t"></span>
+            </template>
+          </div>
+          <div class="flex flex-wrap gap-1">
+            <template x-for="t in (pdf.themes || []).slice(0, 3)" :key="t">
+              <span class="text-[10px] px-1.5 py-0.5 rounded-full bg-warm-100 text-warm-500" x-text="t"></span>
+            </template>
+          </div>
+          <template x-if="pdf.action_suggestion">
+            <div class="mt-2.5 pt-2.5 border-t border-warm-100">
+              <p class="text-[11px] text-warm-500"><span class="text-accent font-medium">Action:</span> <span x-text="pdf.action_suggestion"></span></p>
+            </div>
+          </template>
+        </div>
+      </template>
+    </div>
+  </div>
 
-  // Close on ESC
-  const esc=e=>{if(e.key==='Escape'){overlay.remove();document.removeEventListener('keydown',esc);}};
-  document.addEventListener('keydown',esc);
-}
+</main>
 
-// ============================================================
-// INIT
-// ============================================================
-document.addEventListener('DOMContentLoaded',()=>loadOverview());
+<!-- ==================== REPORT OVERLAY ==================== -->
+<div id="report-overlay" x-show="showReport" x-transition.opacity
+     style="position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.6);backdrop-filter:blur(4px);display:flex;flex-direction:column;"
+     @keydown.escape.window="showReport=false" x-cloak>
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:#2A2520;color:white;flex-shrink:0;">
+    <span style="font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" x-text="reportTitle"></span>
+    <div style="display:flex;gap:8px;flex-shrink:0;">
+      <a :href="'./reports/' + reportFile" target="_blank" style="background:rgba(255,255,255,.12);color:white;border:none;border-radius:8px;padding:6px 12px;font-size:11px;cursor:pointer;text-decoration:none;display:flex;align-items:center;gap:4px;">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        새 탭
+      </a>
+      <button @click="showReport=false" style="background:rgba(255,255,255,.12);color:white;border:none;border-radius:8px;width:32px;height:32px;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;">&times;</button>
+    </div>
+  </div>
+  <iframe :src="showReport ? './reports/' + reportFile : ''" style="flex:1;border:none;background:#F5F0EB;"></iframe>
+</div>
+
+<style>[x-cloak] { display: none !important; }</style>
+
+<script type="module">
+import { supabase, isLoggedIn, getCurrentUser, signOut } from './shared/supabase-client.js';
+
+// Expose to Alpine
+window._supabaseAuth = { isLoggedIn, getCurrentUser, signOut };
 </script>
+
+<script>
+function insightsApp() {
+  return {
+    // Auth
+    loggedIn: false,
+    userEmail: null,
+
+    // Data
+    reports: [],
+    digestItems: [],
+    macroBanner: [],
+    allTags: [],
+    activeFilter: 'all',
+
+    // Report overlay
+    showReport: false,
+    reportFile: '',
+    reportTitle: '',
+
+    async init() {
+      // Check auth
+      try {
+        const loggedIn = await window._supabaseAuth.isLoggedIn();
+        if (loggedIn) {
+          const user = await window._supabaseAuth.getCurrentUser();
+          this.loggedIn = true;
+          this.userEmail = user?.email;
+        }
+      } catch (e) {}
+
+      // Fetch all data in parallel
+      const [reportsData, digestData, signalData] = await Promise.all([
+        this.fetchJSON('data/reports.json'),
+        this.fetchJSON('data/digest.json'),
+        this.fetchJSON('data/signal.json')
+      ]);
+
+      // Reports
+      if (reportsData?.status === 'ok' && reportsData.data) {
+        this.reports = reportsData.data;
+        // Extract unique tags
+        const tagSet = new Set();
+        this.reports.forEach(r => (r.tags || []).forEach(t => tagSet.add(t)));
+        this.allTags = Array.from(tagSet).sort();
+      }
+
+      // Digest
+      if (digestData?.status === 'ok' && digestData.data) {
+        this.digestItems = digestData.data;
+      }
+
+      // Signal - macro banner
+      if (signalData?.status === 'ok' && signalData.macro_data) {
+        const picks = ['^VIX', 'CL=F', 'BZ=F', 'USDKRW=X', 'DX-Y.NYB', 'GC=F'];
+        this.macroBanner = signalData.macro_data
+          .filter(m => picks.includes(m.symbol))
+          .map(m => ({
+            symbol: m.symbol,
+            name: m.name.length > 12 ? m.name.substring(0, 12) : m.name,
+            display: m.price.toLocaleString('en-US', { maximumFractionDigits: 2 }),
+            chg: m.chg_1d
+          }));
+      }
+    },
+
+    get filteredReports() {
+      if (this.activeFilter === 'all') return this.reports;
+      return this.reports.filter(r => (r.tags || []).includes(this.activeFilter));
+    },
+
+    openReport(file, title) {
+      this.reportFile = file;
+      this.reportTitle = title;
+      this.showReport = true;
+    },
+
+    async doSignOut() {
+      await window._supabaseAuth.signOut();
+      this.loggedIn = false;
+      this.userEmail = null;
+    },
+
+    async fetchJSON(url) {
+      try {
+        const r = await fetch(url);
+        if (!r.ok) return { status: 'empty' };
+        return await r.json();
+      } catch (e) {
+        return { status: 'error', message: e.message };
+      }
+    }
+  };
+}
+</script>
+
 </body>
 </html>

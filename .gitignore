@@ -1,5 +1,7 @@
 api.env
 *.env
+api/kis_token.json
+toss_img/
 __pycache__/
 logs/
 token.json
@@ -11,4 +13,15 @@ price_alerts.json
 Portfolio/
 pdf_images/
 community_report_pdf/
+api_keys/
 *.pdf
+
+# Supabase
+supabase/.env
+supabase/.temp/
+.supabase/
+
+# Python virtual env
+venv/
+.venv/
+env/

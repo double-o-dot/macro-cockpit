@@ -24,7 +24,7 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 ALERT_CONFIG = os.path.join(BASE_DIR, 'price_alerts.json')
 ALERT_LOG = os.path.join(BASE_DIR, 'logs', 'price_alerts.log')
 TOKEN_FILE = os.path.join(os.path.dirname(BASE_DIR), 'token.json')
-MY_EMAIL = 'woong.seo@kurlycorp.com'
+MY_EMAIL = 'alliswell1618@gmail.com'  # 개인 Gmail
 SCOPES = [
     'https://www.googleapis.com/auth/gmail.modify',
     'https://www.googleapis.com/auth/gmail.labels',

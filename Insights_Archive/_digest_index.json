@@ -282,7 +282,9 @@
     "portfolio_relevance": "현재 포트폴리오와 직접 관련 없음. AI 인프라 테마로 PLTR과 간접 연결.",
     "action_suggestion": "관심 종목 리스트 추가, 소형주 리스크 감안하여 소액으로만 접근 검토.",
     "analyzed_by": "claude-code-manual",
-    "analyzed_at": "2026-03-08T00:08:21.041209"
+    "analyzed_at": "2026-03-08T00:08:21.041209",
+    "archive_md": "Insights_Archive/2026-01-16_코세스.md",
+    "archive_created_at": "2026-03-12T12:00:00.000000"
   },
   "1월4일_팔란티어.pdf": {
     "filename": "1월4일_팔란티어.pdf",
@@ -309,7 +311,7 @@
     "filename": "Nike분석글.pdf",
     "source_type": "개인분석",
     "credibility": 7,
-    "summary": "나이키 역발상 투자 분석. CEO 교체 후 'Back to Basics', DTC 비중 축소 및 도매 파트너십 복원. 베트남 관세 인하 기대. 목표가 $80(현 $65.23 대비 22.6% 상승).",
+    "summary": "나이키 역발상 투자 분석. CEO 교체(Elliott Hill) 후 'Back to Basics' 전략 전환. DTC 비중 축소 및 도매 파트너십 복원(도매 매출 +8%, 배타적 도매 +20%). 매출총이익률 +1.4%p 개선. 베트남 관세 인하 기대. 딕스 스포팅 굿즈의 풋락커 24억 달러 인수가 도매 채널 확대의 촉매. 여성 스포츠 카테고리 전년 대비 20% 이상 성장. 목표가 $80(현 $65.23 대비 22.6% 상승).",
     "key_tickers": [
       "NKE",
       "DKS",
@@ -318,14 +320,18 @@
     "themes": [
       "소비재",
       "턴어라운드",
-      "DTC전략"
+      "DTC전략",
+      "도매파트너십",
+      "베트남관세"
     ],
-    "macro_view": "글로벌 소비재 시장에서 나이키 턴어라운드 가능성. 베트남 무역 협상 결과가 주요 변수.",
-    "usefulness": 5,
-    "portfolio_relevance": "현재 포트폴리오에 관련 종목 없음. 다각화 시 참고.",
-    "action_suggestion": "참고용. 소비재 역발상 관심 시 $60 이하에서 소액 진입 검토.",
+    "macro_view": "글로벌 소비재 시장에서 나이키 턴어라운드 가능성. 베트남 무역 협상 결과가 주요 변수. CEO 교체 후 전략 리셋이 초기 효과를 보이는 중.",
+    "usefulness": 6,
+    "portfolio_relevance": "현재 포트폴리오에 관련 종목 없음. 소비재 섹터 다각화 시 참고.",
+    "action_suggestion": "참고용. 소비재 역발상 관심 시 $60 이하에서 소액 진입 검토. 도매 매출 추이가 턴어라운드 진정성 판단의 핵심 선행 지표.",
     "analyzed_by": "claude-code-manual",
-    "analyzed_at": "2026-03-08T00:08:21.042209"
+    "analyzed_at": "2026-03-08T00:08:21.042209",
+    "archive_md": "Insights_Archive/2026-01-16_Nike분석글.md",
+    "archive_created_at": "2026-03-12T13:00:00.000000"
   },
   "20260120_iren.pdf": {
     "filename": "20260120_iren.pdf",
@@ -534,5 +540,127 @@
     "action_suggestion": "PLTR 방산 AI 독점 포지션 재확인하고 홀딩. 이란 전쟁 장기화 시나리오 대비 유가 헤지 검토. SKT의 앤트로픽 지분 가치 업데이트.",
     "analyzed_by": "claude-code-manual",
     "analyzed_at": "2026-03-09T10:14:46.527561"
+  },
+  "20260311_투자드래곤_미국시장.pdf": {
+    "filename": "20260311_투자드래곤_미국시장.pdf",
+    "source_type": "개인분석",
+    "credibility": 7,
+    "summary": "사모펀드 환매 이슈가 미국 시장 최대 위험 요소. 하이일드 스프레드 3.19로 2025년 11월 중소형주 폭락 시점과 동일. DPST(지역은행 ETF) 35% 하락 매수세 없음. Blue Owl Capital 2022년 저점까지 하락. 관망 권고.",
+    "key_tickers": ["DPST", "OWL", "KBWB"],
+    "themes": ["사모펀드 환매", "하이일드 스프레드", "지역은행 리스크", "신용 위기"],
+    "macro_view": "하이일드 스프레드 위험 수위 도달, 사모펀드 환매 이슈 확산 가능성. 신용 시장 스트레스가 주식 시장으로 전이 중.",
+    "usefulness": 8,
+    "portfolio_relevance": "KBWB 보유 시 지역은행 리스크 직접 노출. 사모펀드 환매 확산 시 전체 신용 시장 파급 우려.",
+    "action_suggestion": "KBWB 포지션 주의 관찰, 하이일드 스프레드 추이 매일 모니터링. 양봉 확인 전 신규 매수 자제.",
+    "analyzed_by": "claude-code-manual",
+    "analyzed_at": "2026-03-12T00:00:00.000000"
+  },
+  "20260311_복리의함정.pdf": {
+    "filename": "20260311_복리의함정.pdf",
+    "source_type": "개인분석",
+    "credibility": 8,
+    "summary": "Howard Marks/Seth Klarman 철학 기반 복리의 함정 분석. 산술평균 동일(+5%)이라도 기하평균은 공격형 -2% vs 안정형 +9.25%로 극명한 차이. Negative Convexity, 낮은 MDD가 장기 복리의 핵심. 확률적 사고, Tail Risk 대비, 경제적 해자 확보 3대 전략 제시.",
+    "key_tickers": [],
+    "themes": ["복리", "리스크 관리", "MDD", "Negative Convexity", "투자 철학"],
+    "macro_view": "현재 불확실성 높은 시장에서 수익률 극대화보다 자본 보존이 기하학적 우위를 만든다.",
+    "usefulness": 7,
+    "portfolio_relevance": "전체 포트폴리오의 MDD 관리 프레임워크. 개별 포지션 손절 기준 엄격 설정 필요성 재확인.",
+    "action_suggestion": "각 보유 종목에 대한 손절 기준 재점검, 집중 투자보다 리스크 분산 우선.",
+    "analyzed_by": "claude-code-manual",
+    "analyzed_at": "2026-03-12T00:00:00.000000"
+  },
+  "20260311_매크로_월가소식.pdf": {
+    "filename": "20260311_매크로_월가소식.pdf",
+    "source_type": "증권사리포트",
+    "credibility": 9,
+    "summary": "3/11 월가소식 종합. GS: 랠리 매도(Fade this rally), 방어막 해제 후 변동성 폭발 경고, IWM/SPX 풋스프레드 추천. JPM: 공포 정점 통과 가능성, 금 ETF 63억달러 유출/한국 ETF 16억달러 유입, AI OpenClaw 토큰 경제 주목. BofA: 에너지 롱/금 숏, 가치주 회복 국면, 동일가중 지수 150억달러 유입, 알파 시대 도래. ING/ANZ: 중국 수출 21.8% 급증(반도체 72.6%), 무역 다변화 성공. ING/미즈호: 일본 GDP 1.3% 상향, 셀 에브리띵은 스태그플레이션 공포, BoJ 6월 금리 인상 유력.",
+    "key_tickers": ["IWM", "SPX", "XLE", "MRNA", "OWL", "EWY"],
+    "themes": ["매크로", "GS", "JPM", "BofA", "가치주 순환매", "AI OpenClaw", "중국 수출", "일본 GDP", "유가"],
+    "macro_view": "GS는 약세(랠리 매도), JPM은 공포 정점 통과 가능, BofA는 가치주/동일가중 순환매 가속. 모든 리포트의 공통 핵심 변수는 유가($85 안정 vs $120 스태그플레이션).",
+    "usefulness": 10,
+    "portfolio_relevance": "KBWB: 가치주 순환매 수혜 vs 하이일드 리스크 교차. ACE: BofA 소형주/가치주 회복 국면 긍정적. PLTR: AI OpenClaw 간접 수혜, GS AI 밸류에이션 경고. 유가가 전체 시나리오의 전제 조건.",
+    "action_suggestion": "유가 $85 이하 안정 여부 핵심 모니터링. GS 권고대로 반등 시 비중 축소 검토, BofA 가치주 순환매 테마는 ACE/KBWB에 긍정적. 3/20 옵션 만기 전 신규 매수 자제.",
+    "analyzed_by": "claude-code-manual",
+    "analyzed_at": "2026-03-12T00:00:00.000000"
+  },
+  "20260309_silver.pdf": {
+    "filename": "20260309_silver.pdf",
+    "source_type": "개인분석",
+    "credibility": 7,
+    "summary": "2026년 1~2월 글로벌 실물 은 재고가 118만 온스(9.2%) 순감소, 가용 실물(Free Float) 기준 103만 온스(29.7%) 유출. LBMA, COMEX, SHFE 3대 거래소 모두 재고 감소 동시 진행. 가격 하락 국면에서도 실물 인출 지속은 구조적 수급 부족 시사. 4월 인도 귀금속 ETF 규제 완화가 추가 수요 촉매. XAU/Gold Ratio 기준 은광주 적정 가치의 절반 수준으로 50~100% 상승 여력 존재.",
+    "key_tickers": [
+      "PSLV",
+      "SLV",
+      "SI"
+    ],
+    "themes": [
+      "귀금속",
+      "실물은재고",
+      "COMEX",
+      "LBMA",
+      "SHFE"
+    ],
+    "macro_view": "전쟁 장기화, 재정적자 확대, 통화 가치 하락(Debasement)이 귀금속 강세의 구조적 배경. 실물 은 재고 유출 가속화는 가격 상방 압력을 시사.",
+    "usefulness": 8,
+    "portfolio_relevance": "PSLV 35주 보유 중으로 직접적 관련성 최고. 3대 거래소 재고 데이터가 실물 은 강세론을 정량적으로 뒷받침.",
+    "action_suggestion": "PSLV 보유 유지, 3월 중순~말 귀금속 상방 돌파 시 추가 매수 검토. 인도 4월 ETF 규제 완화 전후 수급 변화 모니터링.",
+    "analyzed_by": "claude-code-manual",
+    "analyzed_at": "2026-03-12T00:00:00.000000"
+  },
+  "20260312_좋은글.pdf": {
+    "filename": "20260312_좋은글.pdf",
+    "source_type": "개인분석",
+    "credibility": 7,
+    "summary": "Mark Manson의 'No Bullsh*t Guide To Real Change In 2026' 번역/정리본. 새해 목표 실패 원인, 감수할 수 있는 고통 선택, 직관과 충동 구분, 내면 독백 거리두기, 1년 과대평가/10년 과소평가 등 15가지 자기변화 원칙 제시. 투자 심리와 행동편향 관리에 직접 적용 가능한 프레임워크.",
+    "key_tickers": [],
+    "themes": ["투자심리", "행동편향", "자기계발", "리스크관리", "Mark Manson"],
+    "macro_view": "시장 변동성 극대화 시점에서 새로운 매매 아이디어보다 자기 인식 재정비와 감정 관리 시스템 구축이 장기 복리의 핵심.",
+    "usefulness": 7,
+    "portfolio_relevance": "전체 포트폴리오 관리에 적용 가능한 투자 심리 프레임워크. 손절 규율, 충동 매수 방지, MDD 허용치 정의 등 행동 기반 리스크 관리에 활용.",
+    "action_suggestion": "매매 규칙 문서화, 24시간 매수 대기 규칙 도입, 각 보유종목별 MDD 허용치 재정의를 실행할 것.",
+    "analyzed_by": "claude-code-manual",
+    "analyzed_at": "2026-03-12T10:54:00.000000"
+  },
+  "20260310_이란전쟁관련뷰2.pdf": {
+    "filename": "20260310_이란전쟁관련뷰2.pdf",
+    "source_type": "개인분석",
+    "credibility": 8,
+    "summary": "이란 전쟁을 단순 중동 분쟁이 아닌 미중 에너지 패권 전쟁의 레버리지로 해석. 미국은 호르무즈 봉쇄를 통해 에너지 자급 불가능한 중국의 협상력을 약화시키려 하며, 3월 방중 협상에서 에너지 합의가 핵심 의제. 전쟁 base scenario 4~5주, 유가 천장 $200. 에너지 추격매수는 자기모순이며 Defense와 AI value chain이 유효 포지션. 한국 시장의 신용 풀매수 buy the dip은 광기 수준으로 반대매매 리스크 경계 필요.",
+    "key_tickers": ["NVDA", "MU", "IGV", "XLE", "LMT"],
+    "themes": ["이란 전쟁", "미중 패권", "호르무즈 해협", "에너지 패권", "섹터 로테이션", "스태그플레이션"],
+    "macro_view": "이란 전쟁은 미중 에너지 패권 경쟁의 레버리지. 호르무즈 봉쇄로 중국 협상력 약화가 목표. 3/31 방중 joint statement가 최대 변곡점. 유가 장기 체류 시 스태그플레이션 현실화.",
+    "usefulness": 9,
+    "portfolio_relevance": "PLTR: Defense momentum 수혜, AI value chain 주도주 지위 유지. ACE ETF: 유가 급등 시 제조업 마진 압축 리스크. KBWB: Banking 섹터 discount 요인 미해결로 접근 자제. PSLV: risk-off에서 조정 불가피하나 정상화 후 재진입 유효.",
+    "action_suggestion": "에너지 추격매수 자제, Defense 불타기 유효, AI value chain 기존 포지션 유지. 3/31 방중 결과 확인 전 신규 대규모 매수 자제. 유가 $200 장기 체류 시 전량 매도 시나리오 준비.",
+    "analyzed_by": "claude-code-manual",
+    "analyzed_at": "2026-03-12T00:00:00.000000"
+  },
+  "20260310_이란전쟁관련뷰.pdf": {
+    "filename": "20260310_이란전쟁관련뷰.pdf",
+    "source_type": "개인분석",
+    "credibility": 8,
+    "summary": "이란-미국 갈등의 본질은 '설계된 게임'이 아니라 베네수엘라 선례를 적용한 충돌. 양측이 '명분 감옥'에 갇혀 공개적 후퇴 불가. 호르무즈 완전봉쇄 시 유가 $130, 트럼프 레드라인 $120, 기본 시나리오 $100~115 고착. 1988년 라프산자니 역할을 라리자니(SNSC 사무총장)가 수행할 가능성이 가장 높으나, 호메이니 같은 절대 권위자 부재가 결정적 차이. 트럼프의 최강 카드는 군사 행동이 아닌 '협상 채널 개방' 신호. 유가 하락 시 방향이 아닌 원인(협상 기대 vs 비축유 방출 vs 수요 둔화) 구분 필수.",
+    "key_tickers": ["CL", "BZ", "XLE", "USO"],
+    "themes": ["이란 전쟁", "호르무즈 해협", "유가", "지정학", "명분 감옥", "라리자니", "1988년 비교"],
+    "macro_view": "양측 명분 감옥 구조로 단기 해결 어려움. 유가 $100~115 고착이 기본 시나리오. 라리자니 경로 타결 시 $85~95 하락 가능. 모든 자산시장의 전제 조건은 유가.",
+    "usefulness": 9,
+    "portfolio_relevance": "유가 $100 이상 고착 시 ACE(제조업 마진 압축), KBWB/XLF(금리 불확실성)에 부정적. 타결 시나리오 실현되면 리스크온 환경으로 전환되어 성장주/가치주 모두 반등 기대. Murban 특별 모니터링 필수.",
+    "action_suggestion": "라리자니-오만 채널 보도, 트럼프 언어 변화, 이란 바자르 파업 여부를 핵심 모니터링. 유가 원인별 구분 투자(협상 기대->리스크온, 비축유 방출->단기 완화, 수요 둔화->경기침체 대비). 3/20 옵션 만기 전 신규 매수 자제.",
+    "analyzed_by": "claude-code-manual",
+    "analyzed_at": "2026-03-12T00:00:00.000000"
+  },
+  "20260312_한경및추세분석.pdf": {
+    "filename": "20260312_한경및추세분석.pdf",
+    "source_type": "뉴스정리",
+    "credibility": 8,
+    "summary": "한경 월스트리트나우 3/12자 종합 분석. 2월 CPI 안정은 이란 전쟁 이전 데이터이며 정부 보정 효과 3월 소멸. ING는 CPI 2분기 중 3% 재돌파 예상. 블룸버그 유가 시나리오: 4월 지속 시 $130, 5월 지속 시 $150+. IEA 전략비축유 4억 배럴 방출 권고하나 효과 제한적. 국채 10년물 4.21%, 회사채 역대 최대 $660억 일일 발행. 사모대출 $1.8조 시장에서 JP모건 담보 하향 조정, 14% 환매 요구. 오라클 매출 22% 성장, 클라우드 84% 성장하나 $500억 자본지출 우려. 기술적으로 TQQQ Harmonic 수렴, TLT $85.25 지지 테스트 구간. GS: 휴전 시 2~3% 급반등 가능, 분쟁 장기화 시 추가 스트레스.",
+    "key_tickers": ["TLT", "TMF", "TQQQ", "SQQQ", "ORCL", "XLE"],
+    "themes": ["CPI", "인플레이션", "유가", "채권", "사모대출", "기술적분석", "이란전쟁"],
+    "macro_view": "2월 CPI 안정은 허상. 이란 전쟁발 유가 급등이 3월부터 인플레이션 데이터를 왜곡. 채권 금리 급등, 사모대출 부실, 회사채 홍수가 동시 진행. 유가가 모든 시나리오의 전제 조건.",
+    "usefulness": 9,
+    "portfolio_relevance": "채권 포지션 검토 필요(TLT $85.25 지지 확인). 유가 급등 지속 시 ACE/PLTR 비중 축소 검토. 사모대출 전이 리스크로 KBWB 주의. 3/20 옵션 만기 전 신규 매수 자제.",
+    "action_suggestion": "유가 $85 이하 안정 여부 핵심 모니터링. TLT $85.25 이탈 시 채권 추가 하락 대비, 지지 시 매수 기회. 사모대출 관련 지표(하이일드 스프레드, BDC 배당, 운용사 주가) 추적. 3/20 옵션 만기 전 관망 유지.",
+    "analyzed_by": "claude-code-manual",
+    "analyzed_at": "2026-03-12T11:00:00.000000"
   }
 }

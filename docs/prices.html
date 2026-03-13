@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Macro Cockpit - 주식가격</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='14' fill='%23D97757'/></svg>">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
+        colors: {
+          bg:     '#F5F1EB',
+          card:   '#FFFFFF',
+          hero:   { from: '#2A2520', to: '#4A3F35' },
+          warm:   { 50:'#FAF8F5', 100:'#F5F1EB', 200:'#EBE5DC', 300:'#D4CCC0', 400:'#B0A89C', 500:'#8B8580', 600:'#6B6560', 700:'#4A453E', 800:'#2A2520', 900:'#1B1B18' },
+          accent: { 50:'#FEF3ED', 100:'#FDE5D8', DEFAULT:'#D97757', dark:'#B85E42' },
+          up:     '#34C759',
+          down:   '#FF3B30',
+        }
+      }
+    }
+  }
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
+  <link rel="stylesheet" href="shared/theme.css">
+</head>
+
+<body class="font-sans text-warm-900 antialiased" x-data="pricesApp()" x-init="init()">
+
+<!-- ==================== DESKTOP TOP NAV ==================== -->
+<nav class="topnav" id="topnav">
+  <a href="index.html" class="topnav-logo">
+    <div class="logo-circle"><span>M</span></div>
+    <span class="logo-text">Macro Cockpit</span>
+  </a>
+  <div class="topnav-menu">
+    <a href="index.html" data-nav="insights">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+      인사이트
+    </a>
+    <a href="prices.html" class="active" data-nav="prices">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+      주식가격
+    </a>
+    <a href="portfolio.html" data-nav="portfolio">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/><path d="M9 12l2 2 4-4"/></svg>
+      포트폴리오
+    </a>
+    <a href="macro.html" data-nav="macro">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z"/></svg>
+      매크로
+    </a>
+  </div>
+  <div class="topnav-auth">
+    <template x-if="loggedIn">
+      <button class="btn-logout" @click="doSignOut()">
+        <span x-text="userEmail ? userEmail.split('@')[0] : '로그아웃'"></span>
+      </button>
+    </template>
+    <template x-if="!loggedIn">
+      <a href="portfolio.html" class="btn-login">로그인</a>
+    </template>
+  </div>
+</nav>
+
+<!-- ==================== MOBILE BOTTOM NAV ==================== -->
+<nav class="bnav" id="bottom-nav">
+  <a href="index.html" data-nav="insights">
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+    인사이트<div class="dot"></div>
+  </a>
+  <a href="prices.html" class="active" data-nav="prices">
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+    주식가격<div class="dot"></div>
+  </a>
+  <a href="portfolio.html" data-nav="portfolio">
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/><path d="M9 12l2 2 4-4"/></svg>
+    포트폴리오<div class="dot"></div>
+  </a>
+  <a href="macro.html" data-nav="macro">
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z"/></svg>
+    매크로<div class="dot"></div>
+  </a>
+</nav>
+
+<!-- ==================== MAIN CONTENT ==================== -->
+<main class="page-main">
+
+  <!-- Page Header -->
+  <div class="flex items-center justify-between mb-5">
+    <div>
+      <h1 class="text-lg font-semibold">주식가격</h1>
+      <p class="text-[11px] text-warm-400 mt-0.5">Stock Prices & Macro Indicators</p>
+    </div>
+    <div class="flex items-center gap-3">
+      <span class="text-[10px] text-warm-400" x-text="lastUpdated"></span>
+      <label class="flex items-center gap-2 cursor-pointer">
+        <span class="text-[11px] text-warm-500">자동갱신</span>
+        <div class="relative" @click="toggleAutoRefresh()">
+          <div class="w-9 h-5 rounded-full transition-colors" :class="autoRefresh ? 'bg-accent' : 'bg-warm-200'"></div>
+          <div class="absolute top-0.5 left-0.5 w-4 h-4 bg-white rounded-full shadow transition-transform" :class="autoRefresh ? 'translate-x-4' : ''"></div>
+        </div>
+      </label>
+    </div>
+  </div>
+
+  <!-- Macro Indicator Cards -->
+  <div class="mb-6">
+    <div class="text-sm font-semibold mb-3">매크로 지표</div>
+    <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+      <template x-for="m in macroIndicators" :key="m.symbol">
+        <div class="scard-sm p-3.5">
+          <div class="flex items-center gap-2 mb-2">
+            <div class="w-7 h-7 rounded-lg flex items-center justify-center shrink-0"
+                 :class="m.above_sma20 ? 'bg-emerald-50' : 'bg-red-50'">
+              <span class="text-xs font-bold" :class="m.above_sma20 ? 'text-up' : 'text-down'" x-text="m.above_sma20 ? '▲' : '▼'"></span>
+            </div>
+            <div class="min-w-0">
+              <div class="text-xs font-medium truncate" x-text="m.name"></div>
+              <div class="text-[10px] text-warm-400" x-text="'SMA20 ' + (m.above_sma20 ? '상회' : '하회')"></div>
+            </div>
+          </div>
+          <div class="text-lg font-bold" x-text="formatPrice(m.price)"></div>
+          <div class="flex gap-2 mt-1">
+            <span class="text-[10px]" :class="m.chg_1d >= 0 ? 'text-up' : 'text-down'" x-text="fmtPct(m.chg_1d)">1D</span>
+            <span class="text-[10px]" :class="m.chg_1w >= 0 ? 'text-up' : 'text-down'" x-text="fmtPct(m.chg_1w)">1W</span>
+            <span class="text-[10px] desk-only" :class="m.chg_1m >= 0 ? 'text-up' : 'text-down'" x-text="fmtPct(m.chg_1m)">1M</span>
+          </div>
+        </div>
+      </template>
+    </div>
+  </div>
+
+  <!-- Holdings Price Table -->
+  <div class="mb-6">
+    <div class="flex items-center justify-between mb-3">
+      <span class="text-sm font-semibold">보유종목 가격</span>
+      <span class="text-[10px] text-warm-400" x-text="holdings.length + '종목'"></span>
+    </div>
+
+    <!-- Mobile: Card list -->
+    <div class="space-y-2.5 md:hidden">
+      <template x-for="(h, idx) in holdings" :key="h.code">
+        <div class="scard-sm p-3.5 flex items-center gap-3">
+          <div class="w-10 h-10 rounded-full flex items-center justify-center shrink-0"
+               :class="'av-' + (idx % 7)">
+            <span class="text-xs font-bold" x-text="h.ticker.substring(0, 2)"></span>
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-1.5">
+              <span class="text-sm font-semibold" x-text="h.ticker"></span>
+              <span class="text-[10px] text-warm-400 truncate" x-text="h.name"></span>
+            </div>
+            <div class="text-[11px] text-warm-400 mt-0.5" x-text="h.quantity + '주 · avg ' + (h.currency === 'USD' ? '$' + h.avg_price.toFixed(2) : h.avg_price.toLocaleString() + '원')"></div>
+          </div>
+          <div class="text-right shrink-0">
+            <div class="text-sm font-semibold whitespace-nowrap" x-text="h.currentDisplay"></div>
+            <div class="text-xs font-medium whitespace-nowrap" :class="h.pnlPct >= 0 ? 'text-up' : 'text-down'" x-text="h.pnlDisplay" x-show="h.hasPrice"></div>
+            <div class="text-[10px] text-warm-300" x-show="!h.hasPrice">평단가 기준</div>
+          </div>
+        </div>
+      </template>
+    </div>
+
+    <!-- Desktop: Table -->
+    <div class="hidden md:block scard overflow-hidden">
+      <table class="w-full text-sm">
+        <thead>
+          <tr class="border-b border-warm-100 text-warm-400 text-[11px]">
+            <th class="text-left py-3 px-4 font-medium">종목</th>
+            <th class="text-right py-3 px-4 font-medium">현재가</th>
+            <th class="text-right py-3 px-4 font-medium">평단가</th>
+            <th class="text-right py-3 px-4 font-medium">변동률</th>
+            <th class="text-right py-3 px-4 font-medium">수량</th>
+            <th class="text-right py-3 px-4 font-medium">평가금액</th>
+          </tr>
+        </thead>
+        <tbody>
+          <template x-for="(h, idx) in holdings" :key="h.code">
+            <tr class="border-b border-warm-50 hover:bg-warm-50/50 transition-colors">
+              <td class="py-3 px-4">
+                <div class="flex items-center gap-2.5">
+                  <div class="w-8 h-8 rounded-full flex items-center justify-center shrink-0" :class="'av-' + (idx % 7)">
+                    <span class="text-[10px] font-bold" x-text="h.ticker.substring(0, 2)"></span>
+                  </div>
+                  <div>
+                    <div class="font-semibold" x-text="h.ticker"></div>
+                    <div class="text-[10px] text-warm-400" x-text="h.name"></div>
+                  </div>
+                </div>
+              </td>
+              <td class="py-3 px-4 text-right font-semibold" x-text="h.currentDisplay"></td>
+              <td class="py-3 px-4 text-right text-warm-500" x-text="h.currency === 'USD' ? '$' + h.avg_price.toFixed(2) : h.avg_price.toLocaleString() + '원'"></td>
+              <td class="py-3 px-4 text-right font-medium" :class="h.pnlPct >= 0 ? 'text-up' : 'text-down'">
+                <span x-text="h.pnlDisplay" x-show="h.hasPrice"></span>
+                <span class="text-warm-300" x-show="!h.hasPrice">-</span>
+              </td>
+              <td class="py-3 px-4 text-right text-warm-500" x-text="h.quantity + '주'"></td>
+              <td class="py-3 px-4 text-right font-semibold" x-text="h.evalDisplay"></td>
+            </tr>
+          </template>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Signal Alerts -->
+  <div class="mb-6" x-show="signals.length > 0">
+    <div class="text-sm font-semibold mb-3">Signal Alerts</div>
+    <div class="space-y-2">
+      <template x-for="sig in signals" :key="sig.indicator">
+        <div class="scard-sm p-3.5" :class="sigCls(sig.level)">
+          <div class="flex items-center gap-2 mb-1">
+            <span class="inline-block w-2 h-2 rounded-full" :class="sigDot(sig.level)"></span>
+            <span class="text-xs font-semibold" x-text="sig.indicator"></span>
+            <span class="text-[10px] px-1.5 py-0.5 rounded-full bg-warm-100 text-warm-500 font-medium" x-text="sigLabel(sig.level)"></span>
+          </div>
+          <p class="text-xs text-warm-600 leading-relaxed pl-4" x-text="sig.message"></p>
+        </div>
+      </template>
+    </div>
+  </div>
+
+</main>
+
+<script type="module">
+import { supabase, isLoggedIn, getCurrentUser, signOut } from './shared/supabase-client.js';
+window._supabaseAuth = { isLoggedIn, getCurrentUser, signOut };
+</script>
+
+<script>
+function pricesApp() {
+  return {
+    loggedIn: false,
+    userEmail: null,
+    holdings: [],
+    macroIndicators: [],
+    signals: [],
+    prices: {},
+    lastUpdated: '',
+    autoRefresh: false,
+    refreshInterval: null,
+
+    async init() {
+      // Auth check
+      try {
+        const loggedIn = await window._supabaseAuth.isLoggedIn();
+        if (loggedIn) {
+          const user = await window._supabaseAuth.getCurrentUser();
+          this.loggedIn = true;
+          this.userEmail = user?.email;
+        }
+      } catch (e) {}
+
+      await this.loadData();
+    },
+
+    async loadData() {
+      const [pricesData, portfolioData, signalData, metaData] = await Promise.all([
+        this.fetchJSON('data/prices.json'),
+        this.fetchJSON('data/portfolio.json'),
+        this.fetchJSON('data/signal.json'),
+        this.fetchJSON('data/_meta.json')
+      ]);
+
+      // Prices
+      if (pricesData?.status === 'ok' && pricesData.prices) {
+        this.prices = pricesData.prices;
+      }
+
+      // Holdings with prices
+      if (portfolioData?.status === 'ok' && portfolioData.holdings) {
+        this.holdings = portfolioData.holdings.map(h => {
+          const cp = this.prices[h.code];
+          const hasPrice = cp != null;
+          const pnlPct = hasPrice ? ((cp - h.avg_price) / h.avg_price * 100) : 0;
+          const evalVal = hasPrice ? h.quantity * cp : h.est_value;
+          return {
+            ...h,
+            hasPrice,
+            currentPrice: cp,
+            pnlPct,
+            currentDisplay: hasPrice
+              ? (h.currency === 'USD' ? '$' + cp.toFixed(2) : cp.toLocaleString() + '원')
+              : (h.currency === 'USD' ? '$' + h.avg_price.toFixed(2) : h.avg_price.toLocaleString() + '원'),
+            pnlDisplay: hasPrice ? ((pnlPct >= 0 ? '+' : '') + pnlPct.toFixed(1) + '%') : '-',
+            evalDisplay: hasPrice
+              ? (h.currency === 'USD' ? '$' + evalVal.toFixed(2) : evalVal.toLocaleString() + '원')
+              : (h.currency === 'USD' ? '$' + h.est_value.toFixed(2) : h.est_value.toLocaleString() + '원')
+          };
+        });
+      }
+
+      // Macro indicators
+      if (signalData?.status === 'ok') {
+        if (signalData.macro_data) {
+          this.macroIndicators = signalData.macro_data;
+        }
+        if (signalData.signals) {
+          this.signals = signalData.signals;
+        }
+      }
+
+      // Meta
+      if (metaData?.built_at) {
+        this.lastUpdated = metaData.built_at;
+      }
+    },
+
+    toggleAutoRefresh() {
+      this.autoRefresh = !this.autoRefresh;
+      if (this.autoRefresh) {
+        this.refreshInterval = setInterval(() => this.loadData(), 60000);
+      } else {
+        if (this.refreshInterval) {
+          clearInterval(this.refreshInterval);
+          this.refreshInterval = null;
+        }
+      }
+    },
+
+    formatPrice(p) {
+      if (p == null) return '-';
+      return p.toLocaleString('en-US', { maximumFractionDigits: 2 });
+    },
+
+    fmtPct(n) {
+      if (n == null) return '-';
+      return (n > 0 ? '+' : '') + n.toFixed(1) + '%';
+    },
+
+    sigCls(l) {
+      const m = { danger: 'sig-danger', caution: 'sig-caution', calm: 'sig-calm', bullish: 'sig-bullish', bearish: 'sig-bearish', favorable: 'sig-favorable', neutral: 'sig-neutral', info: 'sig-info' };
+      return m[l] || 'sig-neutral';
+    },
+    sigDot(l) {
+      const m = { danger: 'bg-down', caution: 'bg-orange-400', calm: 'bg-up', bullish: 'bg-up', bearish: 'bg-down', favorable: 'bg-teal-500', neutral: 'bg-warm-300', info: 'bg-blue-400' };
+      return m[l] || 'bg-warm-300';
+    },
+    sigLabel(l) {
+      const m = { danger: '위험', caution: '주의', calm: '안정', bullish: '강세', bearish: '약세', favorable: '긍정', neutral: '중립', info: '정보' };
+      return m[l] || '중립';
+    },
+
+    async doSignOut() {
+      await window._supabaseAuth.signOut();
+      this.loggedIn = false;
+      this.userEmail = null;
+    },
+
+    async fetchJSON(url) {
+      try {
+        const r = await fetch(url);
+        if (!r.ok) return { status: 'empty' };
+        return await r.json();
+      } catch (e) {
+        return { status: 'error', message: e.message };
+      }
+    }
+  };
+}
+</script>
+
+</body>
+</html>

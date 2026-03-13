@@ -49,7 +49,7 @@
       "symbol": "USDKRW=X",
       "name": "USD/KRW 환율",
       "category": "currency",
-      "price": 1494.28,
+      "price": 1497.0,
       "chg_1d": 1.0,
       "chg_1w": 2.89,
       "chg_1m": 2.18,
@@ -139,49 +139,49 @@
       "indicator": "VIX",
       "level": "danger",
       "value": 34.71,
-      "message": "VIX 34.7 - 극심한 공포. 신규 매수 자제, 현금 확보 우선"
+      "message": "VIX 34.7 - 극심한 공포. 현금 비중 0.6%로 추가 하락 시 대응 여력 없음"
     },
     {
       "indicator": "USD/KRW",
       "level": "caution",
-      "value": 1494.28,
-      "message": "환율 1494원 (주간 +2.9%) - 고환율 구간. 해외주식 추가 매수 환율 부담"
+      "value": 1497.0,
+      "message": "환율 1497원 (SMA20 대비 +3.2%) - 달러 자산 대폭 확대한 시점이 고환율 구간"
+    },
+    {
+      "indicator": "NVDA",
+      "level": "caution",
+      "value": 183.83,
+      "message": "NVDA 47주($8,640) = 미국포트 55%. 3/18 GTC 전후 변동성 주의 [포트 최대 포지션]"
     },
     {
       "indicator": "Silver",
       "level": "bullish",
       "value": 83.9,
-      "message": "은 $83.90 (월간 +2.2%) SMA20 위 - 상승 추세 [PSLV 35주 보유 중]"
-    },
-    {
-      "indicator": "Gold",
-      "level": "bullish",
-      "value": 5118.1,
-      "message": "금 $5118.10 (월간 +1.3%) SMA20 위 [GDXJ 2주 보유 중]"
+      "message": "은 $83.90 (월간 +2.2%) SMA20 위 - 유일한 실물자산 헤지 [PSLV 35주 보유 중]"
     },
     {
       "indicator": "Oil (Murban proxy)",
-      "level": "info",
+      "level": "danger",
       "value": 106.48,
-      "message": "브렌트 $106.48 / WTI $102.25 (스프레드 $4.23, 월간 +54.2%)"
+      "message": "브렌트 $106.48 / WTI $102.25 (월간 +54%). 호르무즈 해협 리스크 지속. 전 포지션에 부정적 영향"
     },
     {
-      "indicator": "US 10Y",
-      "level": "neutral",
-      "value": 4.13,
-      "message": "미국 10년물 4.13% (월간 -1.74%p 하락) [금융주(KBWB/XLF) 주의]"
+      "indicator": "Financials",
+      "level": "info",
+      "value": 0,
+      "message": "KBWB(12주)+XLF(30주)+ACE핀테크(150주) = 포트 23%. 금리 인하 베팅이나 10Y 4.13% 아직 높음"
     },
     {
       "indicator": "KOSPI",
       "level": "bearish",
       "value": 5251.87,
-      "message": "KOSPI 5252 (월간 -0.9%) SMA20 아래 - 약세 [ACE ETF 150주 보유 중]"
+      "message": "KOSPI 5252 (주간 -9.3%) SMA20 아래 - KORU 3배 레버리지 보유 중. 추가 하락 시 3배 낙폭 주의"
     },
     {
       "indicator": "NASDAQ",
       "level": "bearish",
       "value": 22387.68,
-      "message": "나스닥 22,388 (월간 -3.7%) SMA20 아래 [PLTR 14주 보유 중]"
+      "message": "나스닥 22,388 (월간 -3.7%) SMA20 아래 [NVDA 47주 + PLTR 17주 직접 노출]"
     }
   ]
 }

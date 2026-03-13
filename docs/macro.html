@@ -1,0 +1,1567 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Macro Cockpit - Top-Down 매크로 대시보드</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='14' fill='%23D97757'/></svg>">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
+        colors: {
+          dark:   { 50:'#e2e8f0', 100:'#cbd5e1', 200:'#94a3b8', 300:'#64748b', 400:'#475569', 500:'#334155', 600:'#1e293b', 700:'#1a1f2e', 800:'#151a26', 900:'#0f1419' },
+          accent: { 50:'#FEF3ED', 100:'#FDE5D8', DEFAULT:'#D97757', dark:'#B85E42' },
+          up:     '#22c55e',
+          down:   '#ef4444',
+          warn:   '#f59e0b',
+          info:   '#3b82f6',
+        }
+      }
+    }
+  }
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="shared/theme.css">
+  <style>
+    body.dark-macro {
+      background: #0f1419 !important;
+      color: #e2e8f0 !important;
+    }
+    body.dark-macro .topnav {
+      background: #151a26 !important;
+      border-bottom: 1px solid rgba(255,255,255,.06);
+    }
+    body.dark-macro .bnav {
+      background: #151a26 !important;
+      border-top: 1px solid rgba(255,255,255,.08);
+    }
+    body.dark-macro .bnav a { color: rgba(255,255,255,.4); }
+    body.dark-macro .bnav a.active { color: #D97757; }
+    body.dark-macro .bnav a .dot { background: transparent; }
+    body.dark-macro .bnav a.active .dot { background: #D97757; }
+    body.dark-macro ::-webkit-scrollbar { width: 6px; }
+    body.dark-macro ::-webkit-scrollbar-track { background: transparent; }
+    body.dark-macro ::-webkit-scrollbar-thumb { background: rgba(255,255,255,.1); border-radius: 3px; }
+
+    @keyframes gaugeGrow { from { stroke-dasharray: 0 283; } }
+    .gauge-circle { animation: gaugeGrow 1.2s ease-out forwards; }
+    @keyframes fadeIn { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:translateY(0); } }
+    .fade-in { animation: fadeIn .3s ease; }
+
+    .badge { display:inline-flex; align-items:center; padding:3px 10px; border-radius:9999px; font-size:11px; font-weight:600; white-space:nowrap; }
+    .badge-strong-up   { background:rgba(34,197,94,.15);  color:#22c55e; }
+    .badge-moderate-up  { background:rgba(34,197,94,.1);   color:#4ade80; }
+    .badge-sideways     { background:rgba(148,163,184,.15); color:#94a3b8; }
+    .badge-moderate-dn  { background:rgba(245,158,11,.15); color:#f59e0b; }
+    .badge-strong-dn    { background:rgba(239,68,68,.15);  color:#ef4444; }
+    .badge-reversal     { background:rgba(234,179,8,.15);  color:#eab308; }
+
+    .section-card {
+      background: rgba(255,255,255,.03);
+      border: 1px solid rgba(255,255,255,.06);
+      border-radius: 16px;
+      padding: 24px;
+    }
+
+    .macro-table { width:100%; border-collapse:collapse; }
+    .macro-table th {
+      text-align:left; font-size:11px; font-weight:600; color:#64748b;
+      text-transform:uppercase; letter-spacing:.05em; padding:10px 12px;
+      border-bottom:1px solid rgba(255,255,255,.06);
+    }
+    .macro-table td {
+      padding:12px; font-size:13px;
+      border-bottom:1px solid rgba(255,255,255,.04);
+      vertical-align:middle;
+    }
+    .macro-table tbody tr { transition:background .15s; cursor:pointer; }
+    .macro-table tbody tr:hover { background:rgba(255,255,255,.04); }
+
+    .table-scroll { overflow-x:auto; -webkit-overflow-scrolling:touch; }
+    .table-scroll::-webkit-scrollbar { height:4px; }
+    .table-scroll::-webkit-scrollbar-thumb { background:rgba(255,255,255,.1); border-radius:2px; }
+
+    .cat-header {
+      display:flex; align-items:center; justify-content:space-between;
+      cursor:pointer; user-select:none;
+    }
+    .cat-header:hover { opacity:.85; }
+
+    .score-badge {
+      display:inline-flex; align-items:center; padding:4px 12px;
+      border-radius:9999px; font-size:12px; font-weight:700;
+    }
+
+    .detail-panel {
+      background:rgba(255,255,255,.03); border:1px solid rgba(255,255,255,.06);
+      border-radius:12px; padding:16px; margin-top:8px;
+    }
+
+    .sparkline-canvas { width:80px; height:28px; }
+
+    .mini-gauge { position:relative; display:inline-flex; align-items:center; justify-content:center; }
+
+    .alert-card {
+      background:rgba(255,255,255,.03); border-radius:12px;
+      padding:14px 18px; border-left:3px solid;
+    }
+    .alert-danger  { border-color:#ef4444; }
+    .alert-caution { border-color:#f59e0b; }
+    .alert-bullish { border-color:#22c55e; }
+    .alert-bearish { border-color:#ef4444; }
+    .alert-info    { border-color:#3b82f6; }
+
+    .yield-curve-wrap { position:relative; height:260px; }
+    .cpi-ppi-wrap { position:relative; height:240px; }
+
+    .topdown-flow {
+      display:flex; align-items:center; justify-content:center; gap:8px;
+      flex-wrap:wrap; padding:16px 0;
+    }
+    .topdown-flow .flow-step {
+      background:rgba(255,255,255,.06); border-radius:10px;
+      padding:10px 18px; font-size:12px; font-weight:600; color:#e2e8f0;
+    }
+    .topdown-flow .flow-arrow { color:#64748b; font-size:18px; }
+  </style>
+</head>
+
+<body class="font-sans antialiased dark-macro" x-data="macroDashboard()" x-init="init()">
+
+<!-- DESKTOP TOP NAV -->
+<nav class="topnav" id="topnav">
+  <a href="index.html" class="topnav-logo">
+    <div class="logo-circle"><span>M</span></div>
+    <span class="logo-text">Macro Cockpit</span>
+  </a>
+  <div class="topnav-menu">
+    <a href="index.html" data-nav="insights">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+      인사이트
+    </a>
+    <a href="prices.html" data-nav="prices">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+      주식가격
+    </a>
+    <a href="portfolio.html" data-nav="portfolio">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/><path d="M9 12l2 2 4-4"/></svg>
+      포트폴리오
+    </a>
+    <a href="macro.html" class="active" data-nav="macro">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z"/></svg>
+      매크로
+    </a>
+  </div>
+  <div class="topnav-auth">
+    <template x-if="loggedIn">
+      <button class="btn-logout" @click="doSignOut()">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+        <span x-text="userEmail ? userEmail.split('@')[0] : '로그아웃'"></span>
+      </button>
+    </template>
+    <template x-if="!loggedIn">
+      <button class="btn-login" onclick="window.location.href='portfolio.html'">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/></svg>
+        로그인
+      </button>
+    </template>
+  </div>
+</nav>
+
+<!-- MOBILE BOTTOM NAV -->
+<nav class="bnav" id="bottom-nav">
+  <a href="index.html" data-nav="insights">
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+    인사이트<div class="dot"></div>
+  </a>
+  <a href="prices.html" data-nav="prices">
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+    주식가격<div class="dot"></div>
+  </a>
+  <a href="portfolio.html" data-nav="portfolio">
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/><path d="M9 12l2 2 4-4"/></svg>
+    포트폴리오<div class="dot"></div>
+  </a>
+  <a href="macro.html" class="active" data-nav="macro">
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z"/></svg>
+    매크로<div class="dot"></div>
+  </a>
+</nav>
+
+<!-- MAIN CONTENT -->
+<main class="min-h-screen max-w-[1100px] mx-auto px-4 pb-24 md:pb-8" style="padding-top:16px;">
+
+  <!-- Error -->
+  <template x-if="error">
+    <div class="flex flex-col items-center justify-center py-20 text-center">
+      <div class="w-16 h-16 rounded-full bg-red-500/10 flex items-center justify-center mb-4">
+        <svg class="w-8 h-8 text-red-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"/></svg>
+      </div>
+      <h3 class="text-base font-semibold text-dark-50 mb-2">데이터 로드 실패</h3>
+      <p class="text-xs text-dark-300 mb-4 whitespace-pre-line" x-text="error"></p>
+      <button @click="init()" class="text-xs px-4 py-2 rounded-lg bg-accent/20 text-accent hover:bg-accent/30 transition-colors">다시 시도</button>
+    </div>
+  </template>
+
+  <!-- Loading -->
+  <template x-if="loading && !error">
+    <div class="flex flex-col items-center justify-center py-20">
+      <div class="w-12 h-12 rounded-full border-2 border-dark-500 border-t-accent animate-spin mb-4"></div>
+      <p class="text-sm text-dark-300">FRED 매크로 데이터 로딩 중...</p>
+    </div>
+  </template>
+
+  <!-- Dashboard -->
+  <template x-if="!loading && !error">
+    <div class="space-y-5 fade-in">
+
+      <!-- ===== SECTION 0: COMPOSITE HERO ===== -->
+      <div class="section-card" style="background:linear-gradient(135deg,rgba(255,255,255,.04) 0%,rgba(255,255,255,.01) 100%);">
+        <div class="flex flex-col md:flex-row items-center gap-6 md:gap-10">
+          <!-- Big Gauge -->
+          <div class="relative flex-shrink-0">
+            <svg width="160" height="160" viewBox="0 0 100 100">
+              <circle cx="50" cy="50" r="45" fill="none" stroke="rgba(255,255,255,.06)" stroke-width="8"/>
+              <circle cx="50" cy="50" r="45" fill="none"
+                      :stroke="getScoreColor(data.composite_score)"
+                      stroke-width="8" stroke-linecap="round"
+                      :stroke-dasharray="`${data.composite_score * 2.83} 283`"
+                      transform="rotate(-90 50 50)"
+                      class="gauge-circle"/>
+            </svg>
+            <div class="absolute inset-0 flex flex-col items-center justify-center">
+              <span class="text-4xl font-extrabold" :style="`color:${getScoreColor(data.composite_score)}`" x-text="data.composite_score"></span>
+              <span class="text-[10px] font-semibold text-dark-300 mt-0.5">/ 100</span>
+            </div>
+          </div>
+          <!-- Info -->
+          <div class="text-center md:text-left flex-1">
+            <div class="text-[11px] font-semibold text-dark-300 uppercase tracking-widest mb-1">Macro Health Score</div>
+            <h2 class="text-2xl font-bold mb-2" :style="`color:${getScoreColor(data.composite_score)}`" x-text="data.composite_label"></h2>
+            <p class="text-sm text-dark-200 leading-relaxed max-w-lg" x-text="data.composite_summary"></p>
+            <!-- Mini scores -->
+            <div class="flex flex-wrap gap-3 mt-4 justify-center md:justify-start">
+              <template x-for="cat in data.categories" :key="cat.key">
+                <div class="flex items-center gap-2 px-3 py-1.5 rounded-lg" style="background:rgba(255,255,255,.04);">
+                  <div class="w-2.5 h-2.5 rounded-full" :style="`background:${cat.color || getScoreColor(cat.score)}`"></div>
+                  <span class="text-[11px] text-dark-200" x-text="cat.name.split('(')[0].trim()"></span>
+                  <span class="text-[12px] font-bold" :style="`color:${cat.color || getScoreColor(cat.score)}`" x-text="cat.score"></span>
+                </div>
+              </template>
+            </div>
+          </div>
+        </div>
+        <!-- Updated time -->
+        <div class="text-right mt-3">
+          <span class="text-[10px] text-dark-400" x-text="'Updated: ' + data.updated_at"></span>
+        </div>
+      </div>
+
+      <!-- ===== CATEGORY SECTIONS (1-6) ===== -->
+      <template x-for="(cat, catIdx) in data.categories" :key="cat.key">
+        <div class="section-card">
+          <!-- Category Header (accordion) -->
+          <div class="cat-header" @click="toggleCat(cat.key)">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded-lg flex items-center justify-center" :style="`background:${(cat.color||getScoreColor(cat.score))}20`">
+                <span class="text-sm font-bold" :style="`color:${cat.color||getScoreColor(cat.score)}`" x-text="catIdx + 1"></span>
+              </div>
+              <div>
+                <h3 class="text-base font-bold text-dark-50" x-text="cat.name"></h3>
+                <p class="text-[11px] text-dark-300 mt-0.5" x-text="cat.description"></p>
+              </div>
+            </div>
+            <div class="flex items-center gap-3">
+              <span class="score-badge" :style="`background:${(cat.color||getScoreColor(cat.score))}20; color:${cat.color||getScoreColor(cat.score)}`">
+                <span x-text="cat.score"></span><span class="ml-1 text-[10px] opacity-70" x-text="cat.label"></span>
+              </span>
+              <svg class="w-5 h-5 text-dark-300 transition-transform" :class="openCats[cat.key] ? 'rotate-180' : ''" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"/></svg>
+            </div>
+          </div>
+
+          <!-- Category Content -->
+          <div x-show="openCats[cat.key]" x-transition:enter="transition ease-out duration-200"
+               x-transition:enter-start="opacity-0 -translate-y-2" x-transition:enter-end="opacity-100 translate-y-0">
+
+            <!-- Korea Summary -->
+            <div class="mt-4 p-3 rounded-lg flex items-start gap-2" style="background:rgba(217,119,87,.08); border:1px solid rgba(217,119,87,.15);" x-show="cat.korea_summary">
+              <svg class="w-4 h-4 text-accent mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582"/></svg>
+              <p class="text-[12px] text-accent leading-relaxed" x-text="cat.korea_summary"></p>
+            </div>
+
+            <!-- Yield Curve Chart (rates only) -->
+            <template x-if="cat.key === 'rates'">
+              <div class="mt-4">
+                <h4 class="text-xs font-semibold text-dark-300 uppercase tracking-wide mb-2">수익률 곡선 (Yield Curve)</h4>
+                <div class="yield-curve-wrap">
+                  <canvas :id="'yieldCurveChart'"></canvas>
+                </div>
+              </div>
+            </template>
+
+            <!-- CPI vs PPI chart (inflation only) -->
+            <template x-if="cat.key === 'inflation'">
+              <div class="mt-4">
+                <h4 class="text-xs font-semibold text-dark-300 uppercase tracking-wide mb-2">CPI vs PPI 비교</h4>
+                <div class="cpi-ppi-wrap">
+                  <canvas :id="'cpiPpiChart'"></canvas>
+                </div>
+              </div>
+            </template>
+
+            <!-- Indicator Table -->
+            <div class="table-scroll mt-4">
+              <table class="macro-table" style="min-width:680px;">
+                <thead>
+                  <tr>
+                    <th>지표명</th>
+                    <th class="text-right">현재값</th>
+                    <th class="text-right">MoM</th>
+                    <th class="text-right">3M</th>
+                    <th class="text-right">YoY</th>
+                    <th class="text-center">시그널</th>
+                    <th class="text-center">추이</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <template x-for="(ind, indIdx) in cat.indicators" :key="ind.fred_id">
+                    <tr @click="toggleIndicator(cat.key, indIdx)">
+                      <td>
+                        <div class="flex items-center gap-2">
+                          <span class="text-dark-50 font-medium" x-text="ind.name"></span>
+                          <span class="text-[10px] text-dark-400" x-text="ind.fred_id"></span>
+                        </div>
+                      </td>
+                      <td class="text-right font-semibold text-dark-100 tabular-nums">
+                        <span x-text="formatVal(ind.value, ind.unit)"></span>
+                        <span class="text-[10px] text-dark-400 ml-1" x-text="ind.unit"></span>
+                      </td>
+                      <td class="text-right tabular-nums">
+                        <span :class="ind.change_mom >= 0 ? 'text-up' : 'text-down'" x-text="fmtPct(ind.change_mom)"></span>
+                      </td>
+                      <td class="text-right tabular-nums">
+                        <span :class="ind.change_3m >= 0 ? 'text-up' : 'text-down'" x-text="fmtPct(ind.change_3m)"></span>
+                      </td>
+                      <td class="text-right tabular-nums">
+                        <span :class="ind.change_yoy >= 0 ? 'text-up' : 'text-down'" x-text="fmtPct(ind.change_yoy)"></span>
+                      </td>
+                      <td class="text-center">
+                        <span class="badge" :class="getSignalBadge(ind.signal)" x-text="ind.signal"></span>
+                      </td>
+                      <td class="text-center">
+                        <canvas :id="'spark_'+ind.fred_id" width="80" height="28" class="sparkline-canvas inline-block"></canvas>
+                      </td>
+                    </tr>
+                  </template>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Expandable Detail Panels -->
+            <template x-for="(ind, indIdx) in cat.indicators" :key="'detail_'+ind.fred_id">
+              <div x-show="openIndicators[cat.key+'_'+indIdx]" x-transition class="detail-panel fade-in">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div>
+                    <div class="text-[10px] font-semibold text-dark-300 uppercase tracking-wide mb-1">이 지표는 무엇인가?</div>
+                    <p class="text-[12px] text-dark-200 leading-relaxed" x-text="ind.description"></p>
+                  </div>
+                  <div>
+                    <div class="text-[10px] font-semibold text-dark-300 uppercase tracking-wide mb-1">어떻게 읽는가?</div>
+                    <p class="text-[12px] text-dark-200 leading-relaxed" x-text="ind.how_to_read"></p>
+                  </div>
+                  <div>
+                    <div class="text-[10px] font-semibold text-accent uppercase tracking-wide mb-1">한국 시장 영향</div>
+                    <p class="text-[12px] text-accent/80 leading-relaxed" x-text="ind.korea_impact"></p>
+                  </div>
+                </div>
+              </div>
+            </template>
+
+          </div>
+        </div>
+      </template>
+
+      <!-- ===== SECTION 7: MARKET SIGNALS (signal.json) ===== -->
+      <div class="section-card">
+        <div class="cat-header" @click="openMarket = !openMarket">
+          <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background:rgba(59,130,246,.15);">
+              <span class="text-sm font-bold text-info">7</span>
+            </div>
+            <div>
+              <h3 class="text-base font-bold text-dark-50">시장 시그널 (Market) -- 현재 시장 온도</h3>
+              <p class="text-[11px] text-dark-300 mt-0.5">signal.json의 VIX, 주가, 원자재, 환율 실시간 데이터</p>
+            </div>
+          </div>
+          <svg class="w-5 h-5 text-dark-300 transition-transform" :class="openMarket ? 'rotate-180' : ''" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"/></svg>
+        </div>
+
+        <div x-show="openMarket" x-transition>
+          <!-- Signal Alerts -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mt-4" x-show="signalAlerts.length > 0">
+            <template x-for="(sig, idx) in signalAlerts" :key="idx">
+              <div class="alert-card" :class="'alert-' + sig.level">
+                <div class="flex items-start gap-3">
+                  <div class="mt-0.5 flex-shrink-0">
+                    <div class="w-2 h-2 rounded-full mt-1"
+                         :class="{'bg-down': sig.level==='danger'||sig.level==='bearish', 'bg-warn': sig.level==='caution', 'bg-up': sig.level==='bullish', 'bg-info': sig.level==='info'}"></div>
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <div class="flex items-center gap-2 mb-1">
+                      <span class="text-xs font-bold text-dark-50" x-text="sig.indicator"></span>
+                      <span class="text-[10px] font-semibold px-2 py-0.5 rounded-full"
+                            :class="{'bg-red-500/15 text-red-400': sig.level==='danger'||sig.level==='bearish', 'bg-yellow-500/15 text-yellow-400': sig.level==='caution', 'bg-green-500/15 text-green-400': sig.level==='bullish', 'bg-blue-500/15 text-blue-400': sig.level==='info'}"
+                            x-text="sig.level.toUpperCase()"></span>
+                    </div>
+                    <p class="text-[12px] text-dark-200 leading-relaxed" x-text="sig.message"></p>
+                  </div>
+                </div>
+              </div>
+            </template>
+          </div>
+
+          <!-- Market Data Table -->
+          <div class="table-scroll mt-4">
+            <table class="macro-table" style="min-width:700px;">
+              <thead>
+                <tr>
+                  <th>지표명</th>
+                  <th class="text-right">현재값</th>
+                  <th class="text-right">1일</th>
+                  <th class="text-right">1주</th>
+                  <th class="text-right">1개월</th>
+                  <th class="text-right">SMA20</th>
+                  <th class="text-center">시그널</th>
+                </tr>
+              </thead>
+              <tbody>
+                <template x-for="row in marketTableRows" :key="row.symbol || row.catKey">
+                  <tr :class="row.isCat ? '' : ''" :style="row.isCat ? 'border-bottom:1px solid rgba(217,119,87,.2)' : ''">
+                    <template x-if="row.isCat">
+                      <td colspan="7" class="text-[12px] font-bold text-accent uppercase tracking-wider" style="padding-top:20px;" x-text="row.catLabel"></td>
+                    </template>
+                    <template x-if="!row.isCat">
+                      <td>
+                        <div class="flex items-center gap-2">
+                          <span class="text-dark-50 font-medium" x-text="row.name"></span>
+                          <span class="text-[10px] text-dark-400" x-text="row.symbol"></span>
+                        </div>
+                      </td>
+                    </template>
+                    <template x-if="!row.isCat">
+                      <td class="text-right font-semibold text-dark-100 tabular-nums" x-text="formatMarketPrice(row.price, row.category)"></td>
+                    </template>
+                    <template x-if="!row.isCat">
+                      <td class="text-right tabular-nums"><span :class="row.chg_1d >= 0 ? 'text-up' : 'text-down'" x-text="fmtPct(row.chg_1d)"></span></td>
+                    </template>
+                    <template x-if="!row.isCat">
+                      <td class="text-right tabular-nums"><span :class="row.chg_1w >= 0 ? 'text-up' : 'text-down'" x-text="fmtPct(row.chg_1w)"></span></td>
+                    </template>
+                    <template x-if="!row.isCat">
+                      <td class="text-right tabular-nums"><span :class="row.chg_1m >= 0 ? 'text-up' : 'text-down'" x-text="fmtPct(row.chg_1m)"></span></td>
+                    </template>
+                    <template x-if="!row.isCat">
+                      <td class="text-right tabular-nums text-dark-200" x-text="formatMarketPrice(row.sma20, row.category)"></td>
+                    </template>
+                    <template x-if="!row.isCat">
+                      <td class="text-center">
+                        <span class="badge" :class="getMarketSignalBadge(row)" x-text="getMarketSignalLabel(row)"></span>
+                      </td>
+                    </template>
+                  </tr>
+                </template>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== SECTION 8: KOREA IMPACT ===== -->
+      <div class="section-card" style="border:1px solid rgba(217,119,87,.2);">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-8 h-8 rounded-full bg-accent/15 flex items-center justify-center flex-shrink-0">
+            <svg class="w-4 h-4 text-accent" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3"/></svg>
+          </div>
+          <h3 class="text-base font-bold text-dark-50">한국 투자자 종합 요약</h3>
+        </div>
+
+        <!-- Top-Down Flow -->
+        <div class="topdown-flow mb-4">
+          <div class="flow-step">매크로 환경</div>
+          <span class="flow-arrow">&rarr;</span>
+          <div class="flow-step">한국 섹터 영향</div>
+          <span class="flow-arrow">&rarr;</span>
+          <div class="flow-step">종목 선정</div>
+        </div>
+
+        <!-- Korea summaries from categories -->
+        <div class="space-y-3">
+          <template x-for="cat in data.categories" :key="'kr_'+cat.key">
+            <div class="flex items-start gap-3 p-3 rounded-lg" style="background:rgba(255,255,255,.03);" x-show="cat.korea_summary">
+              <div class="w-2 h-2 rounded-full mt-1.5 flex-shrink-0" :style="`background:${cat.color||getScoreColor(cat.score)}`"></div>
+              <div>
+                <span class="text-xs font-bold text-dark-100" x-text="cat.name.split('(')[0].trim()"></span>
+                <p class="text-[12px] text-dark-200 mt-0.5 leading-relaxed" x-text="cat.korea_summary"></p>
+              </div>
+            </div>
+          </template>
+        </div>
+
+        <!-- KOSPI & KRW -->
+        <div class="grid grid-cols-2 gap-3 mt-4">
+          <div class="p-3 rounded-lg text-center" style="background:rgba(255,255,255,.03);">
+            <div class="text-[10px] text-dark-300 mb-1">KOSPI</div>
+            <div class="text-lg font-bold" :class="kospiChg >= 0 ? 'text-up' : 'text-down'" x-text="kospiPrice"></div>
+            <div class="text-[11px]" :class="kospiChg >= 0 ? 'text-up' : 'text-down'" x-text="fmtPct(kospiChg) + ' (1M)'"></div>
+          </div>
+          <div class="p-3 rounded-lg text-center" style="background:rgba(255,255,255,.03);">
+            <div class="text-[10px] text-dark-300 mb-1">USD/KRW</div>
+            <div class="text-lg font-bold" :class="krwChg >= 0 ? 'text-down' : 'text-up'" x-text="krwPrice"></div>
+            <div class="text-[11px]" :class="krwChg >= 0 ? 'text-down' : 'text-up'" x-text="fmtPct(krwChg) + ' (1M)'"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="text-center py-4">
+        <p class="text-[10px] text-dark-400">Macro Cockpit - FRED Top-Down Dashboard &middot; <span x-text="data.updated_at"></span></p>
+      </div>
+
+    </div>
+  </template>
+</main>
+
+<!-- SCRIPTS -->
+<script type="module">
+import { supabase, isLoggedIn, getCurrentUser, signOut } from './shared/supabase-client.js';
+window._supabaseAuth = { isLoggedIn, getCurrentUser, signOut, supabase };
+</script>
+
+<script>
+// ============================================================
+// SAMPLE / FALLBACK DATA
+// ============================================================
+const SAMPLE_MACRO_DATA = {
+  "updated_at": "2026-03-13T12:00:00Z",
+  "composite_score": 42,
+  "composite_label": "주의 국면",
+  "composite_summary": "유동성은 소폭 확장 중이나, 인플레이션 재상승 조짐과 수익률곡선 역전이 지속되고 있어 경계가 필요합니다. 신용시장은 아직 안정적이나, 고용 둔화 신호가 감지됩니다.",
+  "categories": [
+    {
+      "key": "liquidity",
+      "name": "유동성 (Liquidity)",
+      "score": 65,
+      "label": "확장",
+      "color": "#84cc16",
+      "description": "통화량, Fed 밸런스시트, 역레포 등 시중 유동성 수준",
+      "korea_summary": "글로벌 유동성 완만한 확장세. 외국인 자금 한국 유입 가능성은 있으나 달러 강세가 제한 요인.",
+      "indicators": [
+        {
+          "fred_id": "M2SL",
+          "name": "M2 통화량",
+          "description": "미국 광의통화. 경제 내 유통되는 현금+예금+MMF 총합",
+          "how_to_read": "MoM 증가 시 유동성 풍부, 자산가격 상승 압력. YoY 5% 이상이면 완화적 환경",
+          "korea_impact": "글로벌 유동성 증가 시 외국인 한국 유입 가능성 상승. 원화 강세 요인",
+          "value": 21763,
+          "unit": "십억 USD",
+          "change_mom": 0.4,
+          "change_3m": 1.1,
+          "change_yoy": 3.9,
+          "trend": "rising",
+          "signal": "Moderate Uptrend",
+          "history": [21450, 21510, 21580, 21620, 21680, 21720, 21763]
+        },
+        {
+          "fred_id": "WALCL",
+          "name": "Fed 밸런스시트",
+          "description": "연준 총자산. QT(양적긴축) 시 감소, QE(양적완화) 시 증가",
+          "how_to_read": "감소 = 유동성 회수(긴축). 감소 속도 둔화 시 QT 종료 기대",
+          "korea_impact": "Fed 밸런스시트 축소 시 신흥국 자금 이탈 압력. 한국 외국인 매도 가능성",
+          "value": 6800,
+          "unit": "십억 USD",
+          "change_mom": -1.2,
+          "change_3m": -3.5,
+          "change_yoy": -8.5,
+          "trend": "falling",
+          "signal": "Moderate Downtrend",
+          "history": [7100, 7020, 6950, 6900, 6860, 6830, 6800]
+        },
+        {
+          "fred_id": "RRPONTSYD",
+          "name": "역레포 (ON RRP)",
+          "description": "연준 역레포 잔고. 금융기관이 연준에 예치한 초과 유동성",
+          "how_to_read": "감소 = 시중 유동성 방출(긍정). 0에 가까워지면 유동성 완충장치 소진",
+          "korea_impact": "역레포 고갈 시 미국 국채 시장 변동성 증가, 글로벌 위험자산 하방 압력",
+          "value": 150,
+          "unit": "십억 USD",
+          "change_mom": -25.0,
+          "change_3m": -55.0,
+          "change_yoy": -85.0,
+          "trend": "falling",
+          "signal": "Strong Downtrend",
+          "history": [800, 600, 420, 300, 220, 180, 150]
+        },
+        {
+          "fred_id": "BOGMBASE",
+          "name": "본원통화 (Monetary Base)",
+          "description": "중앙은행이 직접 공급한 화폐. 지급준비금 + 유통현금",
+          "how_to_read": "증가 = 중앙은행 유동성 직접 공급. 감소 = 긴축",
+          "korea_impact": "본원통화 확대 시 글로벌 위험선호 강화, 한국 수혜 가능",
+          "value": 5420,
+          "unit": "십억 USD",
+          "change_mom": -0.3,
+          "change_3m": -1.0,
+          "change_yoy": -2.1,
+          "trend": "sideways",
+          "signal": "Sideways",
+          "history": [5480, 5460, 5450, 5440, 5430, 5425, 5420]
+        }
+      ]
+    },
+    {
+      "key": "inflation",
+      "name": "인플레이션 (Inflation)",
+      "score": 38,
+      "label": "경계",
+      "color": "#f59e0b",
+      "description": "CPI, PPI, PCE 등 물가 상승 압력 종합 판단",
+      "korea_summary": "미국 인플레이션 재상승 시 Fed 금리인하 지연, 원화 약세 및 한국 수출기업 원가 압박 우려.",
+      "indicators": [
+        {
+          "fred_id": "CPIAUCSL",
+          "name": "CPI (소비자물가)",
+          "description": "소비자물가지수. 가계가 체감하는 물가 수준",
+          "how_to_read": "YoY 2% 미만 = 안정, 3% 이상 = 인플레이션 우려. Fed 목표: 2%",
+          "korea_impact": "미국 CPI 상승 시 Fed 긴축 장기화, 한국 수입물가 상승, 원화 약세",
+          "value": 3.1,
+          "unit": "% YoY",
+          "change_mom": 0.3,
+          "change_3m": 0.1,
+          "change_yoy": -0.4,
+          "trend": "rising",
+          "signal": "Moderate Uptrend",
+          "history": [2.9, 2.9, 3.0, 3.0, 3.1, 3.1, 3.1]
+        },
+        {
+          "fred_id": "CPILFESL",
+          "name": "Core CPI (근원 CPI)",
+          "description": "식품/에너지 제외 CPI. Fed가 실질적으로 주목하는 인플레이션 지표",
+          "how_to_read": "Core > Headline = 구조적 인플레이션. 3.5% 이상이면 금리인하 어려움",
+          "korea_impact": "Core CPI 하락 지연 시 한국 금리인하도 지연. 부동산/내수 부담 지속",
+          "value": 3.8,
+          "unit": "% YoY",
+          "change_mom": 0.1,
+          "change_3m": -0.1,
+          "change_yoy": -0.5,
+          "trend": "sideways",
+          "signal": "Sideways",
+          "history": [3.9, 3.9, 3.8, 3.8, 3.8, 3.8, 3.8]
+        },
+        {
+          "fred_id": "PPIACO",
+          "name": "PPI (생산자물가)",
+          "description": "공장 출하 단계의 물가. CPI의 선행지표 역할",
+          "how_to_read": "PPI 상승 → 수개월 후 CPI 상승 전이 가능. 기업 마진 압박 신호",
+          "korea_impact": "미국 PPI 상승 시 한국 수출기업 원자재 원가 상승. 정유/화학/철강 직격",
+          "value": 1.6,
+          "unit": "% YoY",
+          "change_mom": 0.4,
+          "change_3m": 0.8,
+          "change_yoy": -0.3,
+          "trend": "rising",
+          "signal": "Moderate Uptrend",
+          "history": [1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6]
+        },
+        {
+          "fred_id": "PCEPILFE",
+          "name": "Core PCE",
+          "description": "Fed가 공식 타겟으로 삼는 물가지표. Core CPI보다 광범위",
+          "how_to_read": "Fed 목표 2%. 현재 2.8%면 아직 목표 미달성. 금리인하 지연 요인",
+          "korea_impact": "Core PCE 하락 속도가 한국 금리정책 시차에 직접 영향",
+          "value": 2.8,
+          "unit": "% YoY",
+          "change_mom": 0.0,
+          "change_3m": -0.2,
+          "change_yoy": -0.4,
+          "trend": "sideways",
+          "signal": "Sideways",
+          "history": [3.0, 2.9, 2.9, 2.8, 2.8, 2.8, 2.8]
+        },
+        {
+          "fred_id": "T10YIE",
+          "name": "10Y 기대인플레이션 (BEI)",
+          "description": "10년 만기 손익분기 인플레이션율. 시장 참여자들의 인플레이션 기대",
+          "how_to_read": "2.5% 이상이면 인플레 기대 과열. 급등 시 채권 매도 압력",
+          "korea_impact": "미국 기대인플레이션 상승 시 달러 강세, 원화 약세 압력",
+          "value": 2.35,
+          "unit": "%",
+          "change_mom": 0.05,
+          "change_3m": 0.10,
+          "change_yoy": -0.15,
+          "trend": "rising",
+          "signal": "Moderate Uptrend",
+          "history": [2.20, 2.22, 2.25, 2.28, 2.30, 2.33, 2.35]
+        }
+      ]
+    },
+    {
+      "key": "rates",
+      "name": "금리 & 수익률곡선 (Rates)",
+      "score": 35,
+      "label": "역전",
+      "color": "#f97316",
+      "description": "연방기금금리, 국채 수익률, 수익률곡선 스프레드",
+      "korea_summary": "수익률곡선 역전 지속으로 경기침체 신호. 한미 금리차 확대 시 외국인 이탈 및 원화 약세 압력.",
+      "indicators": [
+        {
+          "fred_id": "FEDFUNDS",
+          "name": "연방기금금리 (Fed Funds)",
+          "description": "미국 기준금리. Fed가 설정하는 단기금리 목표",
+          "how_to_read": "인하 시작 시 리스크 자산 긍정. 그러나 경기침체 대응 인하는 부정적",
+          "korea_impact": "Fed 금리인하 시 한미 금리차 축소, 외국인 한국 유입 기대",
+          "value": 5.33,
+          "unit": "%",
+          "change_mom": 0.0,
+          "change_3m": 0.0,
+          "change_yoy": 0.0,
+          "trend": "sideways",
+          "signal": "Sideways",
+          "history": [5.33, 5.33, 5.33, 5.33, 5.33, 5.33, 5.33]
+        },
+        {
+          "fred_id": "DGS2",
+          "name": "2Y 국채금리",
+          "description": "2년 만기 미국 국채 수익률. Fed 금리 기대를 가장 잘 반영",
+          "how_to_read": "하락 = 금리인하 기대 반영. 급락 = 경기침체 우려",
+          "korea_impact": "2Y 하락 시 한국 단기 금리에도 하방 압력",
+          "value": 4.60,
+          "unit": "%",
+          "change_mom": -0.05,
+          "change_3m": -0.15,
+          "change_yoy": -0.30,
+          "trend": "falling",
+          "signal": "Moderate Downtrend",
+          "history": [4.80, 4.75, 4.72, 4.68, 4.65, 4.62, 4.60]
+        },
+        {
+          "fred_id": "DGS5",
+          "name": "5Y 국채금리",
+          "description": "5년 만기 미국 국채 수익률",
+          "how_to_read": "중기 금리 기대. 10Y와의 스프레드 변화 주목",
+          "korea_impact": "중기 금리 변동은 한국 회사채 금리에 영향",
+          "value": 4.15,
+          "unit": "%",
+          "change_mom": -0.03,
+          "change_3m": -0.10,
+          "change_yoy": -0.25,
+          "trend": "falling",
+          "signal": "Moderate Downtrend",
+          "history": [4.35, 4.30, 4.25, 4.22, 4.20, 4.17, 4.15]
+        },
+        {
+          "fred_id": "DGS10",
+          "name": "10Y 국채금리",
+          "description": "10년 만기 미국 국채 수익률. 글로벌 채권시장 벤치마크",
+          "how_to_read": "4% 이상 = 긴축적. 주식 밸류에이션에 직접 영향 (DCF 할인율)",
+          "korea_impact": "미국 10Y 상승 시 한국 10Y도 동반 상승. 부동산/성장주 부담",
+          "value": 4.25,
+          "unit": "%",
+          "change_mom": 0.02,
+          "change_3m": -0.05,
+          "change_yoy": -0.15,
+          "trend": "sideways",
+          "signal": "Sideways",
+          "history": [4.30, 4.28, 4.26, 4.25, 4.24, 4.25, 4.25]
+        },
+        {
+          "fred_id": "DGS30",
+          "name": "30Y 국채금리",
+          "description": "30년 만기 미국 국채 수익률. 장기 인플레이션/성장 기대 반영",
+          "how_to_read": "30Y > 10Y = 정상적 기간 프리미엄. 급등 = 재정적자 우려",
+          "korea_impact": "장기금리 상승 시 글로벌 연기금 자산배분 변화, 한국 채권시장 영향",
+          "value": 4.45,
+          "unit": "%",
+          "change_mom": 0.05,
+          "change_3m": 0.08,
+          "change_yoy": -0.10,
+          "trend": "rising",
+          "signal": "Moderate Uptrend",
+          "history": [4.30, 4.33, 4.36, 4.38, 4.40, 4.43, 4.45]
+        },
+        {
+          "fred_id": "T10Y2Y",
+          "name": "10Y-2Y 스프레드",
+          "description": "장단기 금리차. 역전(음수) = 경기침체 선행지표",
+          "how_to_read": "음수 = 역전(침체 경고). 양수 전환 = 재정상화 또는 침체 임박",
+          "korea_impact": "역전 지속 시 글로벌 위험회피, 한국 수출 둔화 우려",
+          "value": -0.35,
+          "unit": "%p",
+          "change_mom": 0.07,
+          "change_3m": 0.10,
+          "change_yoy": 0.25,
+          "trend": "rising",
+          "signal": "Reversal",
+          "history": [-0.80, -0.70, -0.60, -0.50, -0.45, -0.40, -0.35]
+        },
+        {
+          "fred_id": "T10Y3M",
+          "name": "10Y-3M 스프레드",
+          "description": "10년-3개월 금리차. T10Y2Y보다 학술적으로 더 정확한 침체 예측 지표",
+          "how_to_read": "음수 지속 18개월 후 침체 확률 높음. Fed 모델 핵심 변수",
+          "korea_impact": "미국 침체 시 한국 수출 급감 불가피. 반도체/자동차 직격",
+          "value": -1.08,
+          "unit": "%p",
+          "change_mom": 0.02,
+          "change_3m": 0.05,
+          "change_yoy": 0.15,
+          "trend": "rising",
+          "signal": "Strong Downtrend",
+          "history": [-1.50, -1.40, -1.30, -1.20, -1.15, -1.10, -1.08]
+        }
+      ]
+    },
+    {
+      "key": "credit",
+      "name": "신용 & 금융환경 (Credit)",
+      "score": 55,
+      "label": "보통",
+      "color": "#eab308",
+      "description": "하이일드 스프레드, 투자등급 스프레드, 금융환경지수",
+      "korea_summary": "미국 신용시장 안정적이나 스프레드 소폭 확대 조짐. 한국 회사채 시장 직접 영향은 제한적이나 글로벌 위험선호 변화 주시.",
+      "indicators": [
+        {
+          "fred_id": "BAMLH0A0HYM2",
+          "name": "하이일드 스프레드 (HY OAS)",
+          "description": "하이일드 채권과 국채 간 수익률 차이. 신용 리스크 체감 온도계",
+          "how_to_read": "3% 미만 = 과도한 낙관. 5% 이상 = 스트레스. 8% 이상 = 위기",
+          "korea_impact": "HY 스프레드 급등 시 글로벌 위험회피, 한국 외국인 매도 가속",
+          "value": 3.50,
+          "unit": "%p",
+          "change_mom": 0.15,
+          "change_3m": 0.30,
+          "change_yoy": -0.20,
+          "trend": "rising",
+          "signal": "Moderate Uptrend",
+          "history": [3.10, 3.15, 3.25, 3.30, 3.35, 3.45, 3.50]
+        },
+        {
+          "fred_id": "BAMLC0A4CBBB",
+          "name": "투자등급 스프레드 (IG BBB)",
+          "description": "BBB 등급 회사채와 국채 간 수익률 차이",
+          "how_to_read": "1.5% 미만 = 양호. 2% 이상 = 기업 신용 우려 시작",
+          "korea_impact": "IG 스프레드 확대 시 한국 대기업 달러 차입 비용 증가",
+          "value": 1.35,
+          "unit": "%p",
+          "change_mom": 0.05,
+          "change_3m": 0.10,
+          "change_yoy": -0.15,
+          "trend": "sideways",
+          "signal": "Sideways",
+          "history": [1.20, 1.22, 1.25, 1.28, 1.30, 1.33, 1.35]
+        },
+        {
+          "fred_id": "NFCI",
+          "name": "금융환경지수 (NFCI)",
+          "description": "시카고 연은 금융환경지수. 100+ 변수로 금융 스트레스 종합 측정",
+          "how_to_read": "양수 = 긴축(스트레스). 음수 = 완화. 0 근처 = 중립",
+          "korea_impact": "NFCI 긴축 전환 시 글로벌 유동성 위축, 신흥국 충격 가능",
+          "value": -0.25,
+          "unit": "지수",
+          "change_mom": 0.05,
+          "change_3m": 0.10,
+          "change_yoy": 0.15,
+          "trend": "rising",
+          "signal": "Moderate Uptrend",
+          "history": [-0.50, -0.45, -0.40, -0.35, -0.30, -0.28, -0.25]
+        },
+        {
+          "fred_id": "STLFSI4",
+          "name": "금융스트레스지수 (FSI)",
+          "description": "세인트루이스 연은 금융스트레스지수. 스트레스 이상치 탐지",
+          "how_to_read": "0 이상 = 평균 이상 스트레스. 1 이상 = 심각한 스트레스",
+          "korea_impact": "FSI 급등 시 안전자산 선호 강화, 한국 주식/채권 동반 매도 가능",
+          "value": -0.50,
+          "unit": "지수",
+          "change_mom": 0.02,
+          "change_3m": 0.05,
+          "change_yoy": -0.10,
+          "trend": "sideways",
+          "signal": "Sideways",
+          "history": [-0.60, -0.58, -0.55, -0.53, -0.52, -0.51, -0.50]
+        }
+      ]
+    },
+    {
+      "key": "labor",
+      "name": "고용 (Labor)",
+      "score": 52,
+      "label": "둔화",
+      "color": "#eab308",
+      "description": "실업률, 비농업고용, 신규실업수당, 구인건수",
+      "korea_summary": "미국 고용 둔화 시 소비 위축 우려. 한국 대미 수출(반도체, 자동차) 감소 리스크.",
+      "indicators": [
+        {
+          "fred_id": "UNRATE",
+          "name": "실업률",
+          "description": "미국 공식 실업률. 경기 후행지표이지만 추세 변화는 중요",
+          "how_to_read": "3.5% 미만 = 완전고용. 4% 이상 = 둔화 시작. 급상승 = Sahm Rule 발동",
+          "korea_impact": "미국 실업 증가 시 소비 둔화, 한국 수출 물량 감소",
+          "value": 3.9,
+          "unit": "%",
+          "change_mom": 0.1,
+          "change_3m": 0.2,
+          "change_yoy": 0.4,
+          "trend": "rising",
+          "signal": "Moderate Uptrend",
+          "history": [3.5, 3.6, 3.6, 3.7, 3.8, 3.8, 3.9]
+        },
+        {
+          "fred_id": "PAYEMS",
+          "name": "비농업고용 (NFP)",
+          "description": "비농업 부문 월간 신규 고용자 수. 고용시장 건전성의 핵심 지표",
+          "how_to_read": "15만+ = 건강. 10만 미만 = 둔화. 음수 = 침체 시작",
+          "korea_impact": "NFP 부진 시 달러 약세 가능, 한국 수출주에 단기 긍정/중기 부정",
+          "value": 175,
+          "unit": "천명",
+          "change_mom": -25,
+          "change_3m": -50,
+          "change_yoy": -75,
+          "trend": "falling",
+          "signal": "Moderate Downtrend",
+          "history": [260, 240, 225, 210, 200, 185, 175]
+        },
+        {
+          "fred_id": "ICSA",
+          "name": "신규실업수당 청구",
+          "description": "주간 신규 실업수당 청구 건수. 가장 빠른 고용시장 선행지표",
+          "how_to_read": "20만 미만 = 강건. 25만 이상 = 주의. 30만 이상 = 둔화 본격화",
+          "korea_impact": "신규실업 급증 시 미국 소비 급감, 한국 수출 타격 우려",
+          "value": 215,
+          "unit": "천건",
+          "change_mom": 5,
+          "change_3m": 15,
+          "change_yoy": 20,
+          "trend": "rising",
+          "signal": "Moderate Uptrend",
+          "history": [195, 198, 202, 205, 208, 212, 215]
+        },
+        {
+          "fred_id": "JTSJOL",
+          "name": "구인건수 (JOLTS)",
+          "description": "미국 전체 구인 공석 수. 노동 수요의 직접 지표",
+          "how_to_read": "구인/실업자 비율 > 1 = 타이트한 고용시장. 급감 = 기업 채용 동결",
+          "korea_impact": "구인 감소 시 임금 상승 둔화, Fed 인하 명분 강화. 한국 간접 수혜",
+          "value": 8800,
+          "unit": "천건",
+          "change_mom": -200,
+          "change_3m": -500,
+          "change_yoy": -1200,
+          "trend": "falling",
+          "signal": "Moderate Downtrend",
+          "history": [10500, 10100, 9800, 9500, 9200, 9000, 8800]
+        }
+      ]
+    },
+    {
+      "key": "growth",
+      "name": "성장 & 심리 (Growth)",
+      "score": 48,
+      "label": "둔화",
+      "color": "#eab308",
+      "description": "GDP, 소비자심리, 경기선행지수, 산업생산, 소매판매",
+      "korea_summary": "미국 성장 둔화 국면 진입 조짐. 그러나 소비는 아직 건재. 한국 수출은 반도체 AI 수요로 일부 방어.",
+      "indicators": [
+        {
+          "fred_id": "A191RL1Q225SBEA",
+          "name": "실질 GDP 성장률",
+          "description": "미국 분기별 실질 GDP 성장률 (연율). 경제 성장의 총체적 지표",
+          "how_to_read": "2% 이상 = 건강. 0-1% = 둔화. 연속 음수 = 기술적 침체",
+          "korea_impact": "미국 GDP 둔화 시 한국 수출 감소. 글로벌 교역량 위축",
+          "value": 3.1,
+          "unit": "% SAAR",
+          "change_mom": 0,
+          "change_3m": -0.2,
+          "change_yoy": 0.3,
+          "trend": "sideways",
+          "signal": "Sideways",
+          "history": [2.1, 2.4, 2.8, 3.3, 3.2, 3.1, 3.1]
+        },
+        {
+          "fred_id": "UMCSENT",
+          "name": "소비자심리지수 (UMich)",
+          "description": "미시간대 소비자심리지수. 소비 지출의 선행지표",
+          "how_to_read": "80+ = 낙관. 60-80 = 보통. 60 미만 = 비관. 급락 = 소비 위축 경보",
+          "korea_impact": "미국 소비심리 악화 시 수입 감소, 한국 소비재 수출 타격",
+          "value": 67.4,
+          "unit": "지수",
+          "change_mom": -2.5,
+          "change_3m": -5.0,
+          "change_yoy": -8.0,
+          "trend": "falling",
+          "signal": "Moderate Downtrend",
+          "history": [78.0, 76.0, 74.0, 72.0, 70.0, 68.5, 67.4]
+        },
+        {
+          "fred_id": "USSLIND",
+          "name": "경기선행지수 (LEI)",
+          "description": "Conference Board 경기선행지수. 10개 선행지표 종합",
+          "how_to_read": "연속 3개월 하락 = 경기침체 경보. 반등 전환 시 회복 기대",
+          "korea_impact": "LEI 반등 시 글로벌 교역 회복 기대. 한국 수출주에 긍정적",
+          "value": 99.5,
+          "unit": "지수",
+          "change_mom": -0.3,
+          "change_3m": -0.8,
+          "change_yoy": -2.5,
+          "trend": "falling",
+          "signal": "Moderate Downtrend",
+          "history": [102.0, 101.5, 101.0, 100.5, 100.0, 99.8, 99.5]
+        },
+        {
+          "fred_id": "INDPRO",
+          "name": "산업생산지수",
+          "description": "미국 광업, 제조업, 공익사업 생산량 종합",
+          "how_to_read": "MoM 양수 = 생산 확대. 3개월 연속 음수 = 제조업 침체",
+          "korea_impact": "미국 산업생산 회복 시 한국 중간재/소재 수출 증가",
+          "value": 102.8,
+          "unit": "지수",
+          "change_mom": -0.1,
+          "change_3m": 0.2,
+          "change_yoy": 0.5,
+          "trend": "sideways",
+          "signal": "Sideways",
+          "history": [102.0, 102.2, 102.4, 102.5, 102.6, 102.7, 102.8]
+        },
+        {
+          "fred_id": "RSXFS",
+          "name": "소매판매 (ex-Auto/Gas)",
+          "description": "자동차/가솔린 제외 소매판매. 핵심 소비 트렌드 파악",
+          "how_to_read": "MoM 양수 = 소비 견조. 음수 = 소비 둔화. 연속 음수 = 위험 신호",
+          "korea_impact": "미국 소매 호조 시 한국 전자제품/의류 수출 수혜",
+          "value": 0.4,
+          "unit": "% MoM",
+          "change_mom": 0.1,
+          "change_3m": -0.2,
+          "change_yoy": -0.5,
+          "trend": "sideways",
+          "signal": "Sideways",
+          "history": [0.6, 0.5, 0.3, 0.2, 0.3, 0.3, 0.4]
+        }
+      ]
+    }
+  ],
+  "market_signals": {
+    "macro_data": [],
+    "signals": []
+  }
+};
+
+// ============================================================
+// Market Categories (for signal.json table)
+// ============================================================
+const MARKET_CATS = [
+  { key: 'volatility', label: '변동성 (Volatility)' },
+  { key: 'rate',       label: '금리 (Rates)' },
+  { key: 'currency',   label: '통화 (Currency)' },
+  { key: 'commodity',  label: '원자재 (Commodities)' },
+  { key: 'index',      label: '주식시장 (Indices)' },
+];
+
+// ============================================================
+// Alpine.js Component
+// ============================================================
+function macroDashboard() {
+  return {
+    loading: true,
+    error: null,
+    data: {},
+    signalData: null,
+    signalAlerts: [],
+    marketTableRows: [],
+
+    // Auth
+    loggedIn: false,
+    userEmail: null,
+
+    // Accordion state
+    openCats: {},
+    openIndicators: {},
+    openMarket: true,
+
+    // Korea
+    kospiPrice: '--',
+    kospiChg: 0,
+    krwPrice: '--',
+    krwChg: 0,
+
+    // Charts
+    chartInstances: {},
+
+    async init() {
+      // Auth
+      try {
+        const loggedIn = await window._supabaseAuth.isLoggedIn();
+        if (loggedIn) {
+          const user = await window._supabaseAuth.getCurrentUser();
+          this.loggedIn = true;
+          this.userEmail = user?.email;
+        }
+      } catch(e) {}
+      try {
+        window._supabaseAuth.supabase.auth.onAuthStateChange((event, session) => {
+          this.loggedIn = !!session?.user;
+          this.userEmail = session?.user?.email || null;
+        });
+      } catch(e) {}
+
+      await this.loadData();
+    },
+
+    async loadData() {
+      this.loading = true;
+      this.error = null;
+
+      // Load macro.json (FRED data)
+      let macroData = null;
+      try {
+        const res = await fetch('data/macro.json');
+        if (res.ok) macroData = await res.json();
+      } catch(e) {}
+
+      if (!macroData) {
+        try {
+          macroData = await new Promise((resolve, reject) => {
+            const xhr = new XMLHttpRequest();
+            xhr.open('GET', 'data/macro.json', true);
+            xhr.onload = function() {
+              if (xhr.status === 200 || xhr.status === 0) {
+                try { resolve(JSON.parse(xhr.responseText)); } catch(e) { reject(e); }
+              } else { reject(); }
+            };
+            xhr.onerror = () => reject();
+            xhr.send();
+          });
+        } catch(e) {}
+      }
+
+      // Fallback to sample
+      if (!macroData || !macroData.categories) {
+        macroData = JSON.parse(JSON.stringify(SAMPLE_MACRO_DATA));
+        console.log('[Macro] Using sample fallback data');
+      }
+
+      this.data = macroData;
+
+      // Initialize accordions - all open
+      for (const cat of this.data.categories) {
+        this.openCats[cat.key] = true;
+      }
+
+      // Load market signals: prefer macro.json's market_signals, fallback to signal.json
+      let marketSignalsLoaded = false;
+      const ms = macroData.market_signals;
+      if (ms && ((ms.status === 'ok' && ms.macro_data) || (ms.macro_data && ms.macro_data.length > 0))) {
+        this.signalAlerts = ms.signals || [];
+        this.buildMarketTable(ms.macro_data || []);
+        const kospi = (ms.macro_data||[]).find(d => d.symbol === '^KS11');
+        const krw = (ms.macro_data||[]).find(d => d.symbol === 'USDKRW=X');
+        if (kospi) { this.kospiPrice = kospi.price.toLocaleString(); this.kospiChg = kospi.chg_1m; }
+        if (krw) { this.krwPrice = krw.price.toLocaleString() + '원'; this.krwChg = krw.chg_1m; }
+        marketSignalsLoaded = true;
+        console.log('[Macro] Market signals loaded from macro.json');
+      }
+
+      if (!marketSignalsLoaded) {
+        try {
+          let sigData = null;
+          try {
+            const res2 = await fetch('data/signal.json');
+            if (res2.ok) sigData = await res2.json();
+          } catch(e) {
+            sigData = await new Promise((resolve, reject) => {
+              const xhr = new XMLHttpRequest();
+              xhr.open('GET', 'data/signal.json', true);
+              xhr.onload = function() {
+                if (xhr.status === 200 || xhr.status === 0) {
+                  try { resolve(JSON.parse(xhr.responseText)); } catch(e) { reject(e); }
+                } else { reject(); }
+              };
+              xhr.onerror = () => reject();
+              xhr.send();
+            });
+          }
+          if (sigData && sigData.status === 'ok') {
+            this.signalData = sigData;
+            this.signalAlerts = sigData.signals || [];
+            this.buildMarketTable(sigData.macro_data || []);
+            const kospi = sigData.macro_data.find(d => d.symbol === '^KS11');
+            const krw = sigData.macro_data.find(d => d.symbol === 'USDKRW=X');
+            if (kospi) { this.kospiPrice = kospi.price.toLocaleString(); this.kospiChg = kospi.chg_1m; }
+            if (krw) { this.krwPrice = krw.price.toLocaleString() + '원'; this.krwChg = krw.chg_1m; }
+            console.log('[Macro] Market signals loaded from signal.json');
+          }
+        } catch(e) {
+          console.log('[Macro] signal.json not loaded:', e);
+        }
+      }
+
+      this.loading = false;
+
+      // Build charts after DOM renders
+      this.$nextTick(() => {
+        setTimeout(() => {
+          this.drawAllSparklines();
+          this.drawYieldCurve();
+          this.drawCpiPpi();
+        }, 200);
+      });
+    },
+
+    // ==================== ACCORDION ====================
+    toggleCat(key) {
+      this.openCats[key] = !this.openCats[key];
+      if (this.openCats[key]) {
+        this.$nextTick(() => {
+          setTimeout(() => {
+            this.drawSparklinesForCat(key);
+            if (key === 'rates') this.drawYieldCurve();
+            if (key === 'inflation') this.drawCpiPpi();
+          }, 100);
+        });
+      }
+    },
+
+    toggleIndicator(catKey, indIdx) {
+      const k = catKey + '_' + indIdx;
+      this.openIndicators[k] = !this.openIndicators[k];
+    },
+
+    // ==================== SCORE COLOR ====================
+    getScoreColor(score) {
+      if (score >= 80) return '#22c55e';
+      if (score >= 60) return '#84cc16';
+      if (score >= 40) return '#eab308';
+      if (score >= 20) return '#f97316';
+      return '#ef4444';
+    },
+
+    // ==================== SIGNAL BADGES ====================
+    getSignalBadge(signal) {
+      if (!signal) return 'badge-sideways';
+      const s = signal.toLowerCase();
+      if (s.includes('strong') && s.includes('up')) return 'badge-strong-up';
+      if (s.includes('moderate') && s.includes('up')) return 'badge-moderate-up';
+      if (s.includes('strong') && s.includes('down')) return 'badge-strong-dn';
+      if (s.includes('moderate') && s.includes('down')) return 'badge-moderate-dn';
+      if (s.includes('reversal')) return 'badge-reversal';
+      return 'badge-sideways';
+    },
+
+    // ==================== FORMATTERS ====================
+    fmtPct(val) {
+      if (val === null || val === undefined) return '--';
+      return (val >= 0 ? '+' : '') + Number(val).toFixed(2) + '%';
+    },
+
+    formatVal(value, unit) {
+      if (value === null || value === undefined) return '--';
+      if (unit && (unit.includes('%') || unit === '%p')) return Number(value).toFixed(2);
+      if (unit === '지수') return Number(value).toFixed(2);
+      if (value >= 1000) return Number(value).toLocaleString(undefined, { maximumFractionDigits: 0 });
+      return Number(value).toFixed(2);
+    },
+
+    formatMarketPrice(price, category) {
+      if (price === null || price === undefined) return '--';
+      if (category === 'rate') return price.toFixed(2) + '%';
+      if (category === 'currency') {
+        if (price > 100) return price.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+        return price.toFixed(2);
+      }
+      if (price >= 1000) return price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      return price.toFixed(2);
+    },
+
+    // ==================== MARKET TABLE ====================
+    buildMarketTable(macroData) {
+      const rows = [];
+      for (const cat of MARKET_CATS) {
+        rows.push({ isCat: true, catKey: cat.key, catLabel: cat.label });
+        const items = macroData.filter(d => d.category === cat.key);
+        for (const item of items) {
+          rows.push({ ...item, isCat: false });
+        }
+      }
+      this.marketTableRows = rows;
+    },
+
+    getMarketSignalLabel(row) {
+      const pctFromSma = ((row.price - row.sma20) / row.sma20) * 100;
+      const absPctFromSma = Math.abs(pctFromSma);
+      if (row.category === 'volatility') {
+        if (row.chg_1m > 10 && row.above_sma20) return 'Strong Uptrend';
+        if (row.chg_1m > 0 && row.above_sma20) return 'Moderate Uptrend';
+        if (row.chg_1m < -5 && !row.above_sma20) return 'Strong Downtrend';
+        if (row.chg_1m < 0 && !row.above_sma20) return 'Moderate Downtrend';
+        if (absPctFromSma < 2) return 'Reversal';
+        return 'Sideways';
+      }
+      if (absPctFromSma < 2 && ((row.chg_1m > 0 && !row.above_sma20) || (row.chg_1m < 0 && row.above_sma20))) return 'Reversal';
+      if (row.chg_1m > 10 && row.above_sma20) return 'Strong Uptrend';
+      if (row.chg_1m > 0 && row.above_sma20) return 'Moderate Uptrend';
+      if (row.chg_1m >= -5 && row.chg_1m <= 5) return 'Sideways';
+      if (row.chg_1m < -5 && !row.above_sma20) return 'Strong Downtrend';
+      if (row.chg_1m < 0 && !row.above_sma20) return 'Moderate Downtrend';
+      return 'Sideways';
+    },
+
+    getMarketSignalBadge(row) {
+      const label = this.getMarketSignalLabel(row);
+      switch (label) {
+        case 'Strong Uptrend':   return 'badge-strong-up';
+        case 'Moderate Uptrend': return 'badge-moderate-up';
+        case 'Sideways':         return 'badge-sideways';
+        case 'Moderate Downtrend': return 'badge-moderate-dn';
+        case 'Strong Downtrend': return 'badge-strong-dn';
+        case 'Reversal':         return 'badge-reversal';
+        default:                 return 'badge-sideways';
+      }
+    },
+
+    // ==================== SPARKLINES ====================
+    drawAllSparklines() {
+      for (const cat of this.data.categories) {
+        this.drawSparklinesForCat(cat.key);
+      }
+    },
+
+    drawSparklinesForCat(catKey) {
+      const cat = this.data.categories.find(c => c.key === catKey);
+      if (!cat) return;
+      for (const ind of cat.indicators) {
+        this.drawSparkline(ind);
+      }
+    },
+
+    drawSparkline(ind) {
+      const canvas = document.getElementById('spark_' + ind.fred_id);
+      if (!canvas || !ind.history || ind.history.length < 2) return;
+
+      // Destroy existing
+      const existingChart = Chart.getChart(canvas);
+      if (existingChart) existingChart.destroy();
+
+      const isUp = ind.history[ind.history.length - 1] >= ind.history[0];
+      const color = isUp ? '#22c55e' : '#ef4444';
+
+      new Chart(canvas, {
+        type: 'line',
+        data: {
+          labels: ind.history.map((_, i) => i),
+          datasets: [{
+            data: ind.history,
+            borderColor: color,
+            borderWidth: 1.5,
+            fill: true,
+            backgroundColor: isUp ? 'rgba(34,197,94,.1)' : 'rgba(239,68,68,.1)',
+            pointRadius: 0,
+            tension: 0.4,
+          }]
+        },
+        options: {
+          responsive: false,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false }, tooltip: { enabled: false } },
+          scales: {
+            x: { display: false },
+            y: { display: false }
+          },
+          animation: { duration: 600 }
+        }
+      });
+    },
+
+    // ==================== YIELD CURVE ====================
+    drawYieldCurve() {
+      const canvas = document.getElementById('yieldCurveChart');
+      if (!canvas) return;
+
+      const existingChart = Chart.getChart(canvas);
+      if (existingChart) existingChart.destroy();
+
+      const ratesCat = this.data.categories.find(c => c.key === 'rates');
+      if (!ratesCat) return;
+
+      const maturityMap = { 'DGS2': '2Y', 'DGS5': '5Y', 'DGS10': '10Y', 'DGS30': '30Y' };
+      const labels = [];
+      const values = [];
+
+      for (const fid of ['DGS2', 'DGS5', 'DGS10', 'DGS30']) {
+        const ind = ratesCat.indicators.find(i => i.fred_id === fid);
+        if (ind) {
+          labels.push(maturityMap[fid]);
+          values.push(ind.value);
+        }
+      }
+
+      // Determine if inverted
+      const isInverted = values.length >= 2 && values[0] > values[values.length - 1];
+
+      new Chart(canvas, {
+        type: 'line',
+        data: {
+          labels,
+          datasets: [{
+            label: '현재 수익률곡선',
+            data: values,
+            borderColor: isInverted ? '#ef4444' : '#22c55e',
+            backgroundColor: isInverted ? 'rgba(239,68,68,.1)' : 'rgba(34,197,94,.1)',
+            borderWidth: 3,
+            fill: true,
+            pointRadius: 6,
+            pointBackgroundColor: isInverted ? '#ef4444' : '#22c55e',
+            pointBorderColor: '#151a26',
+            pointBorderWidth: 2,
+            tension: 0.3,
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { labels: { color: '#94a3b8', font: { size: 11, family: 'Inter' } } },
+            tooltip: {
+              backgroundColor: '#1e293b',
+              titleColor: '#e2e8f0',
+              bodyColor: '#94a3b8',
+              borderColor: 'rgba(255,255,255,.1)',
+              borderWidth: 1,
+              padding: 12,
+              cornerRadius: 8,
+              callbacks: {
+                label: (ctx) => `${ctx.label}: ${ctx.raw.toFixed(2)}%`
+              }
+            },
+            annotation: isInverted ? undefined : undefined
+          },
+          scales: {
+            x: {
+              ticks: { color: '#94a3b8', font: { size: 12, family: 'Inter', weight: 600 } },
+              grid: { color: 'rgba(255,255,255,.04)' },
+              border: { color: 'rgba(255,255,255,.08)' }
+            },
+            y: {
+              ticks: {
+                color: '#64748b',
+                font: { size: 11, family: 'Inter' },
+                callback: (val) => val.toFixed(1) + '%'
+              },
+              grid: { color: 'rgba(255,255,255,.04)' },
+              border: { color: 'rgba(255,255,255,.08)' }
+            }
+          }
+        }
+      });
+
+      // Also draw spread trend
+      this.drawSpreadTrend(ratesCat);
+    },
+
+    drawSpreadTrend(ratesCat) {
+      const spread = ratesCat.indicators.find(i => i.fred_id === 'T10Y2Y');
+      if (!spread || !spread.history) return;
+      // Use the sparkline canvas for this
+    },
+
+    // ==================== CPI vs PPI ====================
+    drawCpiPpi() {
+      const canvas = document.getElementById('cpiPpiChart');
+      if (!canvas) return;
+
+      const existingChart = Chart.getChart(canvas);
+      if (existingChart) existingChart.destroy();
+
+      const inflCat = this.data.categories.find(c => c.key === 'inflation');
+      if (!inflCat) return;
+
+      const cpi = inflCat.indicators.find(i => i.fred_id === 'CPIAUCSL');
+      const coreCpi = inflCat.indicators.find(i => i.fred_id === 'CPILFESL');
+      const ppi = inflCat.indicators.find(i => i.fred_id === 'PPIACO');
+      const corePce = inflCat.indicators.find(i => i.fred_id === 'PCEPILFE');
+
+      const labels = ['CPI', 'Core CPI', 'PPI', 'Core PCE'];
+      const values = [
+        cpi ? cpi.value : 0,
+        coreCpi ? coreCpi.value : 0,
+        ppi ? ppi.value : 0,
+        corePce ? corePce.value : 0,
+      ];
+
+      new Chart(canvas, {
+        type: 'bar',
+        data: {
+          labels,
+          datasets: [{
+            label: '현재 (% YoY)',
+            data: values,
+            backgroundColor: [
+              'rgba(239,68,68,.7)',
+              'rgba(249,115,22,.7)',
+              'rgba(234,179,8,.7)',
+              'rgba(59,130,246,.7)',
+            ],
+            borderRadius: 6,
+            barPercentage: 0.6,
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { labels: { color: '#94a3b8', font: { size: 11, family: 'Inter' } } },
+            tooltip: {
+              backgroundColor: '#1e293b',
+              titleColor: '#e2e8f0',
+              bodyColor: '#94a3b8',
+              padding: 12,
+              cornerRadius: 8,
+              callbacks: {
+                label: (ctx) => `${ctx.label}: ${ctx.raw.toFixed(1)}%`
+              }
+            }
+          },
+          scales: {
+            x: {
+              ticks: { color: '#94a3b8', font: { size: 12, family: 'Inter', weight: 600 } },
+              grid: { display: false }
+            },
+            y: {
+              ticks: {
+                color: '#64748b',
+                font: { size: 11, family: 'Inter' },
+                callback: (val) => val + '%'
+              },
+              grid: { color: 'rgba(255,255,255,.04)' },
+              beginAtZero: true,
+            }
+          }
+        }
+      });
+    },
+
+    // ==================== AUTH ====================
+    async doSignOut() {
+      await window._supabaseAuth.signOut();
+      this.loggedIn = false;
+      this.userEmail = null;
+    }
+  };
+}
+</script>
+
+</body>
+</html>

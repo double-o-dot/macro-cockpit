@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Macro Cockpit - 포트폴리오</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='14' fill='%23D97757'/></svg>">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
+        colors: {
+          bg:     '#F5F1EB',
+          card:   '#FFFFFF',
+          hero:   { from: '#2A2520', to: '#4A3F35' },
+          warm:   { 50:'#FAF8F5', 100:'#F5F1EB', 200:'#EBE5DC', 300:'#D4CCC0', 400:'#B0A89C', 500:'#8B8580', 600:'#6B6560', 700:'#4A453E', 800:'#2A2520', 900:'#1B1B18' },
+          accent: { 50:'#FEF3ED', 100:'#FDE5D8', DEFAULT:'#D97757', dark:'#B85E42' },
+          up:     '#34C759',
+          down:   '#FF3B30',
+        }
+      }
+    }
+  }
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
+  <link rel="stylesheet" href="shared/theme.css">
+</head>
+
+<body class="font-sans text-warm-900 antialiased" x-data="portfolioApp()" x-init="init()">
+
+<!-- ==================== DESKTOP TOP NAV ==================== -->
+<nav class="topnav" id="topnav">
+  <a href="index.html" class="topnav-logo">
+    <div class="logo-circle"><span>M</span></div>
+    <span class="logo-text">Macro Cockpit</span>
+  </a>
+  <div class="topnav-menu">
+    <a href="index.html" data-nav="insights">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+      인사이트
+    </a>
+    <a href="prices.html" data-nav="prices">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+      주식가격
+    </a>
+    <a href="portfolio.html" class="active" data-nav="portfolio">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/><path d="M9 12l2 2 4-4"/></svg>
+      포트폴리오
+    </a>
+    <a href="macro.html" data-nav="macro">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z"/></svg>
+      매크로
+    </a>
+  </div>
+  <div class="topnav-auth">
+    <template x-if="loggedIn">
+      <button class="btn-logout" @click="doSignOut()">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+        <span x-text="userEmail ? userEmail.split('@')[0] : '로그아웃'"></span>
+      </button>
+    </template>
+    <template x-if="!loggedIn">
+      <button class="btn-login" @click="showLogin = true">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/></svg>
+        로그인
+      </button>
+    </template>
+  </div>
+</nav>
+
+<!-- ==================== MOBILE BOTTOM NAV ==================== -->
+<nav class="bnav" id="bottom-nav">
+  <a href="index.html" data-nav="insights">
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+    인사이트<div class="dot"></div>
+  </a>
+  <a href="prices.html" data-nav="prices">
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+    주식가격<div class="dot"></div>
+  </a>
+  <a href="portfolio.html" class="active" data-nav="portfolio">
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/><path d="M9 12l2 2 4-4"/></svg>
+    포트폴리오<div class="dot"></div>
+  </a>
+  <a href="macro.html" data-nav="macro">
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z"/></svg>
+    매크로<div class="dot"></div>
+  </a>
+</nav>
+
+<!-- ==================== MAIN CONTENT ==================== -->
+<main class="page-main">
+
+  <!-- AUTH GATE: Login form if not logged in -->
+  <template x-if="!loggedIn">
+    <div id="auth-section">
+      <div class="auth-card">
+        <div style="width:48px;height:48px;border-radius:50%;background:#D97757;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;">
+          <span style="color:#fff;font-size:20px;font-weight:700;">M</span>
+        </div>
+        <h2 x-text="isSignUp ? '회원가입' : '로그인'"></h2>
+        <p x-text="isSignUp ? '새 계정을 만들어주세요' : '포트폴리오를 보려면 로그인하세요'"></p>
+        <div class="auth-error" x-text="authError"></div>
+        <div x-show="authSuccess" style="font-size:12px;color:#34C759;margin-bottom:12px;" x-text="authSuccess"></div>
+        <form @submit.prevent="submitAuth()">
+          <input class="auth-input" type="email" placeholder="이메일" x-model="authEmail" required>
+          <input class="auth-input" type="password" placeholder="비밀번호 (6자 이상)" x-model="authPassword" required minlength="6">
+          <button class="auth-btn" type="submit" :disabled="authLoading">
+            <span x-show="!authLoading" x-text="isSignUp ? '가입하기' : '로그인'"></span>
+            <span x-show="authLoading">처리 중...</span>
+          </button>
+        </form>
+        <div class="auth-toggle">
+          <span x-show="!isSignUp">계정이 없으신가요? <a @click="isSignUp=true; authError=''; authSuccess=''">회원가입</a></span>
+          <span x-show="isSignUp">이미 계정이 있으신가요? <a @click="isSignUp=false; authError=''; authSuccess=''">로그인</a></span>
+        </div>
+      </div>
+    </div>
+  </template>
+
+  <!-- PORTFOLIO CONTENT (only when logged in) -->
+  <template x-if="loggedIn">
+    <div class="animate-fadeUp">
+
+      <!-- Hero Card: Total Portfolio Value -->
+      <div class="hero p-5 md:p-6 mb-5">
+        <svg class="absolute -top-6 -right-6 opacity-[.06]" width="140" height="140"><circle cx="70" cy="70" r="70" fill="white"/></svg>
+        <svg class="absolute bottom-2 left-[20%] opacity-[.04]" width="80" height="80"><circle cx="40" cy="40" r="40" fill="white"/></svg>
+        <div class="relative z-10">
+          <div class="text-xs text-white/50 font-medium tracking-wide uppercase">Total Portfolio</div>
+          <div class="text-3xl md:text-4xl font-extrabold mt-1 tracking-tight" x-text="totalDisplay"></div>
+          <div class="text-sm text-white/50 mt-1" x-text="totalSubDisplay"></div>
+          <div class="flex gap-4 mt-4">
+            <div class="bg-white/10 rounded-xl px-3 py-2 backdrop-blur-sm">
+              <div class="text-[10px] text-white/40">종목</div>
+              <div class="text-sm font-bold" x-text="holdings.length"></div>
+            </div>
+            <div class="bg-white/10 rounded-xl px-3 py-2 backdrop-blur-sm">
+              <div class="text-[10px] text-white/40">환율(USD/KRW)</div>
+              <div class="text-sm font-bold" x-text="fxRate.toLocaleString() + '원'"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cash Balance -->
+      <div class="grid grid-cols-2 gap-3 mb-5">
+        <div class="scard p-4">
+          <div class="text-[11px] text-warm-400 font-medium">KRW 현금</div>
+          <div class="text-lg font-bold mt-1 whitespace-nowrap" x-text="cashKRW.toLocaleString() + '원'"></div>
+        </div>
+        <div class="scard p-4">
+          <div class="text-[11px] text-warm-400 font-medium">USD 현금</div>
+          <div class="text-lg font-bold mt-1 whitespace-nowrap" x-text="'$' + cashUSD.toFixed(2)"></div>
+        </div>
+      </div>
+      <div class="text-[10px] text-warm-400 mb-4 -mt-2" x-show="meta.period_start" x-text="'기간: ' + (meta.period_start || '') + ' ~ ' + (meta.period_end || '')"></div>
+
+      <!-- Holdings Table -->
+      <div class="mb-5">
+        <div class="text-sm font-semibold mb-3">보유 종목</div>
+        <div class="space-y-2.5">
+          <template x-for="(h, idx) in holdings" :key="h.code">
+            <div class="scard p-4">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full flex items-center justify-center shrink-0" :class="'av-' + (idx % 7)">
+                  <span class="text-xs font-bold" x-text="h.ticker.substring(0, 2)"></span>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <div class="flex items-center gap-1.5">
+                    <span class="text-sm font-semibold" x-text="h.ticker"></span>
+                    <span class="text-[10px] text-warm-400 truncate" x-text="h.name"></span>
+                  </div>
+                  <div class="text-[11px] text-warm-400" x-text="h.quantity + '주'"></div>
+                </div>
+                <div class="text-right shrink-0">
+                  <div class="text-sm font-semibold whitespace-nowrap" x-text="h.evalDisplay"></div>
+                  <div class="text-xs font-medium whitespace-nowrap" :class="h.pnlPct >= 0 ? 'text-up' : 'text-down'" x-text="h.pnlDisplay" x-show="h.hasPrice"></div>
+                </div>
+              </div>
+              <div class="flex justify-between mt-3 pt-3 border-t border-warm-100 text-[11px] text-warm-400">
+                <span x-text="'평단가 ' + (h.currency === 'USD' ? '$' + h.avg_price.toFixed(2) : h.avg_price.toLocaleString() + '원')"></span>
+                <span x-text="h.hasPrice ? ('현재가 ' + (h.currency === 'USD' ? '$' + h.currentPrice.toFixed(2) : h.currentPrice.toLocaleString() + '원')) : '시세 미제공'" :class="h.hasPrice ? '' : 'text-warm-300'"></span>
+              </div>
+            </div>
+          </template>
+        </div>
+      </div>
+
+      <!-- Total Evaluation -->
+      <div class="scard p-4 mb-5">
+        <div class="text-[11px] text-warm-400 font-medium mb-1">합계 평가금액</div>
+        <div class="flex gap-6">
+          <div x-show="totalKRWeval > 0">
+            <div class="text-base font-bold" x-text="totalKRWeval.toLocaleString() + '원'"></div>
+          </div>
+          <div x-show="totalUSDeval > 0">
+            <div class="text-base font-bold" x-text="'$' + totalUSDeval.toFixed(2)"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Allocation Donut Chart -->
+      <div class="scard p-5 mb-5">
+        <div class="text-sm font-semibold mb-3">Asset Allocation</div>
+        <canvas id="alloc-chart" height="280"></canvas>
+      </div>
+
+    </div>
+  </template>
+
+</main>
+
+<script type="module">
+import { supabase, isLoggedIn, getCurrentUser, signIn, signUp, signOut } from './shared/supabase-client.js';
+window._supabaseAuth = { isLoggedIn, getCurrentUser, signIn, signUp, signOut, supabase };
+</script>
+
+<script>
+function portfolioApp() {
+  return {
+    // Auth state
+    loggedIn: false,
+    userEmail: null,
+    isSignUp: false,
+    authEmail: '',
+    authPassword: '',
+    authError: '',
+    authSuccess: '',
+    authLoading: false,
+    showLogin: false,
+
+    // Portfolio data
+    holdings: [],
+    cashKRW: 0,
+    cashUSD: 0,
+    meta: {},
+    prices: {},
+    fxRate: 1450,
+
+    // Computed
+    totalKRWeval: 0,
+    totalUSDeval: 0,
+    totalDisplay: '-',
+    totalSubDisplay: '',
+
+    chartInstance: null,
+
+    async init() {
+      // Check auth
+      try {
+        const loggedIn = await window._supabaseAuth.isLoggedIn();
+        if (loggedIn) {
+          const user = await window._supabaseAuth.getCurrentUser();
+          this.loggedIn = true;
+          this.userEmail = user?.email;
+          await this.loadPortfolio();
+        }
+      } catch (e) {}
+
+      // Listen for auth changes
+      window._supabaseAuth.supabase.auth.onAuthStateChange((event, session) => {
+        if (session?.user) {
+          this.loggedIn = true;
+          this.userEmail = session.user.email;
+          this.$nextTick(() => this.loadPortfolio());
+        } else {
+          this.loggedIn = false;
+          this.userEmail = null;
+        }
+      });
+    },
+
+    async submitAuth() {
+      this.authError = '';
+      this.authSuccess = '';
+      this.authLoading = true;
+
+      try {
+        if (this.isSignUp) {
+          const { user, error } = await window._supabaseAuth.signUp(this.authEmail, this.authPassword);
+          if (error) { this.authError = error.message; }
+          else { this.authSuccess = '가입 완료! 이메일을 확인해주세요.'; }
+        } else {
+          const { user, error } = await window._supabaseAuth.signIn(this.authEmail, this.authPassword);
+          if (error) { this.authError = error.message; }
+          else {
+            this.loggedIn = true;
+            this.userEmail = user?.email;
+            this.$nextTick(() => this.loadPortfolio());
+          }
+        }
+      } catch (e) {
+        this.authError = e.message || '오류가 발생했습니다';
+      }
+      this.authLoading = false;
+    },
+
+    async loadPortfolio() {
+      const [portfolioData, pricesData] = await Promise.all([
+        this.fetchJSON('data/portfolio.json'),
+        this.fetchJSON('data/prices.json')
+      ]);
+
+      if (pricesData?.status === 'ok' && pricesData.prices) {
+        this.prices = pricesData.prices;
+        this.fxRate = pricesData.prices['__FX__'] || 1450;
+      }
+
+      if (portfolioData?.status === 'ok') {
+        this.cashKRW = portfolioData.cash?.krw || 0;
+        this.cashUSD = portfolioData.cash?.usd || 0;
+        this.meta = portfolioData.meta || {};
+
+        this.holdings = (portfolioData.holdings || []).map(h => {
+          const cp = this.prices[h.code];
+          const hasPrice = cp != null;
+          const pnlPct = hasPrice ? ((cp - h.avg_price) / h.avg_price * 100) : 0;
+          const evalVal = hasPrice ? h.quantity * cp : h.est_value;
+          return {
+            ...h,
+            hasPrice,
+            currentPrice: cp || h.avg_price,
+            pnlPct,
+            pnlDisplay: hasPrice ? ((pnlPct >= 0 ? '+' : '') + pnlPct.toFixed(1) + '%') : '-',
+            evalDisplay: h.currency === 'USD'
+              ? '$' + evalVal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+              : evalVal.toLocaleString() + '원',
+            evalValue: evalVal
+          };
+        });
+
+        // Compute totals
+        let usd = 0, krw = 0;
+        this.holdings.forEach(h => {
+          if (h.currency === 'USD') usd += h.evalValue;
+          else krw += h.evalValue;
+        });
+        usd += this.cashUSD;
+        krw += this.cashKRW;
+        this.totalUSDeval = usd - this.cashUSD;
+        this.totalKRWeval = krw - this.cashKRW;
+
+        const totalKRWAll = krw + usd * this.fxRate;
+        if (totalKRWAll >= 100000000) this.totalDisplay = (totalKRWAll / 100000000).toFixed(2) + '억원';
+        else if (totalKRWAll >= 10000) this.totalDisplay = Math.round(totalKRWAll / 10000).toLocaleString() + '만원';
+        else this.totalDisplay = totalKRWAll.toLocaleString() + '원';
+
+        this.totalSubDisplay = '$' + usd.toLocaleString('en-US', { maximumFractionDigits: 0 }) + ' + ' + krw.toLocaleString() + '원 · 환율 ' + this.fxRate.toFixed(0) + '원';
+
+        // Render chart after DOM update
+        this.$nextTick(() => this.renderChart());
+      }
+    },
+
+    renderChart() {
+      const ctx = document.getElementById('alloc-chart');
+      if (!ctx) return;
+      if (this.chartInstance) this.chartInstance.destroy();
+
+      const colors = ['#D97757', '#6C8EBF', '#85CDCA', '#C38D9E', '#E8A87C', '#41B3A3', '#7B68EE'];
+      this.chartInstance = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: this.holdings.map(h => h.ticker),
+          datasets: [{
+            data: this.holdings.map(h => h.evalValue),
+            backgroundColor: colors.slice(0, this.holdings.length),
+            borderWidth: 0
+          }]
+        },
+        options: {
+          cutout: '68%',
+          plugins: {
+            legend: {
+              position: 'bottom',
+              labels: {
+                padding: 14,
+                usePointStyle: true,
+                pointStyle: 'circle',
+                font: { size: 11, family: 'Inter' }
+              }
+            }
+          }
+        }
+      });
+    },
+
+    async doSignOut() {
+      await window._supabaseAuth.signOut();
+      this.loggedIn = false;
+      this.userEmail = null;
+      this.holdings = [];
+    },
+
+    async fetchJSON(url) {
+      try {
+        const r = await fetch(url);
+        if (!r.ok) return { status: 'empty' };
+        return await r.json();
+      } catch (e) {
+        return { status: 'error', message: e.message };
+      }
+    }
+  };
+}
+</script>
+
+</body>
+</html>
