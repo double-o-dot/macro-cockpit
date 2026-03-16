@@ -1,0 +1,1174 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Slow Bear — Watchlist</title>
+    <link rel="icon" type="image/png" href="macro_asset/slowbear_logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Open+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+        :root {
+            --sidebar-bg: #2C2C2C;
+            --sidebar-hover: #3A3A3A;
+            --sidebar-active: rgba(212,168,67,0.15);
+            --body-bg: #F5F0E8;
+            --card-bg: #fff;
+            --card-border: #EDE9E0;
+            --brand-gold: #D4A843;
+            --brand-gold-light: #E8C97A;
+            --brand-gold-bg: #FBF5E6;
+            --brand-olive: #6B7F4E;
+            --brand-olive-light: #8FA574;
+            --brand-oak: #C4A882;
+            --dark: #1A1A1A;
+            --dark-2: #2C2C2C;
+            --dark-3: #4A4A4A;
+            --grey: #7A7A6E;
+            --grey-light: #B0ADA5;
+            --red: #C0392B;
+            --green: #5A8F3C;
+            --font-heading: 'Poppins', sans-serif;
+            --font-body: 'Open Sans', sans-serif;
+            --radius: 14px;
+            --radius-sm: 10px;
+        }
+
+        html { height: 100%; }
+        body {
+            font-family: var(--font-body);
+            background: var(--body-bg);
+            color: var(--dark);
+            height: 100%;
+            display: flex;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ===== SIDEBAR ===== */
+        .sidebar {
+            width: 240px;
+            min-height: 100vh;
+            background: var(--sidebar-bg);
+            display: flex;
+            flex-direction: column;
+            padding: 24px 16px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            z-index: 50;
+        }
+        .sidebar-logo {
+            font-family: var(--font-heading);
+            font-size: 20px;
+            font-weight: 600;
+            color: #fff;
+            padding: 0 8px 28px;
+            letter-spacing: -0.01em;
+        }
+        .sidebar-logo span { color: var(--brand-gold); font-size: 10px; vertical-align: super; margin-left: 2px; }
+
+        .btn-add-stock {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            padding: 12px;
+            background: var(--brand-gold);
+            color: var(--dark);
+            font-family: var(--font-heading);
+            font-size: 14px;
+            font-weight: 600;
+            border: none;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            margin-bottom: 28px;
+            transition: background 0.2s ease, transform 0.15s ease;
+        }
+        .btn-add-stock:hover { background: var(--brand-gold-light); }
+        .btn-add-stock:active { transform: scale(0.97); }
+        .btn-add-stock svg { width: 18px; height: 18px; }
+
+        .nav-section-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: rgba(255,255,255,0.3);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            padding: 16px 8px 8px;
+        }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            color: rgba(255,255,255,0.55);
+            cursor: pointer;
+            transition: background 0.15s ease, color 0.15s ease;
+            text-decoration: none;
+        }
+        .nav-item:hover { background: var(--sidebar-hover); color: rgba(255,255,255,0.85); }
+        .nav-item.active { background: var(--sidebar-active); color: var(--brand-gold); }
+        .nav-item svg { width: 20px; height: 20px; flex-shrink: 0; }
+        .nav-item .badge {
+            margin-left: auto;
+            font-size: 11px;
+            font-weight: 600;
+            background: var(--brand-gold);
+            color: var(--dark);
+            padding: 2px 8px;
+            border-radius: 100px;
+        }
+
+        .sidebar-bottom {
+            margin-top: auto;
+            padding: 16px 8px 0;
+            border-top: 1px solid rgba(255,255,255,0.08);
+        }
+        .sidebar-user {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 0;
+        }
+        .user-avatar {
+            width: 36px; height: 36px;
+            border-radius: 50%;
+            background: var(--brand-gold);
+            display: flex; align-items: center; justify-content: center;
+            font-family: var(--font-heading);
+            font-size: 14px; font-weight: 600; color: var(--dark);
+        }
+        .user-info { flex: 1; }
+        .user-name { font-size: 13px; font-weight: 600; color: #fff; }
+        .user-role { font-size: 11px; color: rgba(255,255,255,0.4); }
+
+        /* ===== MAIN ===== */
+        .main {
+            flex: 1;
+            margin-left: 240px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Top Bar */
+        .topbar {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px 32px;
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--card-border);
+        }
+        .search-box {
+            flex: 1;
+            max-width: 420px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--body-bg);
+            border-radius: 100px;
+            padding: 8px 16px;
+        }
+        .search-box svg { width: 18px; height: 18px; color: var(--grey); flex-shrink: 0; }
+        .search-box input {
+            border: none;
+            background: transparent;
+            font-family: var(--font-body);
+            font-size: 14px;
+            color: var(--dark);
+            width: 100%;
+            outline: none;
+        }
+        .search-box input::placeholder { color: var(--grey-light); }
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-left: auto;
+        }
+        .topbar-label {
+            font-size: 12px;
+            color: var(--grey);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .topbar-label .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); }
+        .topbar-icon-btn {
+            width: 36px; height: 36px;
+            border-radius: 8px;
+            border: 1px solid var(--card-border);
+            background: var(--card-bg);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer;
+            transition: background 0.15s ease;
+        }
+        .topbar-icon-btn:hover { background: var(--body-bg); }
+        .topbar-icon-btn svg { width: 18px; height: 18px; color: var(--dark-3); }
+        .btn-export {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            background: var(--brand-gold);
+            color: var(--dark);
+            font-family: var(--font-heading);
+            font-size: 13px;
+            font-weight: 600;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+        .btn-export:hover { background: var(--brand-gold-light); }
+        .btn-export svg { width: 16px; height: 16px; }
+
+        /* Content */
+        .content {
+            padding: 28px 32px;
+            flex: 1;
+        }
+        .content-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+        }
+        .content-header h1 {
+            font-family: var(--font-heading);
+            font-size: 26px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .btn-ghost {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 14px;
+            background: transparent;
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            font-family: var(--font-body);
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--dark-3);
+            cursor: pointer;
+            transition: background 0.15s ease;
+        }
+        .btn-ghost:hover { background: var(--card-bg); }
+        .btn-ghost svg { width: 16px; height: 16px; }
+
+        /* ===== WATCHLIST ADD BAR ===== */
+        .watchlist-add-bar {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius);
+            padding: 16px 20px;
+            margin-bottom: 24px;
+        }
+        .watchlist-add-bar .add-icon {
+            width: 40px; height: 40px;
+            border-radius: 10px;
+            background: var(--brand-gold-bg);
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+        }
+        .watchlist-add-bar .add-icon svg { width: 20px; height: 20px; color: var(--brand-gold); }
+        .watchlist-add-bar input {
+            flex: 1;
+            padding: 10px 14px;
+            border: 1px solid var(--card-border);
+            border-radius: 10px;
+            font-family: var(--font-body);
+            font-size: 14px;
+            color: var(--dark);
+            background: var(--body-bg);
+            transition: border-color 0.2s ease;
+        }
+        .watchlist-add-bar input:focus { border-color: var(--brand-gold); outline: none; background: var(--card-bg); }
+        .watchlist-add-bar input::placeholder { color: var(--grey-light); }
+        .btn-watch {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 20px;
+            background: var(--brand-gold);
+            color: var(--dark);
+            font-family: var(--font-heading);
+            font-size: 14px;
+            font-weight: 600;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background 0.2s ease, transform 0.15s ease;
+        }
+        .btn-watch:hover { background: var(--brand-gold-light); }
+        .btn-watch:active { transform: scale(0.97); }
+        .btn-watch:focus-visible { outline: 2px solid var(--brand-gold); outline-offset: 2px; }
+        .btn-watch svg { width: 16px; height: 16px; }
+
+        /* ===== WATCHLIST TABLE ===== */
+        .holdings-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius);
+            padding: 24px;
+        }
+        .holdings-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+        .holdings-header h3 {
+            font-family: var(--font-heading);
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        .holdings-header .watch-count {
+            font-size: 13px;
+            color: var(--grey);
+            font-weight: 500;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        thead th {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--grey);
+            text-align: left;
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--card-border);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            cursor: pointer;
+            user-select: none;
+        }
+        thead th:hover { color: var(--dark); }
+        tbody tr {
+            transition: background 0.1s ease;
+        }
+        tbody tr:hover { background: rgba(245,240,232,0.5); }
+        tbody td {
+            padding: 14px 12px;
+            font-size: 14px;
+            border-bottom: 1px solid var(--card-border);
+            vertical-align: middle;
+        }
+        .stock-cell {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .stock-icon {
+            width: 36px; height: 36px;
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            font-family: var(--font-heading);
+            font-size: 12px;
+            font-weight: 700;
+            color: #fff;
+            flex-shrink: 0;
+        }
+        .stock-ticker { font-weight: 600; color: var(--dark); }
+        .stock-name { font-size: 12px; color: var(--grey); }
+        .cell-right { text-align: right; }
+        .cell-mono { font-variant-numeric: tabular-nums; }
+        .positive { color: var(--green); font-weight: 600; }
+        .negative { color: var(--red); font-weight: 600; }
+
+        .btn-remove {
+            width: 30px; height: 30px;
+            border-radius: 6px;
+            border: 1px solid var(--card-border);
+            background: var(--card-bg);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer;
+            transition: background 0.15s ease, border-color 0.15s ease;
+        }
+        .btn-remove:hover { background: #fdecea; border-color: var(--red); }
+        .btn-remove:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }
+        .btn-remove svg { width: 14px; height: 14px; color: var(--grey); }
+        .btn-remove:hover svg { color: var(--red); }
+
+        .btn-add-portfolio {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 6px 14px;
+            background: var(--brand-olive);
+            color: #fff;
+            font-family: var(--font-heading);
+            font-size: 12px;
+            font-weight: 600;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s ease, transform 0.15s ease;
+            white-space: nowrap;
+        }
+        .btn-add-portfolio:hover { background: var(--brand-olive-light); }
+        .btn-add-portfolio:active { transform: scale(0.97); }
+        .btn-add-portfolio:focus-visible { outline: 2px solid var(--brand-olive); outline-offset: 2px; }
+        .btn-add-portfolio svg { width: 14px; height: 14px; }
+
+        .action-cell {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            justify-content: flex-end;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 48px 20px;
+            color: var(--grey);
+        }
+        .empty-state svg { width: 48px; height: 48px; color: var(--grey-light); margin-bottom: 12px; }
+        .empty-state p { font-size: 14px; margin-bottom: 16px; }
+        .empty-state .btn-add-inline {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 20px;
+            background: var(--brand-gold);
+            color: var(--dark);
+            font-family: var(--font-heading);
+            font-size: 13px;
+            font-weight: 600;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        .empty-state .btn-add-inline:hover { background: var(--brand-gold-light); }
+        .empty-state .btn-add-inline:focus-visible { outline: 2px solid var(--brand-gold); outline-offset: 2px; }
+
+        /* 52W range bar */
+        .range-bar-container {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11px;
+            color: var(--grey);
+            min-width: 140px;
+        }
+        .range-bar {
+            flex: 1;
+            height: 4px;
+            background: var(--card-border);
+            border-radius: 2px;
+            position: relative;
+            min-width: 60px;
+        }
+        .range-bar-fill {
+            height: 100%;
+            border-radius: 2px;
+            background: var(--brand-gold);
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        .range-bar-dot {
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            background: var(--brand-gold);
+            border: 2px solid var(--card-bg);
+            box-shadow: 0 0 0 1px var(--brand-gold);
+            position: absolute;
+            top: -2px;
+        }
+
+        /* ===== MODAL ===== */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.4);
+            z-index: 200;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(4px);
+        }
+        .modal-overlay.show { display: flex; }
+        .modal {
+            background: var(--card-bg);
+            border-radius: 16px;
+            width: 440px;
+            max-width: 90vw;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+            overflow: hidden;
+        }
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--card-border);
+        }
+        .modal-header h3 {
+            font-family: var(--font-heading);
+            font-size: 18px;
+            font-weight: 600;
+        }
+        .modal-close {
+            width: 32px; height: 32px;
+            border-radius: 8px;
+            border: 1px solid var(--card-border);
+            background: var(--card-bg);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer;
+        }
+        .modal-close:hover { background: var(--body-bg); }
+        .modal-close:focus-visible { outline: 2px solid var(--brand-gold); outline-offset: 2px; }
+        .modal-close svg { width: 16px; height: 16px; color: var(--dark-3); }
+        .modal-body { padding: 24px; }
+        .form-group { margin-bottom: 18px; }
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--dark-3);
+            margin-bottom: 6px;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid var(--card-border);
+            border-radius: 10px;
+            font-family: var(--font-body);
+            font-size: 14px;
+            color: var(--dark);
+            background: var(--body-bg);
+            transition: border-color 0.2s ease;
+        }
+        .form-group input:focus { border-color: var(--brand-gold); outline: none; background: var(--card-bg); }
+        .form-group input::placeholder { color: var(--grey-light); }
+        .form-group .hint { font-size: 11px; color: var(--grey); margin-top: 4px; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .modal-footer {
+            display: flex;
+            gap: 10px;
+            padding: 0 24px 24px;
+        }
+        .btn-cancel {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid var(--card-border);
+            border-radius: 10px;
+            background: var(--card-bg);
+            font-family: var(--font-heading);
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--dark-3);
+            cursor: pointer;
+            transition: background 0.15s ease;
+        }
+        .btn-cancel:hover { background: var(--body-bg); }
+        .btn-cancel:focus-visible { outline: 2px solid var(--brand-gold); outline-offset: 2px; }
+        .btn-submit {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            background: var(--brand-gold);
+            font-family: var(--font-heading);
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--dark);
+            cursor: pointer;
+            transition: background 0.2s ease, transform 0.15s ease;
+        }
+        .btn-submit:hover { background: var(--brand-gold-light); }
+        .btn-submit:active { transform: scale(0.98); }
+        .btn-submit:focus-visible { outline: 2px solid var(--brand-gold); outline-offset: 2px; }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: var(--dark);
+            color: #fff;
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 500;
+            z-index: 300;
+            transform: translateY(80px);
+            opacity: 0;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+        .toast.show { transform: translateY(0); opacity: 1; }
+    </style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+    <div class="sidebar-logo">slow bear<span>beta</span></div>
+
+    <button class="btn-add-stock" onclick="openModal()">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+        Add Stock
+    </button>
+
+    <a class="nav-item" href="portfolio.html">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z"/></svg>
+        Dashboard
+    </a>
+    <a class="nav-item" href="portfolio-view.html">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75M15 10.5a3 3 0 11-6 0 3 3 0 016 0zm3 0h.008v.008H18V10.5zm-12 0h.008v.008H6V10.5z"/></svg>
+        Portfolio
+    </a>
+    <a class="nav-item active" href="watchlist.html">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        Watchlist
+        <span class="badge" id="watchCount">0</span>
+    </a>
+
+    <div class="nav-section-label">Sales</div>
+    <a class="nav-item" href="analytics.html">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M7.5 14.25v2.25m3-4.5v4.5m3-6.75v6.75m3-9v9M6 20.25h12A2.25 2.25 0 0020.25 18V6A2.25 2.25 0 0018 3.75H6A2.25 2.25 0 003.75 6v12A2.25 2.25 0 006 20.25z"/></svg>
+        Analytics
+    </a>
+    <a class="nav-item" href="transactions.html">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg>
+        Transactions
+    </a>
+
+    <div class="nav-section-label">General</div>
+    <a class="nav-item" href="/">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"/></svg>
+        Home
+    </a>
+    <a class="nav-item" href="settings.html">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 010 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 010-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        Settings
+    </a>
+
+    <div class="sidebar-bottom">
+        <div class="sidebar-user">
+            <div class="user-avatar">SB</div>
+            <div class="user-info">
+                <div class="user-name">Investor</div>
+                <div class="user-role">Personal Plan</div>
+            </div>
+        </div>
+    </div>
+    <div style="padding:0 16px 12px;">
+      <button id="authBtn" onclick="handleAuthClick()" style="width:100%;padding:10px;border-radius:10px;border:none;background:var(--brand-gold);color:#fff;font-weight:600;cursor:pointer;font-size:13px;">Sign In</button>
+    </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+    <!-- TOP BAR -->
+    <div class="topbar">
+        <div class="search-box">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/></svg>
+            <input type="text" placeholder="Search stocks... (e.g. AAPL, TSLA)">
+        </div>
+        <div class="topbar-right">
+            <div class="topbar-label"><span class="dot"></span> Last updated now</div>
+            <button class="topbar-icon-btn" title="Notifications">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"/></svg>
+            </button>
+            <button class="topbar-icon-btn" title="Profile">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/></svg>
+            </button>
+            <button class="btn-export" title="Export">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"/></svg>
+                Exports
+            </button>
+        </div>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="content">
+        <div class="content-header">
+            <h1>Watchlist</h1>
+            <div class="header-actions">
+                <button class="btn-ghost" onclick="clearWatchlist()">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"/></svg>
+                    Clear All
+                </button>
+            </div>
+        </div>
+
+        <!-- ADD TO WATCHLIST BAR -->
+        <div class="watchlist-add-bar">
+            <div class="add-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+            </div>
+            <input type="text" id="watchInput" placeholder="Enter stock ticker to watch (e.g. AAPL, TSLA, NVDA)" autocomplete="off">
+            <button class="btn-watch" onclick="addToWatchlist()">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+                Watch
+            </button>
+        </div>
+
+        <!-- WATCHLIST TABLE -->
+        <div class="holdings-card">
+            <div class="holdings-header">
+                <h3>Watched Stocks</h3>
+                <span class="watch-count" id="watchSummary">0 stocks watched</span>
+            </div>
+            <div id="watchlistContent">
+                <!-- Rendered by JS -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ADD TO PORTFOLIO MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="if(event.target===this)closeModal()">
+    <div class="modal">
+        <div class="modal-header">
+            <h3>Add Stock</h3>
+            <button class="modal-close" onclick="closeModal()">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="form-group">
+                <label>Stock Ticker</label>
+                <input type="text" id="inputTicker" placeholder="e.g. AAPL, TSLA, MSFT" maxlength="5" autocomplete="off">
+                <div class="hint">Enter the stock symbol</div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Shares</label>
+                    <input type="number" id="inputShares" placeholder="e.g. 10" min="0.01" step="0.01">
+                </div>
+                <div class="form-group">
+                    <label>Avg Price</label>
+                    <input type="number" id="inputAvgPrice" placeholder="e.g. 150.00" min="0.01" step="0.01">
+                </div>
+            </div>
+            <div class="form-group" id="previewGroup" style="display:none">
+                <label>Preview</label>
+                <div style="background:var(--body-bg);border-radius:10px;padding:12px 14px;font-size:14px;">
+                    <span id="previewText"></span>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+            <button class="btn-submit" onclick="addStock()">Add to Portfolio</button>
+        </div>
+    </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// Stock "current prices" — simulated (same as portfolio.html)
+const STOCK_DB = {
+    AAPL:{name:'Apple Inc.',price:178.72,color:'#555555'},
+    MSFT:{name:'Microsoft',price:415.50,color:'#4A7C59'},
+    GOOGL:{name:'Alphabet',price:175.98,color:'#C0392B'},
+    AMZN:{name:'Amazon',price:185.60,color:'#D4A843'},
+    TSLA:{name:'Tesla',price:248.42,color:'#8B1A1A'},
+    NVDA:{name:'NVIDIA',price:875.30,color:'#6B7F4E'},
+    META:{name:'Meta Platforms',price:505.75,color:'#2C5F8A'},
+    NFLX:{name:'Netflix',price:628.90,color:'#8B0000'},
+    AMD:{name:'AMD',price:162.40,color:'#3A6B4F'},
+    JPM:{name:'JPMorgan Chase',price:198.55,color:'#2B5A84'},
+    V:{name:'Visa',price:279.30,color:'#1A1A6C'},
+    JNJ:{name:'Johnson & Johnson',price:156.80,color:'#7A3B2E'},
+    WMT:{name:'Walmart',price:168.90,color:'#1A5D9E'},
+    DIS:{name:'Walt Disney',price:112.45,color:'#1B3A6B'},
+    BA:{name:'Boeing',price:178.20,color:'#4A6FA5'},
+    INTC:{name:'Intel',price:31.25,color:'#1A6FB5'},
+    PYPL:{name:'PayPal',price:67.80,color:'#2A4D8E'},
+    UBER:{name:'Uber',price:75.60,color:'#1A1A1A'},
+    SQ:{name:'Block Inc.',price:72.30,color:'#3A3A3A'},
+    COIN:{name:'Coinbase',price:225.10,color:'#2B5EA7'},
+    PLTR:{name:'Palantir',price:22.45,color:'#1A1A1A'},
+    SNAP:{name:'Snap Inc.',price:11.20,color:'#CCCC00'},
+    SOFI:{name:'SoFi',price:8.75,color:'#5B2C82'},
+    NIO:{name:'NIO Inc.',price:5.80,color:'#2A6EA8'},
+    BABA:{name:'Alibaba',price:78.90,color:'#C45A1A'},
+};
+
+// Watchlist: array of ticker strings
+let watchlist = JSON.parse(localStorage.getItem('sb_watchlist') || '[]');
+
+// Portfolio: for "Add to Portfolio" modal
+let portfolio = JSON.parse(localStorage.getItem('sb_portfolio') || '[]');
+
+function saveWatchlist() { localStorage.setItem('sb_watchlist', JSON.stringify(watchlist)); if (window.sbData) window.sbData.saveWatchlist(watchlist); }
+function savePortfolio() { localStorage.setItem('sb_portfolio', JSON.stringify(portfolio)); }
+
+function fmt(n) { return n.toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2}); }
+
+function getPrice(ticker) {
+    const s = STOCK_DB[ticker.toUpperCase()];
+    if (s) return s.price;
+    let hash = 0;
+    for (let i = 0; i < ticker.length; i++) hash = ((hash << 5) - hash) + ticker.charCodeAt(i);
+    return Math.abs(hash % 400) + 10 + Math.random() * 0.01;
+}
+
+function getInfo(ticker) {
+    return STOCK_DB[ticker.toUpperCase()] || { name: ticker.toUpperCase() + ' Corp.', price: getPrice(ticker), color: '#7A7A6E' };
+}
+
+// Generate a stable-ish daily change per ticker (seeded by ticker + date)
+function getDailyChange(ticker) {
+    const dateStr = new Date().toISOString().slice(0, 10);
+    const seed = ticker + dateStr;
+    let hash = 0;
+    for (let i = 0; i < seed.length; i++) hash = ((hash << 5) - hash) + seed.charCodeAt(i);
+    // Normalize to range -3% to +3%
+    const pct = ((hash % 600) - 300) / 100;
+    return pct;
+}
+
+// Generate stable 52W high/low per ticker
+function get52WRange(ticker, currentPrice) {
+    let hash = 0;
+    for (let i = 0; i < ticker.length; i++) hash = ((hash << 5) - hash) + ticker.charCodeAt(i);
+    const lowFactor = 0.55 + (Math.abs(hash % 30) / 100);   // 55%-85% of current
+    const highFactor = 1.10 + (Math.abs((hash >> 4) % 35) / 100); // 110%-145% of current
+    return {
+        low: currentPrice * lowFactor,
+        high: currentPrice * highFactor
+    };
+}
+
+// ========== WATCHLIST FUNCTIONS ==========
+
+function addToWatchlist() {
+    const input = document.getElementById('watchInput');
+    const ticker = input.value.trim().toUpperCase();
+
+    if (!ticker) return showToast('Please enter a stock ticker');
+    if (ticker.length > 5) return showToast('Ticker too long');
+
+    if (watchlist.includes(ticker)) {
+        return showToast(ticker + ' is already in your watchlist');
+    }
+
+    watchlist.push(ticker);
+    saveWatchlist();
+    input.value = '';
+    render();
+    showToast(ticker + ' added to watchlist');
+}
+
+function removeFromWatchlist(ticker) {
+    watchlist = watchlist.filter(t => t !== ticker);
+    saveWatchlist();
+    render();
+    showToast(ticker + ' removed from watchlist');
+}
+
+function clearWatchlist() {
+    if (watchlist.length === 0) return showToast('Watchlist is already empty');
+    watchlist = [];
+    saveWatchlist();
+    render();
+    showToast('Watchlist cleared');
+}
+
+// ========== ADD TO PORTFOLIO MODAL ==========
+
+function openModal(prefillTicker) {
+    document.getElementById('modalOverlay').classList.add('show');
+    const tickerInput = document.getElementById('inputTicker');
+    if (prefillTicker) {
+        tickerInput.value = prefillTicker;
+        // Trigger preview update
+        updatePreview();
+    }
+    tickerInput.focus();
+}
+
+function closeModal() {
+    document.getElementById('modalOverlay').classList.remove('show');
+    document.getElementById('inputTicker').value = '';
+    document.getElementById('inputShares').value = '';
+    document.getElementById('inputAvgPrice').value = '';
+    document.getElementById('previewGroup').style.display = 'none';
+}
+
+function addStock() {
+    const ticker = document.getElementById('inputTicker').value.trim().toUpperCase();
+    const shares = parseFloat(document.getElementById('inputShares').value);
+    const avgPrice = parseFloat(document.getElementById('inputAvgPrice').value);
+
+    if (!ticker) return showToast('Please enter a stock ticker');
+    if (!shares || shares <= 0) return showToast('Please enter valid shares');
+    if (!avgPrice || avgPrice <= 0) return showToast('Please enter valid avg price');
+
+    const existing = portfolio.find(s => s.ticker === ticker);
+    if (existing) {
+        const totalShares = existing.shares + shares;
+        existing.avgPrice = ((existing.shares * existing.avgPrice) + (shares * avgPrice)) / totalShares;
+        existing.shares = totalShares;
+    } else {
+        portfolio.push({ ticker, shares, avgPrice });
+    }
+
+    savePortfolio();
+    closeModal();
+    showToast(ticker + ' added to portfolio');
+}
+
+function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// ========== RENDER ==========
+
+function render() {
+    const container = document.getElementById('watchlistContent');
+    const watchCountEl = document.getElementById('watchCount');
+    const watchSummary = document.getElementById('watchSummary');
+
+    watchCountEl.textContent = watchlist.length;
+    watchSummary.textContent = watchlist.length + ' stock' + (watchlist.length !== 1 ? 's' : '') + ' watched';
+
+    if (watchlist.length === 0) {
+        container.innerHTML = `<div class="empty-state">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+            <p>Start watching stocks to track their prices and performance.</p>
+            <button class="btn-add-inline" onclick="document.getElementById('watchInput').focus()">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width:16px;height:16px"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+                Add your first stock
+            </button>
+        </div>`;
+        return;
+    }
+
+    let rows = '';
+    watchlist.forEach((ticker) => {
+        const info = getInfo(ticker);
+        const currentPrice = info.price;
+        const dailyPct = getDailyChange(ticker);
+        const dailyAmt = currentPrice * (dailyPct / 100);
+        const isUp = dailyPct >= 0;
+        const range = get52WRange(ticker, currentPrice);
+
+        // Position of current price within 52W range (0 to 1)
+        const rangeSpan = range.high - range.low;
+        const rangePct = rangeSpan > 0 ? ((currentPrice - range.low) / rangeSpan) * 100 : 50;
+
+        rows += `<tr>
+            <td>
+                <div class="stock-cell">
+                    <div class="stock-icon" style="background:${info.color}">${ticker.slice(0,2)}</div>
+                    <div>
+                        <div class="stock-ticker">${ticker}</div>
+                        <div class="stock-name">${info.name}</div>
+                    </div>
+                </div>
+            </td>
+            <td class="cell-right cell-mono">$${fmt(currentPrice)}</td>
+            <td class="cell-right cell-mono ${isUp ? 'positive' : 'negative'}">
+                ${isUp ? '+' : ''}$${fmt(dailyAmt)} (${isUp ? '+' : ''}${dailyPct.toFixed(2)}%)
+            </td>
+            <td>
+                <div class="range-bar-container">
+                    <span>$${fmt(range.low)}</span>
+                    <div class="range-bar">
+                        <div class="range-bar-fill" style="width:${Math.min(100, Math.max(0, rangePct))}%"></div>
+                        <div class="range-bar-dot" style="left:calc(${Math.min(100, Math.max(0, rangePct))}% - 4px)"></div>
+                    </div>
+                    <span>$${fmt(range.high)}</span>
+                </div>
+            </td>
+            <td class="cell-right">
+                <div class="action-cell">
+                    <button class="btn-add-portfolio" onclick="openModal('${ticker}')" title="Add to portfolio">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+                        Portfolio
+                    </button>
+                    <button class="btn-remove" onclick="removeFromWatchlist('${ticker}')" title="Remove from watchlist">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                    </button>
+                </div>
+            </td>
+        </tr>`;
+    });
+
+    container.innerHTML = `<table>
+        <thead>
+            <tr>
+                <th>Stock</th>
+                <th class="cell-right">Price</th>
+                <th class="cell-right">Daily Change</th>
+                <th>52W Range</th>
+                <th class="cell-right">Actions</th>
+            </tr>
+        </thead>
+        <tbody>${rows}</tbody>
+    </table>`;
+}
+
+// Preview in modal
+document.getElementById('inputTicker').addEventListener('input', updatePreview);
+document.getElementById('inputShares').addEventListener('input', updatePreview);
+document.getElementById('inputAvgPrice').addEventListener('input', updatePreview);
+
+function updatePreview() {
+    const ticker = document.getElementById('inputTicker').value.trim().toUpperCase();
+    const shares = parseFloat(document.getElementById('inputShares').value);
+    const avgPrice = parseFloat(document.getElementById('inputAvgPrice').value);
+    const pg = document.getElementById('previewGroup');
+    const pt = document.getElementById('previewText');
+
+    if (ticker && shares > 0 && avgPrice > 0) {
+        const info = getInfo(ticker);
+        const cost = shares * avgPrice;
+        const value = shares * info.price;
+        const pl = value - cost;
+        pg.style.display = 'block';
+        pt.innerHTML = `<strong>${ticker}</strong> (${info.name}) — ${shares} shares @ $${fmt(avgPrice)} = <strong>$${fmt(cost)}</strong> invested. Current value: <strong class="${pl>=0?'positive':'negative'}">$${fmt(value)}</strong>`;
+    } else {
+        pg.style.display = 'none';
+    }
+}
+
+// Keyboard shortcuts
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeModal();
+    if (e.key === 'Enter' && document.getElementById('modalOverlay').classList.contains('show')) addStock();
+});
+
+// Enter key on watchlist input
+document.getElementById('watchInput').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') addToWatchlist();
+});
+
+// Auth functions
+function handleAuthClick() {
+  if (window.sbAuth && window.sbAuth.getAuth().loggedIn) {
+    window.sbAuth.doSignOut().then(() => {
+      document.getElementById('authBtn').textContent = 'Sign In';
+      showToast('Signed out');
+    });
+  } else {
+    showLoginModal();
+  }
+}
+
+function showLoginModal() {
+  const m = document.getElementById('loginModal');
+  if (m) m.style.display = 'flex';
+}
+function closeLoginModal() {
+  const m = document.getElementById('loginModal');
+  if (m) m.style.display = 'none';
+}
+async function googleLogin() {
+  if (window.sbAuth) {
+    await window.sbAuth.signInWithGoogle();
+  }
+}
+async function emailLogin() {
+  const email = document.getElementById('loginEmail').value;
+  const pw = document.getElementById('loginPassword').value;
+  if (!email || !pw) return;
+  if (window.sbAuth) {
+    const { user, error } = await window.sbAuth.signIn(email, pw);
+    if (error) { showToast('Login failed: ' + error.message); return; }
+    closeLoginModal();
+    document.getElementById('authBtn').textContent = 'Sign Out';
+    showToast('Welcome back!');
+    // Reload watchlist from Supabase
+    if (window.sbData) {
+      const data = await window.sbData.loadWatchlist();
+      if (data && data.length > 0) {
+        watchlist = data;
+        render();
+      }
+    }
+  }
+}
+async function emailSignUp() {
+  const email = document.getElementById('loginEmail').value;
+  const pw = document.getElementById('loginPassword').value;
+  if (!email || !pw) return;
+  if (window.sbAuth) {
+    const { user, error } = await window.sbAuth.signUp(email, pw);
+    if (error) { showToast('Signup failed: ' + error.message); return; }
+    showToast('Account created! Check your email to confirm.');
+  }
+}
+
+// Init
+render();
+</script>
+
+<!-- LOGIN MODAL -->
+<div id="loginModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:2000;align-items:center;justify-content:center;">
+  <div style="background:#fff;border-radius:16px;padding:32px;max-width:400px;width:90%;text-align:center;">
+    <h3 style="font-family:'Poppins',sans-serif;margin-bottom:8px;">Sign In to Slow Bear</h3>
+    <p style="color:#888;font-size:14px;margin-bottom:24px;">Cloud sync your watchlist</p>
+    <button onclick="googleLogin()" style="width:100%;padding:12px;border-radius:10px;border:1px solid #ddd;background:#fff;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:12px;">
+      <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844a4.14 4.14 0 01-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615z"/><path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 009 18z"/><path fill="#FBBC05" d="M3.964 10.71A5.41 5.41 0 013.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.997 8.997 0 000 9c0 1.452.348 2.827.957 4.042l3.007-2.332z"/><path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 00.957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"/></svg>
+      Sign in with Google
+    </button>
+    <div style="display:flex;align-items:center;gap:12px;margin:16px 0;"><div style="flex:1;height:1px;background:#eee;"></div><span style="color:#aaa;font-size:12px;">or</span><div style="flex:1;height:1px;background:#eee;"></div></div>
+    <input id="loginEmail" type="email" placeholder="Email" style="width:100%;padding:10px 14px;border:1px solid #EDE9E0;border-radius:10px;font-size:14px;margin-bottom:8px;box-sizing:border-box;">
+    <input id="loginPassword" type="password" placeholder="Password" style="width:100%;padding:10px 14px;border:1px solid #EDE9E0;border-radius:10px;font-size:14px;margin-bottom:16px;box-sizing:border-box;">
+    <button onclick="emailLogin()" style="width:100%;padding:12px;border-radius:10px;border:none;background:var(--brand-gold);color:#fff;font-weight:600;font-size:14px;cursor:pointer;margin-bottom:8px;">Sign In</button>
+    <button onclick="emailSignUp()" style="width:100%;padding:12px;border-radius:10px;border:1px solid var(--brand-gold);background:#fff;color:var(--brand-gold);font-weight:600;font-size:14px;cursor:pointer;">Create Account</button>
+    <button onclick="closeLoginModal()" style="margin-top:16px;background:none;border:none;color:#888;cursor:pointer;font-size:13px;">Cancel</button>
+  </div>
+</div>
+
+<script type="module">
+import { initAuth, getAuth, doSignOut, signInWithGoogle, signIn, signUp, loadWatchlist, saveWatchlist, addToWatchlist, removeFromWatchlist, addHolding } from './shared/sb-data.js';
+window.sbAuth = { initAuth, getAuth, doSignOut, signInWithGoogle, signIn, signUp };
+window.sbData = { loadWatchlist, saveWatchlist, addToWatchlist, removeFromWatchlist, addHolding };
+(async () => {
+  const auth = await initAuth();
+  const userNameEl = document.querySelector('.user-name');
+  const userPlanEl = document.querySelector('.user-role');
+  const authBtn = document.getElementById('authBtn');
+  if (auth.loggedIn) {
+    if (userNameEl) userNameEl.textContent = auth.email?.split('@')[0] || 'User';
+    if (userPlanEl) userPlanEl.textContent = 'Cloud Sync';
+    if (authBtn) authBtn.textContent = 'Sign Out';
+    // Load watchlist from Supabase
+    const data = await window.sbData.loadWatchlist();
+    if (data && data.length > 0) {
+      watchlist = data;
+      render();
+    }
+  }
+  window.addEventListener('sb-auth-change', (e) => {
+    const a = e.detail;
+    if (userNameEl) userNameEl.textContent = a.loggedIn ? (a.email?.split('@')[0] || 'User') : 'Guest';
+    if (userPlanEl) userPlanEl.textContent = a.loggedIn ? 'Cloud Sync' : 'Local Only';
+    if (authBtn) authBtn.textContent = a.loggedIn ? 'Sign Out' : 'Sign In';
+  });
+})();
+</script>
+</body>
+</html>

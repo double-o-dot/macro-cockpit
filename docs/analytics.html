@@ -1,0 +1,1028 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Slow Bear — Analytics</title>
+    <link rel="icon" type="image/png" href="macro_asset/slowbear_logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Open+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+        :root {
+            --sidebar-bg: #2C2C2C;
+            --sidebar-hover: #3A3A3A;
+            --sidebar-active: rgba(212,168,67,0.15);
+            --body-bg: #F5F0E8;
+            --card-bg: #fff;
+            --card-border: #EDE9E0;
+            --brand-gold: #D4A843;
+            --brand-gold-light: #E8C97A;
+            --brand-gold-bg: #FBF5E6;
+            --brand-olive: #6B7F4E;
+            --brand-olive-light: #8FA574;
+            --brand-oak: #C4A882;
+            --dark: #1A1A1A;
+            --dark-2: #2C2C2C;
+            --dark-3: #4A4A4A;
+            --grey: #7A7A6E;
+            --grey-light: #B0ADA5;
+            --red: #C0392B;
+            --green: #5A8F3C;
+            --font-heading: 'Poppins', sans-serif;
+            --font-body: 'Open Sans', sans-serif;
+            --radius: 14px;
+            --radius-sm: 10px;
+        }
+
+        html { height: 100%; }
+        body {
+            font-family: var(--font-body);
+            background: var(--body-bg);
+            color: var(--dark);
+            height: 100%;
+            display: flex;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ===== SIDEBAR ===== */
+        .sidebar {
+            width: 240px;
+            min-height: 100vh;
+            background: var(--sidebar-bg);
+            display: flex;
+            flex-direction: column;
+            padding: 24px 16px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            z-index: 50;
+        }
+        .sidebar-logo {
+            font-family: var(--font-heading);
+            font-size: 20px;
+            font-weight: 600;
+            color: #fff;
+            padding: 0 8px 28px;
+            letter-spacing: -0.01em;
+        }
+        .sidebar-logo span { color: var(--brand-gold); font-size: 10px; vertical-align: super; margin-left: 2px; }
+
+        .btn-add-stock {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            padding: 12px;
+            background: var(--brand-gold);
+            color: var(--dark);
+            font-family: var(--font-heading);
+            font-size: 14px;
+            font-weight: 600;
+            border: none;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            margin-bottom: 28px;
+            transition: background 0.2s ease, transform 0.15s ease;
+        }
+        .btn-add-stock:hover { background: var(--brand-gold-light); }
+        .btn-add-stock:active { transform: scale(0.97); }
+        .btn-add-stock svg { width: 18px; height: 18px; }
+
+        .nav-section-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: rgba(255,255,255,0.3);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            padding: 16px 8px 8px;
+        }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            color: rgba(255,255,255,0.55);
+            cursor: pointer;
+            transition: background 0.15s ease, color 0.15s ease;
+            text-decoration: none;
+        }
+        .nav-item:hover { background: var(--sidebar-hover); color: rgba(255,255,255,0.85); }
+        .nav-item.active { background: var(--sidebar-active); color: var(--brand-gold); }
+        .nav-item svg { width: 20px; height: 20px; flex-shrink: 0; }
+        .nav-item .badge {
+            margin-left: auto;
+            font-size: 11px;
+            font-weight: 600;
+            background: var(--brand-gold);
+            color: var(--dark);
+            padding: 2px 8px;
+            border-radius: 100px;
+        }
+
+        .sidebar-bottom {
+            margin-top: auto;
+            padding: 16px 8px 0;
+            border-top: 1px solid rgba(255,255,255,0.08);
+        }
+        .sidebar-user {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 0;
+        }
+        .user-avatar {
+            width: 36px; height: 36px;
+            border-radius: 50%;
+            background: var(--brand-gold);
+            display: flex; align-items: center; justify-content: center;
+            font-family: var(--font-heading);
+            font-size: 14px; font-weight: 600; color: var(--dark);
+        }
+        .user-info { flex: 1; }
+        .user-name { font-size: 13px; font-weight: 600; color: #fff; }
+        .user-role { font-size: 11px; color: rgba(255,255,255,0.4); }
+
+        /* ===== MAIN ===== */
+        .main {
+            flex: 1;
+            margin-left: 240px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Top Bar */
+        .topbar {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px 32px;
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--card-border);
+        }
+        .search-box {
+            flex: 1;
+            max-width: 420px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--body-bg);
+            border-radius: 100px;
+            padding: 8px 16px;
+        }
+        .search-box svg { width: 18px; height: 18px; color: var(--grey); flex-shrink: 0; }
+        .search-box input {
+            border: none;
+            background: transparent;
+            font-family: var(--font-body);
+            font-size: 14px;
+            color: var(--dark);
+            width: 100%;
+            outline: none;
+        }
+        .search-box input::placeholder { color: var(--grey-light); }
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-left: auto;
+        }
+        .topbar-label {
+            font-size: 12px;
+            color: var(--grey);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .topbar-label .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); }
+        .topbar-icon-btn {
+            width: 36px; height: 36px;
+            border-radius: 8px;
+            border: 1px solid var(--card-border);
+            background: var(--card-bg);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer;
+            transition: background 0.15s ease;
+        }
+        .topbar-icon-btn:hover { background: var(--body-bg); }
+        .topbar-icon-btn svg { width: 18px; height: 18px; color: var(--dark-3); }
+        .btn-export {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            background: var(--brand-gold);
+            color: var(--dark);
+            font-family: var(--font-heading);
+            font-size: 13px;
+            font-weight: 600;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+        .btn-export:hover { background: var(--brand-gold-light); }
+        .btn-export svg { width: 16px; height: 16px; }
+
+        /* Content */
+        .content {
+            padding: 28px 32px;
+            flex: 1;
+        }
+        .content-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+        }
+        .content-header h1 {
+            font-family: var(--font-heading);
+            font-size: 26px;
+            font-weight: 600;
+            color: var(--dark);
+            letter-spacing: -0.03em;
+        }
+
+        /* ===== ANALYTICS CARDS ===== */
+        .analytics-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius);
+            padding: 24px;
+        }
+        .analytics-card h3 {
+            font-family: var(--font-heading);
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 20px;
+        }
+
+        /* Chart filters */
+        .chart-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        .chart-card-header h3 {
+            font-family: var(--font-heading);
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 0;
+        }
+        .chart-filters {
+            display: flex;
+            gap: 4px;
+            background: var(--body-bg);
+            border-radius: 8px;
+            padding: 3px;
+        }
+        .chart-filter-btn {
+            padding: 5px 12px;
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--grey);
+            background: transparent;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.15s ease, color 0.15s ease;
+        }
+        .chart-filter-btn:hover { color: var(--dark); }
+        .chart-filter-btn:active { transform: scale(0.96); }
+        .chart-filter-btn:focus-visible { outline: 2px solid var(--brand-gold); outline-offset: 2px; }
+        .chart-filter-btn.active { background: var(--card-bg); color: var(--dark); box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+
+        /* Chart area */
+        .chart-area { width: 100%; height: 220px; position: relative; }
+        .chart-area svg { width: 100%; height: 100%; }
+
+        /* Two column grid */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+        .grid-full {
+            margin-bottom: 16px;
+        }
+
+        /* Performer list */
+        .performer-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--card-border);
+        }
+        .performer-item:last-child { border-bottom: none; }
+        .performer-icon {
+            width: 36px; height: 36px;
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            font-family: var(--font-heading);
+            font-size: 12px;
+            font-weight: 700;
+            color: #fff;
+            flex-shrink: 0;
+        }
+        .performer-info { flex: 1; }
+        .performer-ticker { font-weight: 600; font-size: 14px; color: var(--dark); }
+        .performer-name { font-size: 12px; color: var(--grey); }
+        .performer-bar-wrap {
+            flex: 1;
+            height: 8px;
+            background: var(--body-bg);
+            border-radius: 100px;
+            overflow: hidden;
+        }
+        .performer-bar {
+            height: 100%;
+            border-radius: 100px;
+            transition: width 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .performer-pct {
+            font-family: var(--font-heading);
+            font-size: 14px;
+            font-weight: 600;
+            min-width: 70px;
+            text-align: right;
+        }
+        .positive { color: var(--green); }
+        .negative { color: var(--red); }
+
+        /* Allocation bars */
+        .alloc-bar-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+        .alloc-bar-item:last-child { margin-bottom: 0; }
+        .alloc-bar-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--dark);
+            min-width: 50px;
+        }
+        .alloc-bar-track {
+            flex: 1;
+            height: 24px;
+            background: var(--body-bg);
+            border-radius: 6px;
+            overflow: hidden;
+            position: relative;
+        }
+        .alloc-bar-fill {
+            height: 100%;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            padding-left: 8px;
+            font-size: 11px;
+            font-weight: 600;
+            color: #fff;
+            transition: width 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .alloc-bar-pct {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--dark-3);
+            min-width: 48px;
+            text-align: right;
+        }
+
+        /* Risk metrics */
+        .risk-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+        .risk-item {
+            background: var(--body-bg);
+            border-radius: var(--radius-sm);
+            padding: 16px;
+        }
+        .risk-item .ri-label {
+            font-size: 12px;
+            color: var(--grey);
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            font-weight: 600;
+        }
+        .risk-item .ri-value {
+            font-family: var(--font-heading);
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--dark);
+            letter-spacing: -0.02em;
+        }
+        .risk-item .ri-value.positive { color: var(--green); }
+        .risk-item .ri-value.negative { color: var(--red); }
+
+        /* Monthly summary */
+        .month-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+        .month-cell {
+            background: var(--body-bg);
+            border-radius: var(--radius-sm);
+            padding: 16px;
+            text-align: center;
+            transition: transform 0.15s ease, opacity 0.15s ease;
+        }
+        .month-cell:hover { transform: translateY(-2px); opacity: 0.9; }
+        .month-cell:active { transform: scale(0.97); }
+        .month-cell .mc-month {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--dark-3);
+            margin-bottom: 6px;
+        }
+        .month-cell .mc-return {
+            font-family: var(--font-heading);
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+        .month-cell .mc-bar {
+            width: 40px;
+            height: 4px;
+            border-radius: 100px;
+            margin: 8px auto 0;
+        }
+
+        /* Empty state */
+        .empty-analytics {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--grey);
+        }
+        .empty-analytics svg { width: 56px; height: 56px; color: var(--grey-light); margin-bottom: 16px; }
+        .empty-analytics p { font-size: 15px; margin-bottom: 8px; }
+        .empty-analytics .sub { font-size: 13px; color: var(--grey-light); }
+    </style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+    <div class="sidebar-logo">slow bear<span>beta</span></div>
+
+    <button class="btn-add-stock" onclick="window.location.href='portfolio.html'">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+        Add Stock
+    </button>
+
+    <a class="nav-item" href="portfolio.html">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z"/></svg>
+        Dashboard
+    </a>
+    <a class="nav-item" href="portfolio-view.html">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75M15 10.5a3 3 0 11-6 0 3 3 0 016 0zm3 0h.008v.008H18V10.5zm-12 0h.008v.008H6V10.5z"/></svg>
+        Portfolio
+    </a>
+    <a class="nav-item" href="watchlist.html">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        Watchlist
+    </a>
+
+    <div class="nav-section-label">Sales</div>
+    <a class="nav-item active" href="analytics.html">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M7.5 14.25v2.25m3-4.5v4.5m3-6.75v6.75m3-9v9M6 20.25h12A2.25 2.25 0 0020.25 18V6A2.25 2.25 0 0018 3.75H6A2.25 2.25 0 003.75 6v12A2.25 2.25 0 006 20.25z"/></svg>
+        Analytics
+    </a>
+    <a class="nav-item" href="transactions.html">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg>
+        Transactions
+    </a>
+
+    <div class="nav-section-label">General</div>
+    <a class="nav-item" href="/">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"/></svg>
+        Home
+    </a>
+    <a class="nav-item" href="settings.html">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 010 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 010-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        Settings
+    </a>
+
+    <div class="sidebar-bottom">
+        <div class="sidebar-user">
+            <div class="user-avatar">SB</div>
+            <div class="user-info">
+                <div class="user-name">Investor</div>
+                <div class="user-role">Personal Plan</div>
+            </div>
+        </div>
+    </div>
+    <div style="padding:0 16px 12px;">
+      <button id="authBtn" onclick="handleAuthClick()" style="width:100%;padding:10px;border-radius:10px;border:none;background:var(--brand-gold);color:#fff;font-weight:600;cursor:pointer;font-size:13px;">Sign In</button>
+    </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+    <!-- TOP BAR -->
+    <div class="topbar">
+        <div class="search-box">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/></svg>
+            <input type="text" placeholder="Search stocks... (e.g. AAPL, TSLA)">
+        </div>
+        <div class="topbar-right">
+            <div class="topbar-label"><span class="dot"></span> Last updated now</div>
+            <button class="topbar-icon-btn" title="Notifications">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"/></svg>
+            </button>
+            <button class="topbar-icon-btn" title="Profile">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/></svg>
+            </button>
+            <button class="btn-export" title="Export">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"/></svg>
+                Exports
+            </button>
+        </div>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="content">
+        <div class="content-header">
+            <h1>Analytics</h1>
+        </div>
+
+        <!-- 1. PERFORMANCE CHART (full width) -->
+        <div class="grid-full">
+            <div class="analytics-card">
+                <div class="chart-card-header">
+                    <h3>Portfolio Performance</h3>
+                    <div class="chart-filters" id="chartFilters">
+                        <button class="chart-filter-btn" data-range="7" onclick="setChartRange(this)">1W</button>
+                        <button class="chart-filter-btn active" data-range="30" onclick="setChartRange(this)">1M</button>
+                        <button class="chart-filter-btn" data-range="90" onclick="setChartRange(this)">3M</button>
+                        <button class="chart-filter-btn" data-range="180" onclick="setChartRange(this)">6M</button>
+                        <button class="chart-filter-btn" data-range="365" onclick="setChartRange(this)">1Y</button>
+                    </div>
+                </div>
+                <div class="chart-area" id="chartArea">
+                    <svg viewBox="0 0 800 220" preserveAspectRatio="none" id="chartSvg"></svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2 & 3. Top/Worst Performers -->
+        <div class="grid-2">
+            <div class="analytics-card">
+                <h3>Top Performers</h3>
+                <div id="topPerformers"></div>
+            </div>
+            <div class="analytics-card">
+                <h3>Worst Performers</h3>
+                <div id="worstPerformers"></div>
+            </div>
+        </div>
+
+        <!-- 4 & 5. Allocation + Risk Metrics -->
+        <div class="grid-2">
+            <div class="analytics-card">
+                <h3>Portfolio Allocation</h3>
+                <div id="allocationBars"></div>
+            </div>
+            <div class="analytics-card">
+                <h3>Risk Metrics</h3>
+                <div class="risk-grid" id="riskMetrics"></div>
+            </div>
+        </div>
+
+        <!-- 6. Monthly Summary -->
+        <div class="grid-full">
+            <div class="analytics-card">
+                <h3>Monthly Summary</h3>
+                <div class="month-grid" id="monthlySummary"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Stock "current prices" — simulated (same as portfolio.html)
+const STOCK_DB = {
+    AAPL:{name:'Apple Inc.',price:178.72,color:'#555555'},
+    MSFT:{name:'Microsoft',price:415.50,color:'#4A7C59'},
+    GOOGL:{name:'Alphabet',price:175.98,color:'#C0392B'},
+    AMZN:{name:'Amazon',price:185.60,color:'#D4A843'},
+    TSLA:{name:'Tesla',price:248.42,color:'#8B1A1A'},
+    NVDA:{name:'NVIDIA',price:875.30,color:'#6B7F4E'},
+    META:{name:'Meta Platforms',price:505.75,color:'#2C5F8A'},
+    NFLX:{name:'Netflix',price:628.90,color:'#8B0000'},
+    AMD:{name:'AMD',price:162.40,color:'#3A6B4F'},
+    JPM:{name:'JPMorgan Chase',price:198.55,color:'#2B5A84'},
+    V:{name:'Visa',price:279.30,color:'#1A1A6C'},
+    JNJ:{name:'Johnson & Johnson',price:156.80,color:'#7A3B2E'},
+    WMT:{name:'Walmart',price:168.90,color:'#1A5D9E'},
+    DIS:{name:'Walt Disney',price:112.45,color:'#1B3A6B'},
+    BA:{name:'Boeing',price:178.20,color:'#4A6FA5'},
+    INTC:{name:'Intel',price:31.25,color:'#1A6FB5'},
+    PYPL:{name:'PayPal',price:67.80,color:'#2A4D8E'},
+    UBER:{name:'Uber',price:75.60,color:'#1A1A1A'},
+    SQ:{name:'Block Inc.',price:72.30,color:'#3A3A3A'},
+    COIN:{name:'Coinbase',price:225.10,color:'#2B5EA7'},
+    PLTR:{name:'Palantir',price:22.45,color:'#1A1A1A'},
+    SNAP:{name:'Snap Inc.',price:11.20,color:'#CCCC00'},
+    SOFI:{name:'SoFi',price:8.75,color:'#5B2C82'},
+    NIO:{name:'NIO Inc.',price:5.80,color:'#2A6EA8'},
+    BABA:{name:'Alibaba',price:78.90,color:'#C45A1A'},
+};
+
+const ALLOC_COLORS = ['#D4A843','#6B7F4E','#C4A882','#2C5F8A','#8B1A1A','#3A6B4F','#555555','#7A3B2E','#2B5A84','#1A5D9E','#C45A1A','#5B2C82'];
+
+let portfolio = JSON.parse(localStorage.getItem('sb_portfolio') || '[]');
+if (window.sbData) {
+  window.sbData.loadHoldings().then(data => {
+    if (data && data.length > 0) {
+      portfolio = data.map(h => ({ ticker: h.ticker, shares: Number(h.quantity || h.shares), avgPrice: Number(h.avg_price || h.avgPrice) }));
+      renderAll();
+    }
+  });
+}
+let currentRange = 30;
+
+function fmt(n) { return n.toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2}); }
+
+function getPrice(ticker) {
+    const s = STOCK_DB[ticker.toUpperCase()];
+    if (s) return s.price;
+    let hash = 0;
+    for (let i = 0; i < ticker.length; i++) hash = ((hash << 5) - hash) + ticker.charCodeAt(i);
+    return Math.abs(hash % 400) + 10;
+}
+
+function getInfo(ticker) {
+    return STOCK_DB[ticker.toUpperCase()] || { name: ticker.toUpperCase() + ' Corp.', price: getPrice(ticker), color: '#7A7A6E' };
+}
+
+// Seeded random for consistent simulated data
+function seededRandom(seed) {
+    let x = Math.sin(seed) * 10000;
+    return x - Math.floor(x);
+}
+
+function setChartRange(btn) {
+    document.querySelectorAll('#chartFilters .chart-filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentRange = parseInt(btn.dataset.range);
+    renderChart();
+}
+
+function computeStockData() {
+    return portfolio.map(s => {
+        const info = getInfo(s.ticker);
+        const current = info.price;
+        const value = s.shares * current;
+        const cost = s.shares * s.avgPrice;
+        const pl = value - cost;
+        const plPct = cost > 0 ? (pl / cost) * 100 : 0;
+        return { ...s, info, current, value, cost, pl, plPct };
+    });
+}
+
+// ===== 1. PERFORMANCE CHART =====
+function renderChart() {
+    const svg = document.getElementById('chartSvg');
+    const data = computeStockData();
+
+    if (data.length === 0) {
+        svg.innerHTML = '<text x="400" y="115" text-anchor="middle" fill="#B0ADA5" font-size="14" font-family="Open Sans">Add stocks to your portfolio to see performance analytics</text>';
+        return;
+    }
+
+    const totalCost = data.reduce((s, d) => s + d.cost, 0);
+    const totalCurrent = data.reduce((s, d) => s + d.value, 0);
+    const numPoints = currentRange;
+
+    // Generate simulated historical portfolio values
+    const points = [];
+    let val = totalCost;
+    for (let i = 0; i <= numPoints; i++) {
+        const progress = i / numPoints;
+        const target = totalCost + (totalCurrent - totalCost) * progress;
+        const noise = seededRandom(i * 7 + currentRange) * 0.06 - 0.03;
+        val = target * (1 + noise);
+        points.push(val);
+    }
+    points[points.length - 1] = totalCurrent;
+
+    const min = Math.min(...points) * 0.995;
+    const max = Math.max(...points) * 1.005;
+    const w = 800, h = 220;
+    const padTop = 15, padBot = 25;
+    const chartH = h - padTop - padBot;
+
+    // Grid lines
+    let gridLines = '';
+    for (let i = 0; i <= 4; i++) {
+        const y = padTop + (chartH / 4) * i;
+        const labelVal = max - ((max - min) / 4) * i;
+        gridLines += `<line x1="50" y1="${y}" x2="${w}" y2="${y}" stroke="#EDE9E0" stroke-width="1"/>`;
+        gridLines += `<text x="45" y="${y + 4}" text-anchor="end" fill="#B0ADA5" font-size="10" font-family="Open Sans">$${(labelVal/1000).toFixed(1)}k</text>`;
+    }
+
+    const pathPoints = points.map((v, i) => {
+        const x = 50 + (i / (points.length - 1)) * (w - 60);
+        const y = padTop + chartH - ((v - min) / (max - min)) * chartH;
+        return { x, y };
+    });
+
+    // Smooth curve using bezier
+    let lineD = `M${pathPoints[0].x},${pathPoints[0].y}`;
+    for (let i = 1; i < pathPoints.length; i++) {
+        const prev = pathPoints[i - 1];
+        const curr = pathPoints[i];
+        const cpx1 = prev.x + (curr.x - prev.x) * 0.4;
+        const cpx2 = prev.x + (curr.x - prev.x) * 0.6;
+        lineD += ` C${cpx1},${prev.y} ${cpx2},${curr.y} ${curr.x},${curr.y}`;
+    }
+
+    const lastPt = pathPoints[pathPoints.length - 1];
+    const firstPt = pathPoints[0];
+    const areaD = lineD + ` L${lastPt.x},${padTop + chartH} L${firstPt.x},${padTop + chartH} Z`;
+    const isUp = totalCurrent >= totalCost;
+    const lineColor = isUp ? '#6B7F4E' : '#C0392B';
+    const gradId = 'perfGrad';
+
+    svg.innerHTML = `
+        <defs>
+            <linearGradient id="${gradId}" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="${lineColor}" stop-opacity="0.2"/>
+                <stop offset="100%" stop-color="${lineColor}" stop-opacity="0.01"/>
+            </linearGradient>
+        </defs>
+        ${gridLines}
+        <path d="${areaD}" fill="url(#${gradId})"/>
+        <path d="${lineD}" fill="none" stroke="${lineColor}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="${lastPt.x}" cy="${lastPt.y}" r="5" fill="${lineColor}" stroke="#fff" stroke-width="2"/>
+        <text x="${lastPt.x + 10}" y="${lastPt.y + 4}" fill="${lineColor}" font-size="12" font-weight="600" font-family="Poppins">$${fmt(totalCurrent)}</text>
+    `;
+}
+
+// ===== 2 & 3. TOP / WORST PERFORMERS =====
+function renderPerformers() {
+    const topEl = document.getElementById('topPerformers');
+    const worstEl = document.getElementById('worstPerformers');
+    const data = computeStockData();
+
+    if (data.length === 0) {
+        const emptyHtml = '<div class="empty-analytics"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M7.5 14.25v2.25m3-4.5v4.5m3-6.75v6.75m3-9v9M6 20.25h12A2.25 2.25 0 0020.25 18V6A2.25 2.25 0 0018 3.75H6A2.25 2.25 0 003.75 6v12A2.25 2.25 0 006 20.25z"/></svg><p>No data yet</p><div class="sub">Add stocks in portfolio</div></div>';
+        topEl.innerHTML = emptyHtml;
+        worstEl.innerHTML = emptyHtml;
+        return;
+    }
+
+    const sorted = [...data].sort((a, b) => b.plPct - a.plPct);
+    const top3 = sorted.slice(0, 3);
+    const worst3 = sorted.slice(-3).reverse();
+    const maxAbsPct = Math.max(...data.map(d => Math.abs(d.plPct)), 1);
+
+    function renderList(items, container, isGreen) {
+        let html = '';
+        items.forEach(d => {
+            const barWidth = Math.min(100, (Math.abs(d.plPct) / maxAbsPct) * 100);
+            const barColor = d.plPct >= 0 ? 'var(--green)' : 'var(--red)';
+            const pctClass = d.plPct >= 0 ? 'positive' : 'negative';
+            const sign = d.plPct >= 0 ? '+' : '';
+            html += `
+                <div class="performer-item">
+                    <div class="performer-icon" style="background:${d.info.color}">${d.ticker.slice(0,2)}</div>
+                    <div class="performer-info">
+                        <div class="performer-ticker">${d.ticker}</div>
+                        <div class="performer-name">${d.info.name}</div>
+                    </div>
+                    <div class="performer-bar-wrap">
+                        <div class="performer-bar" style="width:${barWidth}%;background:${barColor}"></div>
+                    </div>
+                    <div class="performer-pct ${pctClass}">${sign}${d.plPct.toFixed(2)}%</div>
+                </div>
+            `;
+        });
+        container.innerHTML = html;
+    }
+
+    renderList(top3, topEl, true);
+    renderList(worst3, worstEl, false);
+}
+
+// ===== 4. ALLOCATION BARS =====
+function renderAllocation() {
+    const container = document.getElementById('allocationBars');
+    const data = computeStockData();
+
+    if (data.length === 0) {
+        container.innerHTML = '<div class="empty-analytics"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M7.5 14.25v2.25m3-4.5v4.5m3-6.75v6.75m3-9v9M6 20.25h12A2.25 2.25 0 0020.25 18V6A2.25 2.25 0 0018 3.75H6A2.25 2.25 0 003.75 6v12A2.25 2.25 0 006 20.25z"/></svg><p>No data yet</p><div class="sub">Add stocks in portfolio</div></div>';
+        return;
+    }
+
+    const totalValue = data.reduce((s, d) => s + d.value, 0);
+    const sorted = [...data].sort((a, b) => b.value - a.value);
+
+    let html = '';
+    sorted.forEach((d, i) => {
+        const pct = totalValue > 0 ? (d.value / totalValue) * 100 : 0;
+        const color = d.info.color || ALLOC_COLORS[i % ALLOC_COLORS.length];
+        html += `
+            <div class="alloc-bar-item">
+                <div class="alloc-bar-label">${d.ticker}</div>
+                <div class="alloc-bar-track">
+                    <div class="alloc-bar-fill" style="width:${pct}%;background:${color}">${pct > 8 ? pct.toFixed(1) + '%' : ''}</div>
+                </div>
+                <div class="alloc-bar-pct">${pct.toFixed(1)}%</div>
+            </div>
+        `;
+    });
+    container.innerHTML = html;
+}
+
+// ===== 5. RISK METRICS =====
+function renderRiskMetrics() {
+    const container = document.getElementById('riskMetrics');
+    const data = computeStockData();
+
+    if (data.length === 0) {
+        container.innerHTML = '<div class="empty-analytics" style="grid-column:1/-1"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M7.5 14.25v2.25m3-4.5v4.5m3-6.75v6.75m3-9v9M6 20.25h12A2.25 2.25 0 0020.25 18V6A2.25 2.25 0 0018 3.75H6A2.25 2.25 0 003.75 6v12A2.25 2.25 0 006 20.25z"/></svg><p>No data yet</p><div class="sub">Add stocks in portfolio</div></div>';
+        return;
+    }
+
+    const totalInvested = data.reduce((s, d) => s + d.cost, 0);
+    const totalValue = data.reduce((s, d) => s + d.value, 0);
+    const avgReturn = data.reduce((s, d) => s + d.plPct, 0) / data.length;
+    const best = data.reduce((a, b) => a.plPct > b.plPct ? a : b);
+    const worst = data.reduce((a, b) => a.plPct < b.plPct ? a : b);
+    const profitable = data.filter(d => d.pl >= 0).length;
+    const losing = data.filter(d => d.pl < 0).length;
+
+    const avgClass = avgReturn >= 0 ? 'positive' : 'negative';
+    const avgSign = avgReturn >= 0 ? '+' : '';
+
+    container.innerHTML = `
+        <div class="risk-item">
+            <div class="ri-label">Total Invested</div>
+            <div class="ri-value">$${fmt(totalInvested)}</div>
+        </div>
+        <div class="risk-item">
+            <div class="ri-label">Average Return</div>
+            <div class="ri-value ${avgClass}">${avgSign}${avgReturn.toFixed(2)}%</div>
+        </div>
+        <div class="risk-item">
+            <div class="ri-label">Best Performing</div>
+            <div class="ri-value positive">${best.ticker} (${best.plPct >= 0 ? '+' : ''}${best.plPct.toFixed(2)}%)</div>
+        </div>
+        <div class="risk-item">
+            <div class="ri-label">Worst Performing</div>
+            <div class="ri-value negative">${worst.ticker} (${worst.plPct >= 0 ? '+' : ''}${worst.plPct.toFixed(2)}%)</div>
+        </div>
+        <div class="risk-item">
+            <div class="ri-label">Profitable Positions</div>
+            <div class="ri-value positive">${profitable}</div>
+        </div>
+        <div class="risk-item">
+            <div class="ri-label">Losing Positions</div>
+            <div class="ri-value negative">${losing}</div>
+        </div>
+    `;
+}
+
+// ===== 6. MONTHLY SUMMARY =====
+function renderMonthlySummary() {
+    const container = document.getElementById('monthlySummary');
+    const data = computeStockData();
+
+    const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    const now = new Date();
+    const currentMonth = now.getMonth();
+
+    let html = '';
+    for (let i = 5; i >= 0; i--) {
+        const mIdx = (currentMonth - i + 12) % 12;
+        const monthName = months[mIdx];
+
+        if (data.length === 0) {
+            html += `
+                <div class="month-cell">
+                    <div class="mc-month">${monthName}</div>
+                    <div class="mc-return" style="color:var(--grey-light)">--</div>
+                    <div class="mc-bar" style="background:var(--card-border)"></div>
+                </div>
+            `;
+        } else {
+            // Simulated monthly return based on seed
+            const seed = mIdx * 31 + data.length * 7;
+            const ret = (seededRandom(seed) - 0.4) * 12; // range roughly -5% to +7%
+            const isUp = ret >= 0;
+            const color = isUp ? 'var(--green)' : 'var(--red)';
+            const sign = isUp ? '+' : '';
+
+            html += `
+                <div class="month-cell">
+                    <div class="mc-month">${monthName}</div>
+                    <div class="mc-return" style="color:${color}">${sign}${ret.toFixed(2)}%</div>
+                    <div class="mc-bar" style="background:${color}"></div>
+                </div>
+            `;
+        }
+    }
+    container.innerHTML = html;
+}
+
+// ===== RENDER ALL =====
+function renderAll() {
+    renderChart();
+    renderPerformers();
+    renderAllocation();
+    renderRiskMetrics();
+    renderMonthlySummary();
+}
+
+renderAll();
+
+function handleAuthClick() {
+  if (window.sbAuth && window.sbAuth.getAuth().loggedIn) {
+    window.sbAuth.doSignOut().then(() => {
+      document.getElementById('authBtn').textContent = 'Sign In';
+    });
+  } else { showLoginModal(); }
+}
+function showLoginModal() { const m = document.getElementById('loginModal'); if (m) m.style.display = 'flex'; }
+function closeLoginModal() { const m = document.getElementById('loginModal'); if (m) m.style.display = 'none'; }
+async function googleLogin() { if (window.sbAuth) await window.sbAuth.signInWithGoogle(); }
+async function emailLogin() {
+  const email = document.getElementById('loginEmail').value;
+  const pw = document.getElementById('loginPassword').value;
+  if (!email || !pw || !window.sbAuth) return;
+  const { user, error } = await window.sbAuth.signIn(email, pw);
+  if (error) { alert('Login failed: ' + error.message); return; }
+  closeLoginModal();
+  document.getElementById('authBtn').textContent = 'Sign Out';
+  location.reload();
+}
+async function emailSignUp() {
+  const email = document.getElementById('loginEmail').value;
+  const pw = document.getElementById('loginPassword').value;
+  if (!email || !pw || !window.sbAuth) return;
+  const { user, error } = await window.sbAuth.signUp(email, pw);
+  if (error) { alert('Signup failed: ' + error.message); return; }
+  alert('Account created! Check your email to confirm.');
+}
+</script>
+
+<!-- LOGIN MODAL -->
+<div id="loginModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:2000;align-items:center;justify-content:center;">
+  <div style="background:#fff;border-radius:16px;padding:32px;max-width:400px;width:90%;text-align:center;">
+    <h3 style="font-family:'Poppins',sans-serif;margin-bottom:8px;">Sign In to Slow Bear</h3>
+    <p style="color:#888;font-size:14px;margin-bottom:24px;">Cloud sync your portfolio</p>
+    <button onclick="googleLogin()" style="width:100%;padding:12px;border-radius:10px;border:1px solid #ddd;background:#fff;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:12px;">
+      <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844a4.14 4.14 0 01-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615z"/><path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 009 18z"/><path fill="#FBBC05" d="M3.964 10.71A5.41 5.41 0 013.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.997 8.997 0 000 9c0 1.452.348 2.827.957 4.042l3.007-2.332z"/><path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 00.957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"/></svg>
+      Sign in with Google
+    </button>
+    <div style="display:flex;align-items:center;gap:12px;margin:16px 0;"><div style="flex:1;height:1px;background:#eee;"></div><span style="color:#aaa;font-size:12px;">or</span><div style="flex:1;height:1px;background:#eee;"></div></div>
+    <input id="loginEmail" type="email" placeholder="Email" style="width:100%;padding:10px 14px;border:1px solid #EDE9E0;border-radius:10px;font-size:14px;margin-bottom:8px;box-sizing:border-box;">
+    <input id="loginPassword" type="password" placeholder="Password" style="width:100%;padding:10px 14px;border:1px solid #EDE9E0;border-radius:10px;font-size:14px;margin-bottom:16px;box-sizing:border-box;">
+    <button onclick="emailLogin()" style="width:100%;padding:12px;border-radius:10px;border:none;background:var(--brand-gold);color:#fff;font-weight:600;font-size:14px;cursor:pointer;margin-bottom:8px;">Sign In</button>
+    <button onclick="emailSignUp()" style="width:100%;padding:12px;border-radius:10px;border:1px solid var(--brand-gold);background:#fff;color:var(--brand-gold);font-weight:600;font-size:14px;cursor:pointer;">Create Account</button>
+    <button onclick="closeLoginModal()" style="margin-top:16px;background:none;border:none;color:#888;cursor:pointer;font-size:13px;">Cancel</button>
+  </div>
+</div>
+
+<script type="module">
+import { initAuth, getAuth, doSignOut, signInWithGoogle, signIn, signUp, loadHoldings, loadTransactions, loadSettings, saveSettings, clearAllData } from './shared/sb-data.js';
+window.sbAuth = { initAuth, getAuth, doSignOut, signInWithGoogle, signIn, signUp };
+window.sbData = { loadHoldings, loadTransactions, loadSettings, saveSettings, clearAllData };
+(async () => {
+  const auth = await initAuth();
+  const userNameEl = document.querySelector('.user-name');
+  const userPlanEl = document.querySelector('.user-plan');
+  const authBtn = document.getElementById('authBtn');
+  if (auth.loggedIn) {
+    if (userNameEl) userNameEl.textContent = auth.email?.split('@')[0] || 'User';
+    if (userPlanEl) userPlanEl.textContent = 'Cloud Sync';
+    if (authBtn) authBtn.textContent = 'Sign Out';
+  }
+  window.addEventListener('sb-auth-change', (e) => {
+    const a = e.detail;
+    if (userNameEl) userNameEl.textContent = a.loggedIn ? (a.email?.split('@')[0] || 'User') : 'Guest';
+    if (userPlanEl) userPlanEl.textContent = a.loggedIn ? 'Cloud Sync' : 'Local Only';
+    if (authBtn) authBtn.textContent = a.loggedIn ? 'Sign Out' : 'Sign In';
+  });
+})();
+</script>
+</body>
+</html>

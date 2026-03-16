@@ -1,1205 +1,1302 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Macro Cockpit - 포트폴리오</title>
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='14' fill='%231A7A4C'/></svg>">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-  tailwind.config = {
-    theme: {
-      extend: {
-        fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
-        colors: {
-          bg:     '#FFFFFF',
-          card:   '#FFFFFF',
-          warm:   { 50:'#F9FAFB', 100:'#F3F4F6', 200:'#E5E7EB', 300:'#D1D5DB', 400:'#9CA3AF', 500:'#6B7280', 600:'#4B5563', 700:'#374151', 800:'#1F2937', 900:'#111827' },
-          accent: { 50:'#F0FDF4', 100:'#DCFCE7', DEFAULT:'#1A7A4C', dark:'#15643E' },
-          up:     '#16A34A',
-          down:   '#DC2626',
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Slow Bear — Portfolio</title>
+    <link rel="icon" type="image/png" href="macro_asset/slowbear_logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Open+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+        :root {
+            --sidebar-bg: #2C2C2C;
+            --sidebar-hover: #3A3A3A;
+            --sidebar-active: rgba(212,168,67,0.15);
+            --body-bg: #F5F0E8;
+            --card-bg: #fff;
+            --card-border: #EDE9E0;
+            --brand-gold: #D4A843;
+            --brand-gold-light: #E8C97A;
+            --brand-gold-bg: #FBF5E6;
+            --brand-olive: #6B7F4E;
+            --brand-olive-light: #8FA574;
+            --brand-oak: #C4A882;
+            --dark: #1A1A1A;
+            --dark-2: #2C2C2C;
+            --dark-3: #4A4A4A;
+            --grey: #7A7A6E;
+            --grey-light: #B0ADA5;
+            --red: #C0392B;
+            --green: #5A8F3C;
+            --font-heading: 'Poppins', sans-serif;
+            --font-body: 'Open Sans', sans-serif;
+            --radius: 14px;
+            --radius-sm: 10px;
         }
+
+        html { height: 100%; }
+        body {
+            font-family: var(--font-body);
+            background: var(--body-bg);
+            color: var(--dark);
+            height: 100%;
+            display: flex;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ===== SIDEBAR ===== */
+        .sidebar {
+            width: 240px;
+            min-height: 100vh;
+            background: var(--sidebar-bg);
+            display: flex;
+            flex-direction: column;
+            padding: 24px 16px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            z-index: 50;
+        }
+        .sidebar-logo {
+            font-family: var(--font-heading);
+            font-size: 20px;
+            font-weight: 600;
+            color: #fff;
+            padding: 0 8px 28px;
+            letter-spacing: -0.01em;
+        }
+        .sidebar-logo span { color: var(--brand-gold); font-size: 10px; vertical-align: super; margin-left: 2px; }
+
+        .btn-add-stock {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            padding: 12px;
+            background: var(--brand-gold);
+            color: var(--dark);
+            font-family: var(--font-heading);
+            font-size: 14px;
+            font-weight: 600;
+            border: none;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            margin-bottom: 28px;
+            transition: background 0.2s ease, transform 0.15s ease;
+        }
+        .btn-add-stock:hover { background: var(--brand-gold-light); }
+        .btn-add-stock:active { transform: scale(0.97); }
+        .btn-add-stock svg { width: 18px; height: 18px; }
+
+        .nav-section-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: rgba(255,255,255,0.3);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            padding: 16px 8px 8px;
+        }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            color: rgba(255,255,255,0.55);
+            cursor: pointer;
+            transition: background 0.15s ease, color 0.15s ease;
+            text-decoration: none;
+        }
+        .nav-item:hover { background: var(--sidebar-hover); color: rgba(255,255,255,0.85); }
+        .nav-item.active { background: var(--sidebar-active); color: var(--brand-gold); }
+        .nav-item svg { width: 20px; height: 20px; flex-shrink: 0; }
+        .nav-item .badge {
+            margin-left: auto;
+            font-size: 11px;
+            font-weight: 600;
+            background: var(--brand-gold);
+            color: var(--dark);
+            padding: 2px 8px;
+            border-radius: 100px;
+        }
+
+        .sidebar-bottom {
+            margin-top: auto;
+            padding: 16px 8px 0;
+            border-top: 1px solid rgba(255,255,255,0.08);
+        }
+        .sidebar-user {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 0;
+        }
+        .user-avatar {
+            width: 36px; height: 36px;
+            border-radius: 50%;
+            background: var(--brand-gold);
+            display: flex; align-items: center; justify-content: center;
+            font-family: var(--font-heading);
+            font-size: 14px; font-weight: 600; color: var(--dark);
+        }
+        .user-info { flex: 1; }
+        .user-name { font-size: 13px; font-weight: 600; color: #fff; }
+        .user-role { font-size: 11px; color: rgba(255,255,255,0.4); }
+
+        /* ===== MAIN ===== */
+        .main {
+            flex: 1;
+            margin-left: 240px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Top Bar */
+        .topbar {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px 32px;
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--card-border);
+        }
+        .search-box {
+            flex: 1;
+            max-width: 420px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--body-bg);
+            border-radius: 100px;
+            padding: 8px 16px;
+        }
+        .search-box svg { width: 18px; height: 18px; color: var(--grey); flex-shrink: 0; }
+        .search-box input {
+            border: none;
+            background: transparent;
+            font-family: var(--font-body);
+            font-size: 14px;
+            color: var(--dark);
+            width: 100%;
+            outline: none;
+        }
+        .search-box input::placeholder { color: var(--grey-light); }
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-left: auto;
+        }
+        .topbar-label {
+            font-size: 12px;
+            color: var(--grey);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .topbar-label .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); }
+        .topbar-icon-btn {
+            width: 36px; height: 36px;
+            border-radius: 8px;
+            border: 1px solid var(--card-border);
+            background: var(--card-bg);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer;
+            transition: background 0.15s ease;
+        }
+        .topbar-icon-btn:hover { background: var(--body-bg); }
+        .topbar-icon-btn svg { width: 18px; height: 18px; color: var(--dark-3); }
+        .btn-export {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            background: var(--brand-gold);
+            color: var(--dark);
+            font-family: var(--font-heading);
+            font-size: 13px;
+            font-weight: 600;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+        .btn-export:hover { background: var(--brand-gold-light); }
+        .btn-export svg { width: 16px; height: 16px; }
+
+        /* Content */
+        .content {
+            padding: 28px 32px;
+            flex: 1;
+        }
+        .content-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+        }
+        .content-header h1 {
+            font-family: var(--font-heading);
+            font-size: 26px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .btn-ghost {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 14px;
+            background: transparent;
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            font-family: var(--font-body);
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--dark-3);
+            cursor: pointer;
+            transition: background 0.15s ease;
+        }
+        .btn-ghost:hover { background: var(--card-bg); }
+        .btn-ghost svg { width: 16px; height: 16px; }
+
+        /* ===== SUMMARY CARDS ===== */
+        .summary-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .summary-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius);
+            padding: 20px;
+        }
+        .summary-card .sc-label {
+            font-size: 13px;
+            color: var(--grey);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .summary-card .sc-label svg { width: 16px; height: 16px; color: var(--grey-light); cursor: pointer; }
+        .summary-card .sc-value {
+            font-family: var(--font-heading);
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--dark);
+            letter-spacing: -0.02em;
+            margin-bottom: 6px;
+        }
+        .summary-card .sc-change {
+            font-size: 13px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .sc-change.up { color: var(--green); }
+        .sc-change.down { color: var(--red); }
+        .sc-change .vs { font-weight: 400; color: var(--grey); margin-left: 4px; }
+
+        /* ===== CHART + ALLOCATION ROW ===== */
+        .chart-row {
+            display: grid;
+            grid-template-columns: 1fr 340px;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .chart-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius);
+            padding: 24px;
+        }
+        .chart-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        .chart-card-header h3 {
+            font-family: var(--font-heading);
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        .chart-filters {
+            display: flex;
+            gap: 4px;
+            background: var(--body-bg);
+            border-radius: 8px;
+            padding: 3px;
+        }
+        .chart-filter-btn {
+            padding: 5px 12px;
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--grey);
+            background: transparent;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.15s ease, color 0.15s ease;
+        }
+        .chart-filter-btn:hover { color: var(--dark); }
+        .chart-filter-btn.active { background: var(--card-bg); color: var(--dark); box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+
+        /* SVG chart area */
+        .chart-area { width: 100%; height: 200px; position: relative; }
+        .chart-area svg { width: 100%; height: 100%; }
+
+        /* Allocation card */
+        .allocation-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius);
+            padding: 24px;
+        }
+        .allocation-card h3 {
+            font-family: var(--font-heading);
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 20px;
+        }
+        .donut-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .donut-container svg { width: 160px; height: 160px; }
+        .alloc-legend {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .alloc-legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+        }
+        .alloc-dot {
+            width: 10px; height: 10px;
+            border-radius: 3px;
+            flex-shrink: 0;
+        }
+        .alloc-legend-item .alloc-name { flex: 1; color: var(--dark-3); }
+        .alloc-legend-item .alloc-pct { font-weight: 600; color: var(--dark); }
+
+        /* ===== HOLDINGS TABLE ===== */
+        .holdings-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius);
+            padding: 24px;
+        }
+        .holdings-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+        .holdings-header h3 {
+            font-family: var(--font-heading);
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        thead th {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--grey);
+            text-align: left;
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--card-border);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            cursor: pointer;
+            user-select: none;
+        }
+        thead th:hover { color: var(--dark); }
+        tbody tr {
+            transition: background 0.1s ease;
+        }
+        tbody tr:hover { background: rgba(245,240,232,0.5); }
+        tbody td {
+            padding: 14px 12px;
+            font-size: 14px;
+            border-bottom: 1px solid var(--card-border);
+            vertical-align: middle;
+        }
+        .stock-cell {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .stock-icon {
+            width: 36px; height: 36px;
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            font-family: var(--font-heading);
+            font-size: 12px;
+            font-weight: 700;
+            color: #fff;
+            flex-shrink: 0;
+        }
+        .stock-ticker { font-weight: 600; color: var(--dark); }
+        .stock-name { font-size: 12px; color: var(--grey); }
+        .cell-right { text-align: right; }
+        .cell-mono { font-variant-numeric: tabular-nums; }
+        .positive { color: var(--green); font-weight: 600; }
+        .negative { color: var(--red); font-weight: 600; }
+        .btn-remove {
+            width: 30px; height: 30px;
+            border-radius: 6px;
+            border: 1px solid var(--card-border);
+            background: var(--card-bg);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer;
+            transition: background 0.15s ease, border-color 0.15s ease;
+        }
+        .btn-remove:hover { background: #fdecea; border-color: var(--red); }
+        .btn-remove svg { width: 14px; height: 14px; color: var(--grey); }
+        .btn-remove:hover svg { color: var(--red); }
+
+        .empty-state {
+            text-align: center;
+            padding: 48px 20px;
+            color: var(--grey);
+        }
+        .empty-state svg { width: 48px; height: 48px; color: var(--grey-light); margin-bottom: 12px; }
+        .empty-state p { font-size: 14px; margin-bottom: 16px; }
+        .empty-state .btn-add-inline {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 20px;
+            background: var(--brand-gold);
+            color: var(--dark);
+            font-family: var(--font-heading);
+            font-size: 13px;
+            font-weight: 600;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        .empty-state .btn-add-inline:hover { background: var(--brand-gold-light); }
+
+        /* ===== MODAL ===== */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.4);
+            z-index: 200;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(4px);
+        }
+        .modal-overlay.show { display: flex; }
+        .modal {
+            background: var(--card-bg);
+            border-radius: 16px;
+            width: 440px;
+            max-width: 90vw;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+            overflow: hidden;
+        }
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--card-border);
+        }
+        .modal-header h3 {
+            font-family: var(--font-heading);
+            font-size: 18px;
+            font-weight: 600;
+        }
+        .modal-close {
+            width: 32px; height: 32px;
+            border-radius: 8px;
+            border: 1px solid var(--card-border);
+            background: var(--card-bg);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer;
+        }
+        .modal-close:hover { background: var(--body-bg); }
+        .modal-close svg { width: 16px; height: 16px; color: var(--dark-3); }
+        .modal-body { padding: 24px; }
+        .form-group { margin-bottom: 18px; }
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--dark-3);
+            margin-bottom: 6px;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid var(--card-border);
+            border-radius: 10px;
+            font-family: var(--font-body);
+            font-size: 14px;
+            color: var(--dark);
+            background: var(--body-bg);
+            transition: border-color 0.2s ease;
+        }
+        .form-group input:focus { border-color: var(--brand-gold); outline: none; background: var(--card-bg); }
+        .form-group input::placeholder { color: var(--grey-light); }
+        .form-group .hint { font-size: 11px; color: var(--grey); margin-top: 4px; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .modal-footer {
+            display: flex;
+            gap: 10px;
+            padding: 0 24px 24px;
+        }
+        .btn-cancel {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid var(--card-border);
+            border-radius: 10px;
+            background: var(--card-bg);
+            font-family: var(--font-heading);
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--dark-3);
+            cursor: pointer;
+            transition: background 0.15s ease;
+        }
+        .btn-cancel:hover { background: var(--body-bg); }
+        .btn-submit {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            background: var(--brand-gold);
+            font-family: var(--font-heading);
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--dark);
+            cursor: pointer;
+            transition: background 0.2s ease, transform 0.15s ease;
+        }
+        .btn-submit:hover { background: var(--brand-gold-light); }
+        .btn-submit:active { transform: scale(0.98); }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: var(--dark);
+            color: #fff;
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 500;
+            z-index: 300;
+            transform: translateY(80px);
+            opacity: 0;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+        .toast.show { transform: translateY(0); opacity: 1; }
+    </style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+    <div class="sidebar-logo">slow bear<span>beta</span></div>
+
+    <button class="btn-add-stock" onclick="openModal()">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+        Add Stock
+    </button>
+
+    <a class="nav-item active" href="portfolio.html">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z"/></svg>
+        Dashboard
+    </a>
+    <a class="nav-item" href="portfolio-view.html">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75M15 10.5a3 3 0 11-6 0 3 3 0 016 0zm3 0h.008v.008H18V10.5zm-12 0h.008v.008H6V10.5z"/></svg>
+        Portfolio
+        <span class="badge" id="stockCount">0</span>
+    </a>
+    <a class="nav-item" href="watchlist.html">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        Watchlist
+    </a>
+
+    <div class="nav-section-label">Sales</div>
+    <a class="nav-item" href="analytics.html">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M7.5 14.25v2.25m3-4.5v4.5m3-6.75v6.75m3-9v9M6 20.25h12A2.25 2.25 0 0020.25 18V6A2.25 2.25 0 0018 3.75H6A2.25 2.25 0 003.75 6v12A2.25 2.25 0 006 20.25z"/></svg>
+        Analytics
+    </a>
+    <a class="nav-item" href="transactions.html">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg>
+        Transactions
+    </a>
+
+    <div class="nav-section-label">General</div>
+    <a class="nav-item" href="/">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"/></svg>
+        Home
+    </a>
+    <a class="nav-item" href="settings.html">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 010 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 010-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        Settings
+    </a>
+
+    <div class="sidebar-bottom">
+        <div class="sidebar-user">
+            <div class="user-avatar">SB</div>
+            <div class="user-info">
+                <div class="user-name">Investor</div>
+                <div class="user-role">Personal Plan</div>
+            </div>
+        </div>
+    </div>
+    <div style="padding:0 16px 12px;">
+      <button id="authBtn" onclick="handleAuthClick()" style="width:100%;padding:10px;border-radius:10px;border:none;background:var(--brand-gold);color:#fff;font-weight:600;cursor:pointer;font-size:13px;">
+        Sign In
+      </button>
+    </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+    <!-- TOP BAR -->
+    <div class="topbar">
+        <div class="search-box">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/></svg>
+            <input type="text" placeholder="Search stocks... (e.g. AAPL, TSLA)">
+        </div>
+        <div class="topbar-right">
+            <div class="topbar-label"><span class="dot"></span> Last updated now</div>
+            <button class="topbar-icon-btn" title="Notifications">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"/></svg>
+            </button>
+            <button class="topbar-icon-btn" title="Profile">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/></svg>
+            </button>
+            <button class="btn-export" title="Export">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"/></svg>
+                Exports
+            </button>
+        </div>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="content">
+        <div class="content-header">
+            <h1>Dashboard</h1>
+            <div class="header-actions">
+                <button class="btn-ghost" onclick="openModal()">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+                    Add Widget
+                </button>
+                <button class="btn-ghost">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"/></svg>
+                    Imports
+                </button>
+            </div>
+        </div>
+
+        <!-- SUMMARY CARDS -->
+        <div class="summary-row">
+            <div class="summary-card">
+                <div class="sc-label">Total Value <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM12.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM18.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"/></svg></div>
+                <div class="sc-value" id="totalValue">$0.00</div>
+                <div class="sc-change up" id="totalChangeRow"><span id="totalChange">+$0.00</span><span class="vs">vs cost</span></div>
+            </div>
+            <div class="summary-card">
+                <div class="sc-label">Total Invested <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM12.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM18.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"/></svg></div>
+                <div class="sc-value" id="totalInvested">$0.00</div>
+                <div class="sc-change up" id="totalPctRow"><span id="totalPct">0.00%</span><span class="vs">return</span></div>
+            </div>
+            <div class="summary-card">
+                <div class="sc-label">Total P&amp;L <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM12.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM18.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"/></svg></div>
+                <div class="sc-value" id="totalPL">$0.00</div>
+                <div class="sc-change up" id="plPctRow"><span id="plPct">0.00%</span><span class="vs">overall</span></div>
+            </div>
+            <div class="summary-card">
+                <div class="sc-label">Stocks <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM12.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM18.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"/></svg></div>
+                <div class="sc-value" id="totalStocks">0</div>
+                <div class="sc-change up"><span>holdings</span></div>
+            </div>
+        </div>
+
+        <!-- CHART + ALLOCATION -->
+        <div class="chart-row">
+            <div class="chart-card">
+                <div class="chart-card-header">
+                    <h3>Portfolio Performance</h3>
+                    <div class="chart-filters">
+                        <button class="chart-filter-btn">1D</button>
+                        <button class="chart-filter-btn active">1W</button>
+                        <button class="chart-filter-btn">1M</button>
+                        <button class="chart-filter-btn">6M</button>
+                        <button class="chart-filter-btn">1Y</button>
+                        <button class="chart-filter-btn">ALL</button>
+                    </div>
+                </div>
+                <div class="chart-area" id="chartArea">
+                    <svg viewBox="0 0 700 200" preserveAspectRatio="none" id="chartSvg"></svg>
+                </div>
+            </div>
+            <div class="allocation-card">
+                <h3>Allocation</h3>
+                <div class="donut-container">
+                    <svg viewBox="0 0 160 160" id="donutSvg"></svg>
+                </div>
+                <div class="alloc-legend" id="allocLegend"></div>
+            </div>
+        </div>
+
+        <!-- HOLDINGS TABLE -->
+        <div class="holdings-card">
+            <div class="holdings-header">
+                <h3>Best selling product</h3>
+            </div>
+            <div id="holdingsContent">
+                <table>
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Product</th>
+                            <th class="cell-right">Shares</th>
+                            <th class="cell-right">Avg Price</th>
+                            <th class="cell-right">Current</th>
+                            <th class="cell-right">Revenue</th>
+                            <th class="cell-right">Rating</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="holdingsBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="if(event.target===this)closeModal()">
+    <div class="modal">
+        <div class="modal-header">
+            <h3>Add Stock</h3>
+            <button class="modal-close" onclick="closeModal()">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="form-group">
+                <label>Stock Ticker</label>
+                <input type="text" id="inputTicker" placeholder="e.g. AAPL, TSLA, MSFT" maxlength="5" autocomplete="off">
+                <div class="hint">Enter the stock symbol</div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Shares (개수)</label>
+                    <input type="number" id="inputShares" placeholder="e.g. 10" min="0.01" step="0.01">
+                </div>
+                <div class="form-group">
+                    <label>Avg Price (평단가)</label>
+                    <input type="number" id="inputAvgPrice" placeholder="e.g. 150.00" min="0.01" step="0.01">
+                </div>
+            </div>
+            <div class="form-group" id="previewGroup" style="display:none">
+                <label>Preview</label>
+                <div style="background:var(--body-bg);border-radius:10px;padding:12px 14px;font-size:14px;">
+                    <span id="previewText"></span>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+            <button class="btn-submit" onclick="addStock()">Add to Portfolio</button>
+        </div>
+    </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// Stock "current prices" — simulated
+const STOCK_DB = {
+    AAPL:{name:'Apple Inc.',price:178.72,color:'#555555'},
+    MSFT:{name:'Microsoft',price:415.50,color:'#4A7C59'},
+    GOOGL:{name:'Alphabet',price:175.98,color:'#C0392B'},
+    AMZN:{name:'Amazon',price:185.60,color:'#D4A843'},
+    TSLA:{name:'Tesla',price:248.42,color:'#8B1A1A'},
+    NVDA:{name:'NVIDIA',price:875.30,color:'#6B7F4E'},
+    META:{name:'Meta Platforms',price:505.75,color:'#2C5F8A'},
+    NFLX:{name:'Netflix',price:628.90,color:'#8B0000'},
+    AMD:{name:'AMD',price:162.40,color:'#3A6B4F'},
+    JPM:{name:'JPMorgan Chase',price:198.55,color:'#2B5A84'},
+    V:{name:'Visa',price:279.30,color:'#1A1A6C'},
+    JNJ:{name:'Johnson & Johnson',price:156.80,color:'#7A3B2E'},
+    WMT:{name:'Walmart',price:168.90,color:'#1A5D9E'},
+    DIS:{name:'Walt Disney',price:112.45,color:'#1B3A6B'},
+    BA:{name:'Boeing',price:178.20,color:'#4A6FA5'},
+    INTC:{name:'Intel',price:31.25,color:'#1A6FB5'},
+    PYPL:{name:'PayPal',price:67.80,color:'#2A4D8E'},
+    UBER:{name:'Uber',price:75.60,color:'#1A1A1A'},
+    SQ:{name:'Block Inc.',price:72.30,color:'#3A3A3A'},
+    COIN:{name:'Coinbase',price:225.10,color:'#2B5EA7'},
+    PLTR:{name:'Palantir',price:22.45,color:'#1A1A1A'},
+    SNAP:{name:'Snap Inc.',price:11.20,color:'#CCCC00'},
+    SOFI:{name:'SoFi',price:8.75,color:'#5B2C82'},
+    NIO:{name:'NIO Inc.',price:5.80,color:'#2A6EA8'},
+    BABA:{name:'Alibaba',price:78.90,color:'#C45A1A'},
+};
+
+let portfolio = JSON.parse(localStorage.getItem('sb_portfolio') || '[]');
+
+function save() {
+    localStorage.setItem('sb_portfolio', JSON.stringify(portfolio));
+    if (window.sbData) window.sbData.saveHoldings(portfolio);
+}
+
+function fmt(n) { return n.toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2}); }
+
+function getPrice(ticker) {
+    const s = STOCK_DB[ticker.toUpperCase()];
+    if (s) return s.price;
+    // Random stable price for unknown tickers
+    let hash = 0;
+    for (let i = 0; i < ticker.length; i++) hash = ((hash << 5) - hash) + ticker.charCodeAt(i);
+    return Math.abs(hash % 400) + 10 + Math.random() * 0.01;
+}
+
+function getInfo(ticker) {
+    return STOCK_DB[ticker.toUpperCase()] || { name: ticker.toUpperCase() + ' Corp.', price: getPrice(ticker), color: '#7A7A6E' };
+}
+
+function openModal() {
+    document.getElementById('modalOverlay').classList.add('show');
+    document.getElementById('inputTicker').focus();
+}
+function closeModal() {
+    document.getElementById('modalOverlay').classList.remove('show');
+    document.getElementById('inputTicker').value = '';
+    document.getElementById('inputShares').value = '';
+    document.getElementById('inputAvgPrice').value = '';
+    document.getElementById('previewGroup').style.display = 'none';
+}
+
+function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+function addStock() {
+    const ticker = document.getElementById('inputTicker').value.trim().toUpperCase();
+    const shares = parseFloat(document.getElementById('inputShares').value);
+    const avgPrice = parseFloat(document.getElementById('inputAvgPrice').value);
+
+    if (!ticker) return showToast('Please enter a stock ticker');
+    if (!shares || shares <= 0) return showToast('Please enter valid shares');
+    if (!avgPrice || avgPrice <= 0) return showToast('Please enter valid avg price');
+
+    // Check if already exists
+    const existing = portfolio.find(s => s.ticker === ticker);
+    if (existing) {
+        // Weighted average
+        const totalShares = existing.shares + shares;
+        existing.avgPrice = ((existing.shares * existing.avgPrice) + (shares * avgPrice)) / totalShares;
+        existing.shares = totalShares;
+    } else {
+        portfolio.push({ ticker, shares, avgPrice });
+    }
+
+    save();
+    closeModal();
+    render();
+    showToast(`${ticker} added to portfolio`);
+}
+
+function removeStock(ticker) {
+    portfolio = portfolio.filter(s => s.ticker !== ticker);
+    save();
+    render();
+    showToast(`${ticker} removed`);
+}
+
+function render() {
+    const body = document.getElementById('holdingsBody');
+    const stockCountEl = document.getElementById('stockCount');
+
+    let totalValue = 0, totalCost = 0;
+
+    stockCountEl.textContent = portfolio.length;
+    document.getElementById('totalStocks').textContent = portfolio.length;
+
+    if (portfolio.length === 0) {
+        body.innerHTML = `<tr><td colspan="8"><div class="empty-state">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75M15 10.5a3 3 0 11-6 0 3 3 0 016 0zm3 0h.008v.008H18V10.5zm-12 0h.008v.008H6V10.5z"/></svg>
+            <p>No stocks in your portfolio yet.</p>
+            <button class="btn-add-inline" onclick="openModal()">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width:16px;height:16px"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+                Add your first stock
+            </button>
+        </div></td></tr>`;
+        renderSummary(0, 0);
+        renderChart([]);
+        renderDonut([]);
+        return;
+    }
+
+    let rows = '';
+    const allocData = [];
+    portfolio.forEach((s, i) => {
+        const info = getInfo(s.ticker);
+        const current = info.price;
+        const value = s.shares * current;
+        const cost = s.shares * s.avgPrice;
+        const pl = value - cost;
+        const plPct = cost > 0 ? (pl / cost) * 100 : 0;
+        const isUp = pl >= 0;
+
+        totalValue += value;
+        totalCost += cost;
+        allocData.push({ ticker: s.ticker, value, color: info.color });
+
+        const stars = Math.min(5, Math.max(1, Math.round(3 + plPct / 10)));
+
+        rows += `<tr>
+            <td style="width:20px;color:var(--grey);font-size:12px;">#${String(i+1).padStart(2,'0')}</td>
+            <td>
+                <div class="stock-cell">
+                    <div class="stock-icon" style="background:${info.color}">${s.ticker.slice(0,2)}</div>
+                    <div>
+                        <div class="stock-ticker">${s.ticker}</div>
+                        <div class="stock-name">${info.name}</div>
+                    </div>
+                </div>
+            </td>
+            <td class="cell-right cell-mono">${fmt(s.shares)}</td>
+            <td class="cell-right cell-mono">$${fmt(s.avgPrice)}</td>
+            <td class="cell-right cell-mono">$${fmt(current)}</td>
+            <td class="cell-right cell-mono ${isUp ? 'positive' : 'negative'}">$${fmt(value)}</td>
+            <td class="cell-right">${'★'.repeat(stars)}${'☆'.repeat(5-stars)} <span style="font-size:12px;color:var(--grey);margin-left:4px">${(stars + plPct/100).toFixed(1)}</span></td>
+            <td class="cell-right">
+                <button class="btn-remove" onclick="removeStock('${s.ticker}')" title="Remove">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"/></svg>
+                </button>
+            </td>
+        </tr>`;
+    });
+
+    body.innerHTML = rows;
+    renderSummary(totalValue, totalCost);
+    renderChart(portfolio);
+    renderDonut(allocData);
+}
+
+function renderSummary(totalValue, totalCost) {
+    const pl = totalValue - totalCost;
+    const plPct = totalCost > 0 ? (pl / totalCost) * 100 : 0;
+    const isUp = pl >= 0;
+
+    document.getElementById('totalValue').textContent = '$' + fmt(totalValue);
+    document.getElementById('totalInvested').textContent = '$' + fmt(totalCost);
+    document.getElementById('totalPL').textContent = (isUp ? '+$' : '-$') + fmt(Math.abs(pl));
+    document.getElementById('totalChange').textContent = (isUp ? '+$' : '-$') + fmt(Math.abs(pl));
+    document.getElementById('totalPct').textContent = (isUp ? '+' : '') + plPct.toFixed(2) + '%';
+    document.getElementById('plPct').textContent = (isUp ? '+' : '') + plPct.toFixed(2) + '%';
+
+    ['totalChangeRow','totalPctRow','plPctRow'].forEach(id => {
+        document.getElementById(id).className = 'sc-change ' + (isUp ? 'up' : 'down');
+    });
+}
+
+function renderChart(data) {
+    const svg = document.getElementById('chartSvg');
+    if (data.length === 0) {
+        svg.innerHTML = `<text x="350" y="105" text-anchor="middle" fill="#B0ADA5" font-size="14" font-family="Open Sans">Add stocks to see performance</text>`;
+        return;
+    }
+    // Generate simulated chart line
+    const points = [];
+    let base = data.reduce((s, d) => s + d.shares * d.avgPrice, 0);
+    for (let i = 0; i <= 30; i++) {
+        const noise = (Math.sin(i * 0.5) * 0.03 + Math.cos(i * 0.3) * 0.02 + (Math.random() - 0.5) * 0.01);
+        base = base * (1 + noise * 0.5);
+        points.push(base);
+    }
+    const current = data.reduce((s, d) => s + d.shares * getPrice(d.ticker), 0);
+    points[points.length - 1] = current;
+
+    const min = Math.min(...points) * 0.98;
+    const max = Math.max(...points) * 1.02;
+    const w = 700, h = 200;
+
+    const pathPoints = points.map((v, i) => {
+        const x = (i / (points.length - 1)) * w;
+        const y = h - ((v - min) / (max - min)) * (h - 20) - 10;
+        return `${x},${y}`;
+    });
+    const lineD = 'M' + pathPoints.join(' L');
+    const areaD = lineD + ` L${w},${h} L0,${h} Z`;
+    const isUp = current >= data.reduce((s, d) => s + d.shares * d.avgPrice, 0);
+    const color = isUp ? '#6B7F4E' : '#C0392B';
+
+    svg.innerHTML = `
+        <defs>
+            <linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="${color}" stop-opacity="0.15"/>
+                <stop offset="100%" stop-color="${color}" stop-opacity="0.01"/>
+            </linearGradient>
+        </defs>
+        <path d="${areaD}" fill="url(#chartGrad)"/>
+        <path d="${lineD}" fill="none" stroke="${color}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="${w}" cy="${h - ((current - min) / (max - min)) * (h - 20) - 10}" r="5" fill="${color}" stroke="#fff" stroke-width="2"/>
+    `;
+}
+
+const DONUT_COLORS = ['#D4A843','#6B7F4E','#C4A882','#2C5F8A','#8B1A1A','#3A6B4F','#555555','#7A3B2E','#2B5A84','#1A5D9E'];
+
+function renderDonut(data) {
+    const svg = document.getElementById('donutSvg');
+    const legend = document.getElementById('allocLegend');
+
+    if (data.length === 0) {
+        svg.innerHTML = `<circle cx="80" cy="80" r="55" fill="none" stroke="#EDE9E0" stroke-width="22"/>
+            <text x="80" y="84" text-anchor="middle" fill="#B0ADA5" font-size="12" font-family="Open Sans">No data</text>`;
+        legend.innerHTML = '';
+        return;
+    }
+
+    const total = data.reduce((s, d) => s + d.value, 0);
+    const cx = 80, cy = 80, r = 55;
+    let currentAngle = -90;
+    let paths = '';
+    let legendHTML = '';
+
+    data.sort((a, b) => b.value - a.value).forEach((d, i) => {
+        const pct = d.value / total;
+        const angle = pct * 360;
+        const startAngle = currentAngle;
+        const endAngle = currentAngle + angle;
+        const large = angle > 180 ? 1 : 0;
+
+        const x1 = cx + r * Math.cos(startAngle * Math.PI / 180);
+        const y1 = cy + r * Math.sin(startAngle * Math.PI / 180);
+        const x2 = cx + r * Math.cos(endAngle * Math.PI / 180);
+        const y2 = cy + r * Math.sin(endAngle * Math.PI / 180);
+
+        const color = DONUT_COLORS[i % DONUT_COLORS.length];
+        paths += `<path d="M${cx},${cy} L${x1},${y1} A${r},${r} 0 ${large} 1 ${x2},${y2} Z" fill="${color}" stroke="#fff" stroke-width="2"/>`;
+        currentAngle = endAngle;
+
+        legendHTML += `<div class="alloc-legend-item">
+            <span class="alloc-dot" style="background:${color}"></span>
+            <span class="alloc-name">${d.ticker}</span>
+            <span class="alloc-pct">${(pct*100).toFixed(1)}%</span>
+        </div>`;
+    });
+
+    // Inner circle for donut
+    paths += `<circle cx="${cx}" cy="${cy}" r="35" fill="#fff"/>`;
+    paths += `<text x="${cx}" y="${cy - 4}" text-anchor="middle" fill="#1A1A1A" font-size="16" font-weight="700" font-family="Poppins">${data.length}</text>`;
+    paths += `<text x="${cx}" y="${cy + 12}" text-anchor="middle" fill="#7A7A6E" font-size="10" font-family="Open Sans">stocks</text>`;
+
+    svg.innerHTML = paths;
+    legend.innerHTML = legendHTML;
+}
+
+// Preview in modal
+document.getElementById('inputTicker').addEventListener('input', updatePreview);
+document.getElementById('inputShares').addEventListener('input', updatePreview);
+document.getElementById('inputAvgPrice').addEventListener('input', updatePreview);
+
+function updatePreview() {
+    const ticker = document.getElementById('inputTicker').value.trim().toUpperCase();
+    const shares = parseFloat(document.getElementById('inputShares').value);
+    const avgPrice = parseFloat(document.getElementById('inputAvgPrice').value);
+    const pg = document.getElementById('previewGroup');
+    const pt = document.getElementById('previewText');
+
+    if (ticker && shares > 0 && avgPrice > 0) {
+        const info = getInfo(ticker);
+        const cost = shares * avgPrice;
+        const value = shares * info.price;
+        const pl = value - cost;
+        pg.style.display = 'block';
+        pt.innerHTML = `<strong>${ticker}</strong> (${info.name}) — ${shares} shares @ $${fmt(avgPrice)} = <strong>$${fmt(cost)}</strong> invested. Current value: <strong class="${pl>=0?'positive':'negative'}">$${fmt(value)}</strong>`;
+    } else {
+        pg.style.display = 'none';
+    }
+}
+
+// Keyboard shortcut
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeModal();
+    if (e.key === 'Enter' && document.getElementById('modalOverlay').classList.contains('show')) addStock();
+});
+
+// Chart filter buttons
+document.querySelectorAll('.chart-filter-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        document.querySelectorAll('.chart-filter-btn').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        render();
+    });
+});
+
+// Auth functions
+function handleAuthClick() {
+  if (window.sbAuth && window.sbAuth.getAuth().loggedIn) {
+    window.sbAuth.doSignOut().then(() => {
+      document.getElementById('authBtn').textContent = 'Sign In';
+      showToast('Signed out');
+    });
+  } else {
+    showLoginModal();
+  }
+}
+
+function showLoginModal() {
+  const m = document.getElementById('loginModal');
+  if (m) m.style.display = 'flex';
+}
+function closeLoginModal() {
+  const m = document.getElementById('loginModal');
+  if (m) m.style.display = 'none';
+}
+async function googleLogin() {
+  if (window.sbAuth) {
+    await window.sbAuth.signInWithGoogle();
+  }
+}
+async function emailLogin() {
+  const email = document.getElementById('loginEmail').value;
+  const pw = document.getElementById('loginPassword').value;
+  if (!email || !pw) return;
+  if (window.sbAuth) {
+    const { user, error } = await window.sbAuth.signIn(email, pw);
+    if (error) { showToast('Login failed: ' + error.message); return; }
+    closeLoginModal();
+    document.getElementById('authBtn').textContent = 'Sign Out';
+    showToast('Welcome back!');
+    // Reload holdings from Supabase
+    if (window.sbData) {
+      const data = await window.sbData.loadHoldings();
+      if (data && data.length > 0) {
+        portfolio = data.map(h => ({ ticker: h.ticker, shares: Number(h.quantity || h.shares), avgPrice: Number(h.avg_price || h.avgPrice) }));
+        renderAll();
       }
     }
   }
-  </script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
-  <link rel="stylesheet" href="shared/theme.css">
-  <style>
-    /* Google button */
-    .google-btn {
-      width: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
-      padding: 12px 16px;
-      background: #fff;
-      border: 1px solid #dadce0;
-      border-radius: 12px;
-      font-size: 14px;
-      font-weight: 500;
-      font-family: 'Inter', system-ui, sans-serif;
-      color: #3c4043;
-      cursor: pointer;
-      transition: background .15s, box-shadow .15s;
+}
+async function emailSignUp() {
+  const email = document.getElementById('loginEmail').value;
+  const pw = document.getElementById('loginPassword').value;
+  if (!email || !pw) return;
+  if (window.sbAuth) {
+    const { user, error } = await window.sbAuth.signUp(email, pw);
+    if (error) { showToast('Signup failed: ' + error.message); return; }
+    showToast('Account created! Check your email to confirm.');
+  }
+}
+
+function renderAll() { render(); }
+
+// Init
+render();
+
+// Try loading from Supabase after initial render
+if (window.sbData) {
+  window.sbData.loadHoldings().then(data => {
+    if (data && data.length > 0) {
+      portfolio = data.map(h => ({
+        ticker: h.ticker,
+        shares: Number(h.quantity || h.shares),
+        avgPrice: Number(h.avg_price || h.avgPrice)
+      }));
+      renderAll();
     }
-    .google-btn:hover { background: #f7f8f8; box-shadow: 0 1px 3px rgba(0,0,0,.1); }
-    .google-btn:active { background: #eee; }
-    .google-btn svg { flex-shrink: 0; }
-
-    /* Divider */
-    .auth-divider {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin: 20px 0;
-      font-size: 12px;
-      color: #B0A89C;
-    }
-    .auth-divider::before,
-    .auth-divider::after {
-      content: '';
-      flex: 1;
-      height: 1px;
-      background: #EBE5DC;
-    }
-
-    /* Email section collapse */
-    .email-section-toggle {
-      font-size: 12px;
-      color: #B0A89C;
-      cursor: pointer;
-      text-align: center;
-      margin-bottom: 12px;
-      transition: color .15s;
-    }
-    .email-section-toggle:hover { color: #8B8580; }
-
-    /* Modal overlay */
-    .modal-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,.4);
-      backdrop-filter: blur(4px);
-      z-index: 100;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 16px;
-    }
-    .modal-card {
-      background: #fff;
-      border-radius: 24px;
-      padding: 32px 24px;
-      width: 100%;
-      max-width: 440px;
-      max-height: 90vh;
-      overflow-y: auto;
-      box-shadow: 0 8px 40px rgba(0,0,0,.12);
-      animation: fadeUp .2s ease;
-    }
-
-    /* Autocomplete dropdown */
-    .autocomplete-dropdown {
-      position: absolute;
-      top: 100%;
-      left: 0;
-      right: 0;
-      background: #fff;
-      border: 1px solid #EBE5DC;
-      border-top: none;
-      border-radius: 0 0 12px 12px;
-      max-height: 200px;
-      overflow-y: auto;
-      z-index: 10;
-      box-shadow: 0 4px 12px rgba(0,0,0,.08);
-    }
-    .autocomplete-item {
-      padding: 10px 16px;
-      font-size: 13px;
-      cursor: pointer;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .autocomplete-item:hover { background: #FAF8F5; }
-    .autocomplete-item .ticker-label { font-weight: 600; }
-    .autocomplete-item .name-label { font-size: 11px; color: #8B8580; }
-
-    /* Inline editing */
-    .inline-input {
-      width: 80px;
-      padding: 4px 8px;
-      border: 1px solid #D97757;
-      border-radius: 8px;
-      font-size: 13px;
-      font-family: 'Inter', system-ui, sans-serif;
-      text-align: right;
-      outline: none;
-      background: #FEF3ED;
-    }
-
-    /* Action buttons in table */
-    .action-btn {
-      width: 28px;
-      height: 28px;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      transition: all .15s;
-      background: transparent;
-    }
-    .action-btn:hover { background: #F5F1EB; }
-    .action-btn.delete:hover { background: #FFF5F5; color: #FF3B30; }
-
-    /* Confirm dialog */
-    .confirm-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,.4);
-      backdrop-filter: blur(4px);
-      z-index: 200;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 16px;
-    }
-    .confirm-card {
-      background: #fff;
-      border-radius: 20px;
-      padding: 28px 24px;
-      width: 100%;
-      max-width: 340px;
-      text-align: center;
-      box-shadow: 0 8px 40px rgba(0,0,0,.12);
-    }
-
-    /* FAB button */
-    .fab-add {
-      position: fixed;
-      bottom: 80px;
-      right: 20px;
-      width: 52px;
-      height: 52px;
-      border-radius: 50%;
-      background: #D97757;
-      color: #fff;
-      border: none;
-      cursor: pointer;
-      box-shadow: 0 4px 16px rgba(217,119,87,.4);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 40;
-      transition: transform .15s, box-shadow .15s;
-    }
-    .fab-add:hover { transform: scale(1.05); box-shadow: 0 6px 20px rgba(217,119,87,.5); }
-    @media (min-width: 768px) {
-      .fab-add { bottom: 32px; right: 32px; }
-    }
-  </style>
-</head>
-
-<body class="font-sans text-gray-900 antialiased" x-data="portfolioApp()" x-init="init()">
-
-<!-- ==================== DESKTOP TOP NAV ==================== -->
-<nav class="topnav" id="topnav">
-  <a href="index.html" class="topnav-logo">
-    <div class="logo-circle"><span>M</span></div>
-    <span class="logo-text">Macro Cockpit</span>
-  </a>
-  <div class="topnav-menu">
-    <a href="index.html" data-nav="insights">
-      <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-      인사이트
-    </a>
-    <a href="prices.html" data-nav="prices">
-      <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-      주식가격
-    </a>
-    <a href="portfolio.html" class="active" data-nav="portfolio">
-      <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/><path d="M9 12l2 2 4-4"/></svg>
-      포트폴리오
-    </a>
-    <a href="macro.html" data-nav="macro">
-      <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z"/></svg>
-      매크로
-    </a>
-  </div>
-  <div class="topnav-auth">
-    <template x-if="loggedIn">
-      <button class="btn-logout" @click="doSignOut()">
-        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
-        <span x-text="userEmail ? userEmail.split('@')[0] : '로그아웃'"></span>
-      </button>
-    </template>
-    <template x-if="!loggedIn">
-      <button class="btn-login" @click="showLogin = true">
-        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/></svg>
-        로그인
-      </button>
-    </template>
-  </div>
-</nav>
-
-<!-- ==================== MOBILE BOTTOM NAV ==================== -->
-<nav class="bnav" id="bottom-nav">
-  <a href="index.html" data-nav="insights">
-    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-    인사이트<div class="dot"></div>
-  </a>
-  <a href="prices.html" data-nav="prices">
-    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-    주식가격<div class="dot"></div>
-  </a>
-  <a href="portfolio.html" class="active" data-nav="portfolio">
-    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/><path d="M9 12l2 2 4-4"/></svg>
-    포트폴리오<div class="dot"></div>
-  </a>
-  <a href="macro.html" data-nav="macro">
-    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z"/></svg>
-    매크로<div class="dot"></div>
-  </a>
-</nav>
-
-<!-- ==================== MAIN CONTENT ==================== -->
-<main class="page-main">
-
-  <!-- AUTH GATE: Login form if not logged in -->
-  <template x-if="!loggedIn">
-    <div id="auth-section">
-      <div class="auth-card">
-        <div style="width:48px;height:48px;border-radius:50%;background:#D97757;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;">
-          <span style="color:#fff;font-size:20px;font-weight:700;">M</span>
-        </div>
-        <h2>로그인</h2>
-        <p>포트폴리오를 보려면 로그인하세요</p>
-
-        <!-- Google Login Button (Primary) -->
-        <button class="google-btn" @click="doGoogleLogin()" :disabled="authLoading">
-          <svg width="20" height="20" viewBox="0 0 48 48">
-            <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
-            <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
-            <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
-            <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
-          </svg>
-          <span x-text="authLoading ? '처리 중...' : 'Google로 로그인'"></span>
-        </button>
-
-        <!-- Divider -->
-        <div class="auth-divider">또는</div>
-
-        <!-- Email/Password (collapsible) -->
-        <div class="email-section-toggle" @click="showEmailForm = !showEmailForm" x-text="showEmailForm ? '이메일 로그인 접기' : '이메일로 로그인'"></div>
-
-        <div x-show="showEmailForm" x-transition>
-          <div class="auth-error" x-text="authError"></div>
-          <div x-show="authSuccess" style="font-size:12px;color:#34C759;margin-bottom:12px;" x-text="authSuccess"></div>
-          <form @submit.prevent="submitAuth()">
-            <input class="auth-input" type="email" placeholder="이메일" x-model="authEmail" required>
-            <input class="auth-input" type="password" placeholder="비밀번호 (6자 이상)" x-model="authPassword" required minlength="6">
-            <button class="auth-btn" type="submit" :disabled="authLoading">
-              <span x-show="!authLoading" x-text="isSignUp ? '가입하기' : '로그인'"></span>
-              <span x-show="authLoading">처리 중...</span>
-            </button>
-          </form>
-          <div class="auth-toggle">
-            <span x-show="!isSignUp">계정이 없으신가요? <a @click="isSignUp=true; authError=''; authSuccess=''">회원가입</a></span>
-            <span x-show="isSignUp">이미 계정이 있으신가요? <a @click="isSignUp=false; authError=''; authSuccess=''">로그인</a></span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </template>
-
-  <!-- PORTFOLIO CONTENT (only when logged in) -->
-  <template x-if="loggedIn">
-    <div class="animate-fadeUp">
-
-      <!-- Hero Card: Total Portfolio Value -->
-      <div class="hero p-5 md:p-6 mb-5">
-        <svg class="absolute -top-6 -right-6 opacity-[.06]" width="140" height="140"><circle cx="70" cy="70" r="70" fill="white"/></svg>
-        <svg class="absolute bottom-2 left-[20%] opacity-[.04]" width="80" height="80"><circle cx="40" cy="40" r="40" fill="white"/></svg>
-        <div class="relative z-10">
-          <div class="text-xs text-white/50 font-medium tracking-wide uppercase">Total Portfolio</div>
-          <div class="text-3xl md:text-4xl font-extrabold mt-1 tracking-tight" x-text="totalDisplay"></div>
-          <div class="text-sm text-white/50 mt-1" x-text="totalSubDisplay"></div>
-          <div class="flex gap-4 mt-4">
-            <div class="bg-white/10 rounded-xl px-3 py-2 backdrop-blur-sm">
-              <div class="text-[10px] text-white/40">종목</div>
-              <div class="text-sm font-bold" x-text="holdings.length"></div>
-            </div>
-            <div class="bg-white/10 rounded-xl px-3 py-2 backdrop-blur-sm">
-              <div class="text-[10px] text-white/40">총 수익률</div>
-              <div class="text-sm font-bold" :class="totalPnlPct >= 0 ? 'text-green-300' : 'text-red-300'" x-text="(totalPnlPct >= 0 ? '+' : '') + totalPnlPct.toFixed(1) + '%'"></div>
-            </div>
-            <div class="bg-white/10 rounded-xl px-3 py-2 backdrop-blur-sm">
-              <div class="text-[10px] text-white/40">환율(USD/KRW)</div>
-              <div class="text-sm font-bold" x-text="fxRate.toLocaleString() + '원'"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Cash Balance (Editable) -->
-      <div class="grid grid-cols-2 gap-3 mb-5">
-        <div class="scard p-4 cursor-pointer" @click="editCashKRW = true">
-          <div class="text-[11px] text-warm-400 font-medium flex items-center gap-1">
-            KRW 현금
-            <svg class="w-3 h-3 text-warm-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
-          </div>
-          <template x-if="!editCashKRW">
-            <div class="text-lg font-bold mt-1 whitespace-nowrap" x-text="cashKRW.toLocaleString() + '원'"></div>
-          </template>
-          <template x-if="editCashKRW">
-            <div class="mt-1" @click.stop>
-              <input type="number" class="inline-input w-full" x-model.number="cashKRW"
-                     @keydown.enter="editCashKRW=false; saveHoldings()" @blur="editCashKRW=false; saveHoldings()" x-ref="cashKrwInput"
-                     x-init="$nextTick(() => $refs.cashKrwInput?.focus())">
-            </div>
-          </template>
-        </div>
-        <div class="scard p-4 cursor-pointer" @click="editCashUSD = true">
-          <div class="text-[11px] text-warm-400 font-medium flex items-center gap-1">
-            USD 현금
-            <svg class="w-3 h-3 text-warm-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
-          </div>
-          <template x-if="!editCashUSD">
-            <div class="text-lg font-bold mt-1 whitespace-nowrap" x-text="'$' + cashUSD.toFixed(2)"></div>
-          </template>
-          <template x-if="editCashUSD">
-            <div class="mt-1" @click.stop>
-              <input type="number" step="0.01" class="inline-input w-full" x-model.number="cashUSD"
-                     @keydown.enter="editCashUSD=false; saveHoldings()" @blur="editCashUSD=false; saveHoldings()" x-ref="cashUsdInput"
-                     x-init="$nextTick(() => $refs.cashUsdInput?.focus())">
-            </div>
-          </template>
-        </div>
-      </div>
-
-      <!-- Holdings Section Header -->
-      <div class="flex items-center justify-between mb-3">
-        <div class="text-sm font-semibold">보유 종목</div>
-        <button class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold text-white bg-accent hover:bg-accent-dark transition-colors"
-                @click="openAddModal()">
-          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"/></svg>
-          종목 추가
-        </button>
-      </div>
-
-      <!-- Holdings: Mobile Cards -->
-      <div class="space-y-2.5 md:hidden mb-5">
-        <template x-for="(h, idx) in holdings" :key="h.id || h.code">
-          <div class="scard p-4">
-            <div class="flex items-center gap-3">
-              <div class="w-10 h-10 rounded-full flex items-center justify-center shrink-0" :class="'av-' + (idx % 7)">
-                <span class="text-xs font-bold" x-text="h.ticker.substring(0, 2)"></span>
-              </div>
-              <div class="flex-1 min-w-0">
-                <div class="flex items-center gap-1.5">
-                  <span class="text-sm font-semibold" x-text="h.ticker"></span>
-                  <span class="text-[10px] text-warm-400 truncate" x-text="h.name"></span>
-                </div>
-                <div class="text-[11px] text-warm-400" x-text="h.quantity + '주'"></div>
-              </div>
-              <div class="text-right shrink-0">
-                <div class="text-sm font-semibold whitespace-nowrap" x-text="h.evalDisplay"></div>
-                <div class="text-xs font-medium whitespace-nowrap" :class="h.pnlPct >= 0 ? 'text-up' : 'text-down'" x-text="h.pnlDisplay" x-show="h.hasPrice"></div>
-                <div class="text-[10px] text-warm-300" x-show="!h.hasPrice">가격 미수신</div>
-              </div>
-            </div>
-            <div class="flex justify-between items-center mt-3 pt-3 border-t border-warm-100">
-              <div class="text-[11px] text-warm-400">
-                <span x-text="'평단가 ' + (h.currency === 'USD' ? '$' + h.avg_price.toFixed(2) : h.avg_price.toLocaleString() + '원')"></span>
-                <span class="mx-1">|</span>
-                <span x-text="h.hasPrice ? ('현재가 ' + (h.currency === 'USD' ? '$' + h.currentPrice.toFixed(2) : h.currentPrice.toLocaleString() + '원')) : '시세 미제공'" :class="h.hasPrice ? '' : 'text-warm-300'"></span>
-              </div>
-              <div class="flex gap-1">
-                <button class="action-btn" @click="startEdit(idx)" title="편집">
-                  <svg class="w-4 h-4 text-warm-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
-                </button>
-                <button class="action-btn delete" @click="confirmDelete(idx)" title="삭제">
-                  <svg class="w-4 h-4 text-warm-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12"/></svg>
-                </button>
-              </div>
-            </div>
-          </div>
-        </template>
-      </div>
-
-      <!-- Holdings: Desktop Table -->
-      <div class="hidden md:block scard overflow-hidden mb-5">
-        <table class="w-full text-sm">
-          <thead>
-            <tr class="border-b border-warm-100 text-warm-400 text-[11px]">
-              <th class="text-left py-3 px-4 font-medium">종목</th>
-              <th class="text-right py-3 px-4 font-medium">수량</th>
-              <th class="text-right py-3 px-4 font-medium">평단가</th>
-              <th class="text-right py-3 px-4 font-medium">현재가</th>
-              <th class="text-right py-3 px-4 font-medium">평가금액</th>
-              <th class="text-right py-3 px-4 font-medium">수익률</th>
-              <th class="text-center py-3 px-4 font-medium w-20">액션</th>
-            </tr>
-          </thead>
-          <tbody>
-            <template x-for="(h, idx) in holdings" :key="h.id || h.code">
-              <tr class="border-b border-warm-50 hover:bg-warm-50/50 transition-colors">
-                <td class="py-3 px-4">
-                  <div class="flex items-center gap-2.5">
-                    <div class="w-8 h-8 rounded-full flex items-center justify-center shrink-0" :class="'av-' + (idx % 7)">
-                      <span class="text-[10px] font-bold" x-text="h.ticker.substring(0, 2)"></span>
-                    </div>
-                    <div>
-                      <div class="font-semibold" x-text="h.ticker"></div>
-                      <div class="text-[10px] text-warm-400" x-text="h.name"></div>
-                    </div>
-                  </div>
-                </td>
-                <td class="py-3 px-4 text-right">
-                  <template x-if="editingIdx !== idx">
-                    <span class="cursor-pointer hover:text-accent" @click="startEdit(idx)" x-text="h.quantity + '주'"></span>
-                  </template>
-                  <template x-if="editingIdx === idx">
-                    <input type="number" class="inline-input" x-model.number="editQuantity"
-                           @keydown.enter="applyEdit(idx)" @keydown.escape="cancelEdit()" x-ref="editQtyInput">
-                  </template>
-                </td>
-                <td class="py-3 px-4 text-right">
-                  <template x-if="editingIdx !== idx">
-                    <span class="cursor-pointer hover:text-accent text-warm-500" @click="startEdit(idx)"
-                          x-text="h.currency === 'USD' ? '$' + h.avg_price.toFixed(2) : h.avg_price.toLocaleString() + '원'"></span>
-                  </template>
-                  <template x-if="editingIdx === idx">
-                    <input type="number" step="0.01" class="inline-input" x-model.number="editAvgPrice"
-                           @keydown.enter="applyEdit(idx)" @keydown.escape="cancelEdit()">
-                  </template>
-                </td>
-                <td class="py-3 px-4 text-right font-semibold">
-                  <span x-show="h.hasPrice" x-text="h.currency === 'USD' ? '$' + h.currentPrice.toFixed(2) : h.currentPrice.toLocaleString() + '원'"></span>
-                  <span class="text-warm-300 text-[11px]" x-show="!h.hasPrice">가격 미수신</span>
-                </td>
-                <td class="py-3 px-4 text-right font-semibold" x-text="h.evalDisplay"></td>
-                <td class="py-3 px-4 text-right font-medium" :class="h.pnlPct >= 0 ? 'text-up' : 'text-down'">
-                  <span x-text="h.pnlDisplay" x-show="h.hasPrice"></span>
-                  <span class="text-warm-300" x-show="!h.hasPrice">-</span>
-                </td>
-                <td class="py-3 px-4 text-center">
-                  <div class="flex items-center justify-center gap-1">
-                    <template x-if="editingIdx === idx">
-                      <button class="action-btn" @click="applyEdit(idx)" title="저장" style="color:#34C759;">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>
-                      </button>
-                    </template>
-                    <template x-if="editingIdx !== idx">
-                      <button class="action-btn" @click="startEdit(idx)" title="편집">
-                        <svg class="w-4 h-4 text-warm-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
-                      </button>
-                    </template>
-                    <button class="action-btn delete" @click="confirmDelete(idx)" title="삭제">
-                      <svg class="w-4 h-4 text-warm-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12"/></svg>
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            </template>
-          </tbody>
-        </table>
-      </div>
-
-      <!-- Total Evaluation -->
-      <div class="scard p-4 mb-5">
-        <div class="text-[11px] text-warm-400 font-medium mb-1">합계 평가금액</div>
-        <div class="flex gap-6">
-          <div x-show="totalKRWeval > 0">
-            <div class="text-base font-bold" x-text="totalKRWeval.toLocaleString() + '원'"></div>
-          </div>
-          <div x-show="totalUSDeval > 0">
-            <div class="text-base font-bold" x-text="'$' + totalUSDeval.toFixed(2)"></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Allocation Donut Chart -->
-      <div class="scard p-5 mb-5">
-        <div class="text-sm font-semibold mb-3">Asset Allocation</div>
-        <canvas id="alloc-chart" height="280"></canvas>
-      </div>
-
-      <!-- Data source info -->
-      <div class="text-[10px] text-warm-400 text-center mb-4" x-text="dataSource"></div>
-
-    </div>
-  </template>
-
-  <!-- ==================== ADD STOCK MODAL ==================== -->
-  <template x-if="showAddModal">
-    <div class="modal-overlay" @click.self="showAddModal = false">
-      <div class="modal-card">
-        <div class="flex items-center justify-between mb-5">
-          <h3 class="text-lg font-bold">종목 추가</h3>
-          <button @click="showAddModal = false" class="w-8 h-8 rounded-full hover:bg-warm-100 flex items-center justify-center transition-colors">
-            <svg class="w-5 h-5 text-warm-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12"/></svg>
-          </button>
-        </div>
-
-        <!-- Ticker Search -->
-        <div class="mb-4 relative">
-          <label class="text-[11px] text-warm-400 font-medium block mb-1.5">종목 검색</label>
-          <input class="auth-input mb-0" type="text" placeholder="티커 또는 종목명 (예: NVDA, 삼성전자)"
-                 x-model="addTicker" @input="filterStocks()" @focus="showAutoComplete = addTicker.length > 0 || true" @click.away="showAutoComplete = false"
-                 autocomplete="off">
-          <!-- Autocomplete dropdown -->
-          <div class="autocomplete-dropdown" x-show="showAutoComplete && filteredStocks.length > 0" @click.away="showAutoComplete = false">
-            <template x-for="s in filteredStocks" :key="s.ticker">
-              <div class="autocomplete-item" @click="selectStock(s)">
-                <div>
-                  <span class="ticker-label" x-text="s.ticker"></span>
-                  <span class="name-label ml-2" x-text="s.name"></span>
-                </div>
-                <span class="text-[10px] text-warm-300" x-text="s.currency"></span>
-              </div>
-            </template>
-          </div>
-        </div>
-
-        <!-- Average Price -->
-        <div class="mb-4">
-          <label class="text-[11px] text-warm-400 font-medium block mb-1.5">평균 매입가</label>
-          <input class="auth-input mb-0" type="number" step="0.01" placeholder="매입 단가" x-model.number="addAvgPrice">
-        </div>
-
-        <!-- Quantity -->
-        <div class="mb-4">
-          <label class="text-[11px] text-warm-400 font-medium block mb-1.5">보유 수량</label>
-          <input class="auth-input mb-0" type="number" placeholder="수량" x-model.number="addQuantity">
-        </div>
-
-        <!-- Currency -->
-        <div class="mb-6">
-          <label class="text-[11px] text-warm-400 font-medium block mb-1.5">통화</label>
-          <div class="flex gap-3">
-            <label class="flex items-center gap-2 cursor-pointer">
-              <input type="radio" value="USD" x-model="addCurrency" class="accent-[#D97757]">
-              <span class="text-sm font-medium">USD</span>
-            </label>
-            <label class="flex items-center gap-2 cursor-pointer">
-              <input type="radio" value="KRW" x-model="addCurrency" class="accent-[#D97757]">
-              <span class="text-sm font-medium">KRW</span>
-            </label>
-          </div>
-        </div>
-
-        <!-- Add Button -->
-        <button class="auth-btn" @click="addHolding()" :disabled="!addTicker || !addAvgPrice || !addQuantity">
-          포트폴리오에 추가
-        </button>
-      </div>
-    </div>
-  </template>
-
-  <!-- ==================== DELETE CONFIRM DIALOG ==================== -->
-  <template x-if="showDeleteConfirm">
-    <div class="confirm-overlay" @click.self="showDeleteConfirm = false">
-      <div class="confirm-card">
-        <div style="width:44px;height:44px;border-radius:50%;background:#FFF5F5;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;">
-          <svg class="w-5 h-5 text-down" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-        </div>
-        <h3 class="text-base font-bold mb-2">종목 삭제</h3>
-        <p class="text-sm text-warm-500 mb-5" x-text="deleteTarget ? (deleteTarget.ticker + ' (' + deleteTarget.name + ')을(를) 삭제하시겠습니까?') : ''"></p>
-        <div class="flex gap-3">
-          <button class="flex-1 py-2.5 rounded-xl border border-warm-200 text-sm font-medium hover:bg-warm-50 transition-colors" @click="showDeleteConfirm = false">취소</button>
-          <button class="flex-1 py-2.5 rounded-xl bg-down text-white text-sm font-semibold hover:opacity-90 transition-opacity" @click="executeDelete()">삭제</button>
-        </div>
-      </div>
-    </div>
-  </template>
-
-  <!-- ==================== EDIT MODAL (Mobile) ==================== -->
-  <template x-if="showEditModal">
-    <div class="modal-overlay" @click.self="showEditModal = false">
-      <div class="modal-card">
-        <div class="flex items-center justify-between mb-5">
-          <h3 class="text-lg font-bold" x-text="editTarget ? (editTarget.ticker + ' 편집') : '편집'"></h3>
-          <button @click="showEditModal = false; cancelEdit()" class="w-8 h-8 rounded-full hover:bg-warm-100 flex items-center justify-center transition-colors">
-            <svg class="w-5 h-5 text-warm-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12"/></svg>
-          </button>
-        </div>
-        <div class="mb-4">
-          <label class="text-[11px] text-warm-400 font-medium block mb-1.5">보유 수량</label>
-          <input class="auth-input mb-0" type="number" x-model.number="editQuantity">
-        </div>
-        <div class="mb-6">
-          <label class="text-[11px] text-warm-400 font-medium block mb-1.5">평균 매입가</label>
-          <input class="auth-input mb-0" type="number" step="0.01" x-model.number="editAvgPrice">
-        </div>
-        <button class="auth-btn" @click="applyEdit(editingIdx); showEditModal = false;">저장</button>
-      </div>
-    </div>
-  </template>
-
-</main>
-
-<!-- FAB for mobile -->
-<template x-if="loggedIn">
-  <button class="fab-add md:hidden" @click="openAddModal()" title="종목 추가">
-    <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"/></svg>
-  </button>
-</template>
-
-<script type="module">
-import { supabase, isLoggedIn, getCurrentUser, signIn, signUp, signOut, signInWithGoogle } from './shared/supabase-client.js';
-window._supabaseAuth = { isLoggedIn, getCurrentUser, signIn, signUp, signOut, signInWithGoogle, supabase };
-</script>
-
-<script>
-// Popular stocks list for autocomplete
-const POPULAR_STOCKS = [
-  { ticker: 'NVDA', name: '엔비디아', code: 'NVDA', currency: 'USD' },
-  { ticker: 'AAPL', name: '애플', code: 'AAPL', currency: 'USD' },
-  { ticker: 'MSFT', name: '마이크로소프트', code: 'MSFT', currency: 'USD' },
-  { ticker: 'GOOGL', name: '알파벳(구글)', code: 'GOOGL', currency: 'USD' },
-  { ticker: 'AMZN', name: '아마존', code: 'AMZN', currency: 'USD' },
-  { ticker: 'TSLA', name: '테슬라', code: 'TSLA', currency: 'USD' },
-  { ticker: 'META', name: '메타(페이스북)', code: 'META', currency: 'USD' },
-  { ticker: 'PLTR', name: '팔란티어', code: 'PLTR', currency: 'USD' },
-  { ticker: 'AMD', name: 'AMD', code: 'AMD', currency: 'USD' },
-  { ticker: 'INTC', name: '인텔', code: 'INTC', currency: 'USD' },
-  { ticker: 'AVGO', name: '브로드컴', code: 'AVGO', currency: 'USD' },
-  { ticker: 'NFLX', name: '넷플릭스', code: 'NFLX', currency: 'USD' },
-  { ticker: 'KBWB', name: '인베스코 금융주 ETF', code: 'KBWB', currency: 'USD' },
-  { ticker: 'XLF', name: '금융 셀렉트 ETF', code: 'XLF', currency: 'USD' },
-  { ticker: 'PSLV', name: '스프롯 실물 은', code: 'PSLV', currency: 'USD' },
-  { ticker: 'KORU', name: 'Direxion 한국 3배', code: 'KORU', currency: 'USD' },
-  { ticker: '005930.KS', name: '삼성전자', code: '005930.KS', currency: 'KRW' },
-  { ticker: '000660.KS', name: 'SK하이닉스', code: '000660.KS', currency: 'KRW' },
-  { ticker: '373220.KS', name: 'LG에너지솔루션', code: '373220.KS', currency: 'KRW' },
-  { ticker: 'ACE FT', name: 'ACE 미국핀테크', code: 'A461300', currency: 'KRW' },
-];
-
-function portfolioApp() {
-  return {
-    // Auth state
-    loggedIn: false,
-    userEmail: null,
-    userId: null,
-    isSignUp: false,
-    authEmail: '',
-    authPassword: '',
-    authError: '',
-    authSuccess: '',
-    authLoading: false,
-    showLogin: false,
-    showEmailForm: false,
-
-    // Portfolio data
-    holdings: [],
-    rawHoldings: [],  // raw data before price enrichment
-    cashKRW: 0,
-    cashUSD: 0,
-    editCashKRW: false,
-    editCashUSD: false,
-    meta: {},
-    prices: {},
-    priceMap: {},  // ticker -> price mapping for new structure
-    fxRate: 1450,
-    dataSource: '',
-
-    // Computed
-    totalKRWeval: 0,
-    totalUSDeval: 0,
-    totalPnlPct: 0,
-    totalDisplay: '-',
-    totalSubDisplay: '',
-
-    chartInstance: null,
-
-    // Add modal
-    showAddModal: false,
-    addTicker: '',
-    addAvgPrice: null,
-    addQuantity: null,
-    addCurrency: 'USD',
-    showAutoComplete: false,
-    filteredStocks: POPULAR_STOCKS.slice(0, 8),
-
-    // Edit state
-    editingIdx: -1,
-    editQuantity: 0,
-    editAvgPrice: 0,
-    showEditModal: false,
-    editTarget: null,
-
-    // Delete state
-    showDeleteConfirm: false,
-    deleteTarget: null,
-    deleteIdx: -1,
-
-    async init() {
-      // Check auth
-      try {
-        const loggedIn = await window._supabaseAuth.isLoggedIn();
-        if (loggedIn) {
-          const user = await window._supabaseAuth.getCurrentUser();
-          this.loggedIn = true;
-          this.userEmail = user?.email;
-          this.userId = user?.id;
-          await this.loadPortfolio();
-        }
-      } catch (e) { console.error('Auth check error:', e); }
-
-      // Listen for auth changes
-      window._supabaseAuth.supabase.auth.onAuthStateChange((event, session) => {
-        if (session?.user) {
-          this.loggedIn = true;
-          this.userEmail = session.user.email;
-          this.userId = session.user.id;
-          this.$nextTick(() => this.loadPortfolio());
-        } else {
-          this.loggedIn = false;
-          this.userEmail = null;
-          this.userId = null;
-        }
-      });
-    },
-
-    // ==================== AUTH ====================
-    async doGoogleLogin() {
-      this.authLoading = true;
-      this.authError = '';
-      try {
-        const { data, error } = await window._supabaseAuth.signInWithGoogle();
-        if (error) {
-          this.authError = error.message;
-        }
-        // OAuth redirects, so no further action needed on success
-      } catch (e) {
-        this.authError = e.message || '오류가 발생했습니다';
-      }
-      this.authLoading = false;
-    },
-
-    async submitAuth() {
-      this.authError = '';
-      this.authSuccess = '';
-      this.authLoading = true;
-
-      try {
-        if (this.isSignUp) {
-          const { user, error } = await window._supabaseAuth.signUp(this.authEmail, this.authPassword);
-          if (error) { this.authError = error.message; }
-          else { this.authSuccess = '가입 완료! 이메일을 확인해주세요.'; }
-        } else {
-          const { user, error } = await window._supabaseAuth.signIn(this.authEmail, this.authPassword);
-          if (error) { this.authError = error.message; }
-          else {
-            this.loggedIn = true;
-            this.userEmail = user?.email;
-            this.userId = user?.id;
-            this.$nextTick(() => this.loadPortfolio());
-          }
-        }
-      } catch (e) {
-        this.authError = e.message || '오류가 발생했습니다';
-      }
-      this.authLoading = false;
-    },
-
-    async doSignOut() {
-      await window._supabaseAuth.signOut();
-      this.loggedIn = false;
-      this.userEmail = null;
-      this.userId = null;
-      this.holdings = [];
-      this.rawHoldings = [];
-    },
-
-    // ==================== DATA LOADING ====================
-    async loadPortfolio() {
-      // Load prices first
-      const pricesData = await this.fetchJSON('data/prices.json');
-
-      // Handle both old and new prices.json structure
-      if (pricesData) {
-        if (pricesData.updated_at && pricesData.holdings) {
-          // New structure: { updated_at, holdings: [{ticker, current_price, ...}], watchlist: [...] }
-          this.priceMap = {};
-          (pricesData.holdings || []).forEach(p => {
-            this.priceMap[p.ticker] = p;
-          });
-          (pricesData.watchlist || []).forEach(p => {
-            this.priceMap[p.ticker] = p;
-          });
-          this.fxRate = pricesData.fx_rate || 1450;
-        } else if (pricesData.status === 'ok' && pricesData.prices) {
-          // Old structure: { status, prices: { code: price, __FX__: rate } }
-          this.prices = pricesData.prices;
-          this.fxRate = pricesData.prices['__FX__'] || 1450;
-        }
-      }
-
-      // Try loading holdings: Supabase -> localStorage -> portfolio.json
-      let holdingsLoaded = false;
-
-      // 1. Try Supabase
-      if (this.userId) {
-        try {
-          const { data, error } = await window._supabaseAuth.supabase
-            .from('holdings')
-            .select('*')
-            .eq('user_id', this.userId);
-          if (!error && data && data.length > 0) {
-            this.rawHoldings = data.map(row => ({
-              id: row.id,
-              code: row.code || row.ticker,
-              ticker: row.ticker,
-              name: row.name || row.ticker,
-              quantity: row.quantity,
-              avg_price: row.avg_price,
-              est_value: row.quantity * row.avg_price,
-              currency: row.currency || 'USD'
-            }));
-            this.cashKRW = data[0]?.cash_krw ?? this.cashKRW;
-            this.cashUSD = data[0]?.cash_usd ?? this.cashUSD;
-            holdingsLoaded = true;
-            this.dataSource = '데이터: Supabase (클라우드 저장)';
-          }
-        } catch (e) {
-          console.warn('Supabase holdings load failed:', e);
-        }
-      }
-
-      // 2. Try localStorage
-      if (!holdingsLoaded) {
-        try {
-          const stored = localStorage.getItem('portfolio_holdings');
-          if (stored) {
-            const parsed = JSON.parse(stored);
-            if (parsed.holdings && parsed.holdings.length > 0) {
-              this.rawHoldings = parsed.holdings;
-              this.cashKRW = parsed.cashKRW ?? 0;
-              this.cashUSD = parsed.cashUSD ?? 0;
-              holdingsLoaded = true;
-              this.dataSource = '데이터: 로컬 저장소 (이 기기에만 저장)';
-            }
-          }
-        } catch (e) {
-          console.warn('localStorage load failed:', e);
-        }
-      }
-
-      // 3. Fallback to portfolio.json
-      if (!holdingsLoaded) {
-        const portfolioData = await this.fetchJSON('data/portfolio.json');
-        if (portfolioData?.status === 'ok') {
-          this.rawHoldings = portfolioData.holdings || [];
-          this.cashKRW = portfolioData.cash?.krw || 0;
-          this.cashUSD = portfolioData.cash?.usd || 0;
-          this.meta = portfolioData.meta || {};
-          this.dataSource = '데이터: portfolio.json (기본 데이터)';
-        }
-      }
-
-      this.enrichHoldings();
-    },
-
-    enrichHoldings() {
-      this.holdings = this.rawHoldings.map(h => {
-        // Try to get current price from either old or new price structure
-        let cp = null;
-
-        // New structure: match by ticker
-        if (this.priceMap[h.ticker]) {
-          cp = this.priceMap[h.ticker].current_price;
-        }
-        // Old structure: match by code
-        if (cp == null && this.prices[h.code]) {
-          cp = this.prices[h.code];
-        }
-
-        const hasPrice = cp != null;
-        const pnlPct = hasPrice ? ((cp - h.avg_price) / h.avg_price * 100) : 0;
-        const evalVal = hasPrice ? h.quantity * cp : (h.est_value || h.quantity * h.avg_price);
-        return {
-          ...h,
-          hasPrice,
-          currentPrice: cp || h.avg_price,
-          pnlPct,
-          pnlDisplay: hasPrice ? ((pnlPct >= 0 ? '+' : '') + pnlPct.toFixed(1) + '%') : '-',
-          evalDisplay: h.currency === 'USD'
-            ? '$' + evalVal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
-            : evalVal.toLocaleString() + '원',
-          evalValue: evalVal
-        };
-      });
-
-      // Compute totals
-      let usd = 0, krw = 0;
-      let costUsd = 0, costKrw = 0;
-      this.holdings.forEach(h => {
-        if (h.currency === 'USD') {
-          usd += h.evalValue;
-          costUsd += h.quantity * h.avg_price;
-        } else {
-          krw += h.evalValue;
-          costKrw += h.quantity * h.avg_price;
-        }
-      });
-
-      this.totalUSDeval = usd;
-      this.totalKRWeval = krw;
-
-      // Total PnL
-      const totalCost = costUsd * this.fxRate + costKrw;
-      const totalEval = usd * this.fxRate + krw;
-      this.totalPnlPct = totalCost > 0 ? ((totalEval - totalCost) / totalCost * 100) : 0;
-
-      // Total display including cash
-      const totalKRWAll = (krw + this.cashKRW) + (usd + this.cashUSD) * this.fxRate;
-      if (totalKRWAll >= 100000000) this.totalDisplay = (totalKRWAll / 100000000).toFixed(2) + '억원';
-      else if (totalKRWAll >= 10000) this.totalDisplay = Math.round(totalKRWAll / 10000).toLocaleString() + '만원';
-      else this.totalDisplay = totalKRWAll.toLocaleString() + '원';
-
-      const usdTotal = usd + this.cashUSD;
-      const krwTotal = krw + this.cashKRW;
-      this.totalSubDisplay = '$' + usdTotal.toLocaleString('en-US', { maximumFractionDigits: 0 }) + ' + ' + krwTotal.toLocaleString() + '원 · 환율 ' + this.fxRate.toFixed(0) + '원';
-
-      // Render chart after DOM update
-      this.$nextTick(() => this.renderChart());
-    },
-
-    // ==================== ADD STOCK ====================
-    openAddModal() {
-      this.showAddModal = true;
-      this.addTicker = '';
-      this.addAvgPrice = null;
-      this.addQuantity = null;
-      this.addCurrency = 'USD';
-      this.filteredStocks = POPULAR_STOCKS.slice(0, 8);
-      this.showAutoComplete = false;
-    },
-
-    filterStocks() {
-      const q = this.addTicker.toLowerCase().trim();
-      if (!q) {
-        this.filteredStocks = POPULAR_STOCKS.slice(0, 8);
-        this.showAutoComplete = true;
-        return;
-      }
-      this.filteredStocks = POPULAR_STOCKS.filter(s =>
-        s.ticker.toLowerCase().includes(q) || s.name.toLowerCase().includes(q)
-      ).slice(0, 8);
-      this.showAutoComplete = true;
-    },
-
-    selectStock(stock) {
-      this.addTicker = stock.ticker;
-      this.addCurrency = stock.currency;
-      this.showAutoComplete = false;
-    },
-
-    async addHolding() {
-      if (!this.addTicker || !this.addAvgPrice || !this.addQuantity) return;
-
-      // Auto-detect currency from ticker
-      const ticker = this.addTicker.trim();
-      if (ticker.endsWith('.KS') || ticker.endsWith('.KQ')) {
-        this.addCurrency = 'KRW';
-      }
-
-      // Find from popular stocks or create new
-      const popular = POPULAR_STOCKS.find(s => s.ticker.toUpperCase() === ticker.toUpperCase());
-      const newHolding = {
-        id: 'local_' + Date.now(),
-        code: popular ? popular.code : ticker,
-        ticker: popular ? popular.ticker : ticker.toUpperCase(),
-        name: popular ? popular.name : ticker.toUpperCase(),
-        quantity: this.addQuantity,
-        avg_price: this.addAvgPrice,
-        est_value: this.addQuantity * this.addAvgPrice,
-        currency: this.addCurrency
-      };
-
-      this.rawHoldings.push(newHolding);
-      this.enrichHoldings();
-      await this.saveHoldings();
-      this.showAddModal = false;
-    },
-
-    // ==================== EDIT ====================
-    startEdit(idx) {
-      const h = this.holdings[idx];
-      this.editingIdx = idx;
-      this.editQuantity = h.quantity;
-      this.editAvgPrice = h.avg_price;
-      this.editTarget = h;
-
-      // On mobile, show edit modal instead of inline
-      if (window.innerWidth < 768) {
-        this.showEditModal = true;
-      }
-    },
-
-    applyEdit(idx) {
-      if (idx < 0 || idx >= this.rawHoldings.length) return;
-      this.rawHoldings[idx].quantity = this.editQuantity;
-      this.rawHoldings[idx].avg_price = this.editAvgPrice;
-      this.rawHoldings[idx].est_value = this.editQuantity * this.editAvgPrice;
-      this.editingIdx = -1;
-      this.editTarget = null;
-      this.enrichHoldings();
-      this.saveHoldings();
-    },
-
-    cancelEdit() {
-      this.editingIdx = -1;
-      this.editTarget = null;
-    },
-
-    // ==================== DELETE ====================
-    confirmDelete(idx) {
-      this.deleteIdx = idx;
-      this.deleteTarget = this.holdings[idx];
-      this.showDeleteConfirm = true;
-    },
-
-    async executeDelete() {
-      const idx = this.deleteIdx;
-      if (idx < 0 || idx >= this.rawHoldings.length) return;
-
-      const holding = this.rawHoldings[idx];
-
-      // Try to delete from Supabase
-      if (this.userId && holding.id && !String(holding.id).startsWith('local_')) {
-        try {
-          await window._supabaseAuth.supabase
-            .from('holdings')
-            .delete()
-            .eq('id', holding.id);
-        } catch (e) {
-          console.warn('Supabase delete failed:', e);
-        }
-      }
-
-      this.rawHoldings.splice(idx, 1);
-      this.enrichHoldings();
-      await this.saveHoldings();
-      this.showDeleteConfirm = false;
-      this.deleteTarget = null;
-      this.deleteIdx = -1;
-    },
-
-    // ==================== SAVE ====================
-    async saveHoldings() {
-      // 1. Try Supabase
-      if (this.userId) {
-        try {
-          const rows = this.rawHoldings.map(h => ({
-            user_id: this.userId,
-            code: h.code,
-            ticker: h.ticker,
-            name: h.name,
-            quantity: h.quantity,
-            avg_price: h.avg_price,
-            currency: h.currency,
-            cash_krw: this.cashKRW,
-            cash_usd: this.cashUSD,
-          }));
-
-          // Delete all existing and re-insert
-          await window._supabaseAuth.supabase
-            .from('holdings')
-            .delete()
-            .eq('user_id', this.userId);
-
-          if (rows.length > 0) {
-            await window._supabaseAuth.supabase
-              .from('holdings')
-              .insert(rows);
-          }
-          this.dataSource = '데이터: Supabase (클라우드 저장)';
-        } catch (e) {
-          console.warn('Supabase save failed, falling back to localStorage:', e);
-          this.saveToLocalStorage();
-        }
-      } else {
-        this.saveToLocalStorage();
-      }
-
-      // Always also save to localStorage as backup
-      this.saveToLocalStorage();
-    },
-
-    saveToLocalStorage() {
-      try {
-        localStorage.setItem('portfolio_holdings', JSON.stringify({
-          holdings: this.rawHoldings,
-          cashKRW: this.cashKRW,
-          cashUSD: this.cashUSD,
-          updatedAt: new Date().toISOString()
-        }));
-        if (!this.userId) {
-          this.dataSource = '데이터: 로컬 저장소 (이 기기에만 저장)';
-        }
-      } catch (e) {
-        console.warn('localStorage save failed:', e);
-      }
-    },
-
-    // ==================== CHART ====================
-    renderChart() {
-      const ctx = document.getElementById('alloc-chart');
-      if (!ctx) return;
-      if (this.chartInstance) this.chartInstance.destroy();
-
-      if (this.holdings.length === 0) return;
-
-      const colors = ['#D97757', '#6C8EBF', '#85CDCA', '#C38D9E', '#E8A87C', '#41B3A3', '#7B68EE', '#FF6B6B', '#4ECDC4', '#45B7D1'];
-      this.chartInstance = new Chart(ctx, {
-        type: 'doughnut',
-        data: {
-          labels: this.holdings.map(h => h.ticker),
-          datasets: [{
-            data: this.holdings.map(h => h.evalValue),
-            backgroundColor: colors.slice(0, this.holdings.length),
-            borderWidth: 0
-          }]
-        },
-        options: {
-          cutout: '68%',
-          plugins: {
-            legend: {
-              position: 'bottom',
-              labels: {
-                padding: 14,
-                usePointStyle: true,
-                pointStyle: 'circle',
-                font: { size: 11, family: 'Inter' }
-              }
-            }
-          }
-        }
-      });
-    },
-
-    // ==================== UTILS ====================
-    async fetchJSON(url) {
-      try {
-        const r = await fetch(url);
-        if (!r.ok) return { status: 'empty' };
-        return await r.json();
-      } catch (e) {
-        return { status: 'error', message: e.message };
-      }
-    }
-  };
+  });
 }
 </script>
 
+<!-- LOGIN MODAL -->
+<div id="loginModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:2000;align-items:center;justify-content:center;">
+  <div style="background:#fff;border-radius:16px;padding:32px;max-width:400px;width:90%;text-align:center;">
+    <h3 style="font-family:'Poppins',sans-serif;margin-bottom:8px;">Sign In to Slow Bear</h3>
+    <p style="color:#888;font-size:14px;margin-bottom:24px;">Cloud sync your portfolio</p>
+    <button onclick="googleLogin()" style="width:100%;padding:12px;border-radius:10px;border:1px solid #ddd;background:#fff;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:12px;">
+      <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844a4.14 4.14 0 01-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615z"/><path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 009 18z"/><path fill="#FBBC05" d="M3.964 10.71A5.41 5.41 0 013.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.997 8.997 0 000 9c0 1.452.348 2.827.957 4.042l3.007-2.332z"/><path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 00.957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"/></svg>
+      Sign in with Google
+    </button>
+    <div style="display:flex;align-items:center;gap:12px;margin:16px 0;"><div style="flex:1;height:1px;background:#eee;"></div><span style="color:#aaa;font-size:12px;">or</span><div style="flex:1;height:1px;background:#eee;"></div></div>
+    <input id="loginEmail" type="email" placeholder="Email" style="width:100%;padding:10px 14px;border:1px solid #EDE9E0;border-radius:10px;font-size:14px;margin-bottom:8px;box-sizing:border-box;">
+    <input id="loginPassword" type="password" placeholder="Password" style="width:100%;padding:10px 14px;border:1px solid #EDE9E0;border-radius:10px;font-size:14px;margin-bottom:16px;box-sizing:border-box;">
+    <button onclick="emailLogin()" style="width:100%;padding:12px;border-radius:10px;border:none;background:var(--brand-gold);color:#fff;font-weight:600;font-size:14px;cursor:pointer;margin-bottom:8px;">Sign In</button>
+    <button onclick="emailSignUp()" style="width:100%;padding:12px;border-radius:10px;border:1px solid var(--brand-gold);background:#fff;color:var(--brand-gold);font-weight:600;font-size:14px;cursor:pointer;">Create Account</button>
+    <button onclick="closeLoginModal()" style="margin-top:16px;background:none;border:none;color:#888;cursor:pointer;font-size:13px;">Cancel</button>
+  </div>
+</div>
+
+<script type="module">
+import { initAuth, getAuth, doSignOut, signInWithGoogle, signIn, signUp, loadHoldings, saveHoldings, addHolding, removeHolding } from './shared/sb-data.js';
+
+window.sbAuth = { initAuth, getAuth, doSignOut, signInWithGoogle, signIn, signUp };
+window.sbData = { loadHoldings, saveHoldings, addHolding, removeHolding };
+
+// Initialize auth on load
+(async () => {
+  const auth = await initAuth();
+  // Update sidebar user info
+  const userNameEl = document.querySelector('.user-name');
+  const userPlanEl = document.querySelector('.user-role');
+  if (auth.loggedIn && auth.email) {
+    if (userNameEl) userNameEl.textContent = auth.email.split('@')[0];
+    if (userPlanEl) userPlanEl.textContent = 'Cloud Sync';
+  }
+
+  // Update auth button text
+  const authBtn = document.getElementById('authBtn');
+  if (auth.loggedIn && authBtn) {
+    authBtn.textContent = 'Sign Out';
+  }
+
+  // Listen for auth changes
+  window.addEventListener('sb-auth-change', (e) => {
+    const a = e.detail;
+    if (a.loggedIn && a.email) {
+      if (userNameEl) userNameEl.textContent = a.email.split('@')[0];
+      if (userPlanEl) userPlanEl.textContent = 'Cloud Sync';
+    } else {
+      if (userNameEl) userNameEl.textContent = 'Guest';
+      if (userPlanEl) userPlanEl.textContent = 'Local Only';
+    }
+  });
+})();
+</script>
 </body>
 </html>

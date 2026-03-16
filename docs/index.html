@@ -1,365 +1,1591 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Macro Cockpit - 인사이트</title>
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='14' fill='%231A7A4C'/></svg>">
-  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-  tailwind.config = {
-    theme: {
-      extend: {
-        fontFamily: {
-          sans: ['Inter', 'system-ui', 'sans-serif'],
-          serif: ['"DM Serif Display"', 'Georgia', 'serif'],
-        },
-        colors: {
-          brand: { 50:'#F0FDF4', 100:'#DCFCE7', 200:'#BBF7D0', 300:'#86EFAC', 400:'#4ADE80', DEFAULT:'#1A7A4C', 600:'#15643E', 700:'#0D4A2D', 800:'#0A3621', 900:'#062215' },
-          up: '#16A34A',
-          down: '#DC2626',
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Slow Bear — Investing for those who take it seriously</title>
+    <link rel="icon" type="image/png" href="macro_asset/slowbear_logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Open+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* ===== CSS Reset & Variables ===== */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            outline: none;
         }
-      }
-    }
-  }
-  </script>
-  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
-  <link rel="stylesheet" href="shared/theme.css">
+
+        :root {
+            --font-family-heading: 'Poppins', Helvetica, Arial, sans-serif;
+            --font-family-text: 'Open Sans', Helvetica, Arial, sans-serif;
+            --h1-font-size: 76px;
+            --h1-line-height: 76px;
+            --h2-font-size: 52px;
+            --h2-line-height: 58px;
+            --h3-font-size: 48px;
+            --h3-line-height: 54px;
+            --h4-font-size: 32px;
+            --h4-line-height: 36px;
+            --h5-font-size: 24px;
+            --h5-line-height: 140%;
+            --h6-font-size: 20px;
+            --h6-line-height: 115%;
+            --text-larger-font-size: 20px;
+            --text-larger-line-height: 30px;
+            --text-large-font-size: 18px;
+            --text-large-line-height: 27px;
+            --text-regular-font-size: 16px;
+            --text-regular-line-height: 24px;
+            --text-small-font-size: 14px;
+            --text-small-line-height: 21px;
+            --text-tiny-font-size: 12px;
+            --text-tiny-line-height: 18px;
+            /* Slow Bear Brand Palette */
+            --white: #FAF8F5;
+            --pure-white: #fff;
+            --dark-001: #2C2C2C;
+            --dark-002: #3A3A3A;
+            --dark-003: #1A1A1A;
+            --dark-004: #4A4A4A;
+            --grey-001: #7A7A6E;
+            --grey-002: #C8C3B8;
+            --grey-003: #EDE9E0;
+            --grey-004: #F5F0E8;
+            --brand-gold: #D4A843;
+            --brand-gold-light: #E8C97A;
+            --brand-gold-bg: #FBF5E6;
+            --brand-olive: #6B7F4E;
+            --brand-olive-light: #8FA574;
+            --brand-oak: #C4A882;
+            --cream-beige: #F5F0E8;
+            --color-text: var(--dark-004);
+            --color-heading: var(--dark-001);
+        }
+
+        html {
+            scroll-behavior: smooth;
+            -webkit-text-size-adjust: 100%;
+            line-height: 1.15;
+        }
+
+        body {
+            font-family: var(--font-family-text);
+            color: var(--color-text);
+            background-color: var(--white);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+            transition: opacity 0.2s ease;
+        }
+        a:hover { opacity: 0.7; }
+        a:focus-visible {
+            outline: 2px solid var(--brand-gold);
+            outline-offset: 2px;
+            border-radius: 2px;
+        }
+
+        img { max-width: 100%; display: block; }
+
+        button {
+            cursor: pointer;
+            font-family: var(--font-family-text);
+            border: none;
+            background: none;
+        }
+        button:focus-visible {
+            outline: 2px solid var(--brand-gold);
+            outline-offset: 2px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* ===== HEADER / NAV ===== */
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: var(--pure-white);
+            border-bottom: 1px solid var(--grey-003);
+        }
+        .header-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 64px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .logo img {
+            height: 36px;
+            width: auto;
+        }
+        .logo-text {
+            font-family: var(--font-family-heading);
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--dark-001);
+            letter-spacing: -0.01em;
+        }
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 28px;
+            list-style: none;
+        }
+        .nav-links a {
+            font-size: var(--text-small-font-size);
+            font-weight: 500;
+            color: var(--dark-004);
+            transition: color 0.2s ease;
+        }
+        .nav-links a:hover { color: var(--dark-001); opacity: 1; }
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .btn-login {
+            font-size: var(--text-small-font-size);
+            font-weight: 500;
+            color: var(--dark-004);
+            padding: 8px 0;
+        }
+        .btn-login:hover { color: var(--dark-001); }
+        .btn-signup {
+            font-size: var(--text-small-font-size);
+            font-weight: 600;
+            color: var(--pure-white);
+            background: var(--dark-001);
+            padding: 10px 20px;
+            border-radius: 100px;
+            transition: background 0.2s ease, transform 0.15s ease;
+        }
+        .btn-signup:hover { background: var(--brand-olive); }
+        .btn-signup:active { transform: scale(0.97); }
+
+        /* ===== HERO ===== */
+        .hero {
+            padding: 96px 0 48px;
+            text-align: center;
+        }
+        .hero h1 {
+            font-family: var(--font-family-heading);
+            font-size: var(--h1-font-size);
+            line-height: var(--h1-line-height);
+            color: var(--color-heading);
+            font-weight: 600;
+            letter-spacing: -0.03em;
+            max-width: 800px;
+            margin: 0 auto 24px;
+        }
+        .hero p {
+            font-size: var(--text-large-font-size);
+            line-height: var(--text-large-line-height);
+            color: var(--grey-001);
+            max-width: 600px;
+            margin: 0 auto 36px;
+        }
+        .hero-buttons {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            margin-bottom: 48px;
+        }
+        .btn-primary {
+            font-size: var(--text-regular-font-size);
+            font-weight: 600;
+            color: var(--pure-white);
+            background: var(--dark-001);
+            padding: 14px 32px;
+            border-radius: 100px;
+            transition: background 0.2s ease, transform 0.15s ease;
+        }
+        .btn-primary:hover { background: var(--brand-olive); }
+        .btn-primary:active { transform: scale(0.97); }
+        .btn-outline {
+            font-size: var(--text-regular-font-size);
+            font-weight: 600;
+            color: var(--dark-001);
+            background: transparent;
+            padding: 14px 32px;
+            border-radius: 100px;
+            border: 1.5px solid var(--grey-002);
+            transition: border-color 0.2s ease, transform 0.15s ease;
+        }
+        .btn-outline:hover { border-color: var(--dark-001); }
+        .btn-outline:active { transform: scale(0.97); }
+
+        /* Product pills */
+        .product-pills {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+        .pill {
+            font-size: var(--text-small-font-size);
+            font-weight: 500;
+            color: var(--dark-004);
+            background: var(--grey-003);
+            padding: 8px 20px;
+            border-radius: 100px;
+            transition: background 0.2s ease, transform 0.15s ease;
+            cursor: pointer;
+        }
+        .pill:hover { background: var(--grey-002); }
+        .pill:active { transform: scale(0.97); }
+        .product-sublinks {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-bottom: 0;
+        }
+        .product-sublinks a {
+            font-size: var(--text-tiny-font-size);
+            color: var(--grey-001);
+            border-bottom: 1px solid transparent;
+            text-decoration: underline;
+            text-underline-offset: 2px;
+        }
+        .product-sublinks a:hover {
+            color: var(--dark-001);
+            opacity: 1;
+        }
+
+        /* ===== APP PREVIEW ===== */
+        .app-preview {
+            padding: 80px 0;
+            background: var(--white);
+        }
+        .app-preview-inner {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+        .app-preview-text h2 {
+            font-family: var(--font-family-heading);
+            font-size: var(--h3-font-size);
+            line-height: var(--h3-line-height);
+            color: var(--color-heading);
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            margin-bottom: 20px;
+        }
+        .app-preview-text p {
+            font-size: var(--text-large-font-size);
+            line-height: var(--text-large-line-height);
+            color: var(--grey-001);
+            margin-bottom: 28px;
+        }
+        .phone-mockup {
+            position: relative;
+            display: flex;
+            justify-content: center;
+        }
+        .phone-frame {
+            width: 280px;
+            height: 580px;
+            background: var(--white);
+            border-radius: 40px;
+            border: 6px solid var(--dark-001);
+            overflow: hidden;
+            box-shadow:
+                0 24px 60px rgba(44, 44, 44, 0.12),
+                0 8px 20px rgba(44, 44, 44, 0.06),
+                inset 0 0 0 2px rgba(255,255,255,0.1);
+            position: relative;
+        }
+        .phone-frame::before {
+            content: '';
+            position: absolute;
+            top: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 24px;
+            background: var(--dark-001);
+            border-radius: 12px;
+            z-index: 2;
+        }
+        /* Phone screen UI */
+        .phone-screen {
+            padding: 48px 20px 20px;
+            height: 100%;
+            background: var(--pure-white);
+            font-family: var(--font-family-text);
+        }
+        .phone-status-bar {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--dark-001);
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .phone-app-header {
+            font-family: var(--font-family-heading);
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--dark-001);
+            margin-bottom: 8px;
+        }
+        .phone-balance {
+            font-family: var(--font-family-heading);
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--dark-001);
+            letter-spacing: -0.02em;
+            margin-bottom: 4px;
+        }
+        .phone-change {
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 20px;
+        }
+        .phone-change.positive { color: var(--brand-olive); }
+        .phone-chart-placeholder {
+            height: 100px;
+            background: linear-gradient(180deg, var(--brand-gold-bg) 0%, transparent 100%);
+            border-radius: 8px;
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        .phone-chart-placeholder::after {
+            content: '';
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            right: 10px;
+            height: 60px;
+            border-bottom: 2px solid var(--brand-gold);
+            border-radius: 0 0 40% 20%;
+        }
+        .phone-holdings-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--dark-001);
+            margin-bottom: 12px;
+        }
+        .phone-holding-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--grey-003);
+        }
+        .holding-info { display: flex; flex-direction: column; gap: 2px; }
+        .holding-symbol { font-size: 13px; font-weight: 600; color: var(--dark-001); }
+        .holding-name { font-size: 11px; color: var(--grey-001); }
+        .holding-value { font-size: 13px; font-weight: 600; color: var(--dark-001); }
+
+        /* ===== HEADLINES / PRESS ===== */
+        .headlines {
+            padding: 80px 0;
+            background: var(--white);
+            border-top: 1px solid var(--grey-003);
+        }
+        .headlines h2 {
+            font-family: var(--font-family-heading);
+            font-size: var(--h3-font-size);
+            line-height: var(--h3-line-height);
+            color: var(--color-heading);
+            font-weight: 600;
+            font-style: italic;
+            letter-spacing: -0.02em;
+            text-align: center;
+            margin-bottom: 48px;
+        }
+        .press-logos {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 48px;
+            flex-wrap: wrap;
+            opacity: 0.5;
+        }
+        .press-logo {
+            font-family: var(--font-family-heading);
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--dark-004);
+            letter-spacing: -0.01em;
+        }
+
+        /* ===== PROFESSIONAL TOOLS ===== */
+        .pro-tools {
+            padding: 80px 0;
+            background: var(--grey-004);
+        }
+        .pro-tools .section-header {
+            text-align: center;
+            margin-bottom: 56px;
+        }
+        .pro-tools .section-header h2 {
+            font-family: var(--font-family-heading);
+            font-size: var(--h2-font-size);
+            line-height: var(--h2-line-height);
+            color: var(--color-heading);
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            margin-bottom: 16px;
+        }
+        .pro-tools .section-header p {
+            font-size: var(--text-large-font-size);
+            line-height: var(--text-large-line-height);
+            color: var(--grey-001);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+        .tool-card {
+            background: var(--pure-white);
+            border-radius: 16px;
+            padding: 32px;
+            border: 1px solid var(--grey-003);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .tool-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.06);
+        }
+        .tool-card-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--brand-gold-bg);
+            border-radius: 12px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .tool-card-icon svg {
+            width: 24px;
+            height: 24px;
+            color: var(--brand-gold);
+        }
+        .tool-card h3 {
+            font-family: var(--font-family-text);
+            font-size: var(--h6-font-size);
+            line-height: var(--h6-line-height);
+            font-weight: 600;
+            color: var(--color-heading);
+            margin-bottom: 8px;
+        }
+        .tool-card p {
+            font-size: var(--text-regular-font-size);
+            line-height: var(--text-regular-line-height);
+            color: var(--grey-001);
+        }
+
+        /* ===== FEATURE SECTION (Generation) ===== */
+        .feature-section {
+            padding: 80px 0;
+            background: var(--white);
+        }
+        .feature-section .feature-inner {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+        .feature-section h2 {
+            font-family: var(--font-family-heading);
+            font-size: var(--h3-font-size);
+            line-height: var(--h3-line-height);
+            color: var(--color-heading);
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            margin-bottom: 20px;
+        }
+        .feature-section p {
+            font-size: var(--text-large-font-size);
+            line-height: var(--text-large-line-height);
+            color: var(--grey-001);
+            margin-bottom: 28px;
+        }
+        /* Feature visual: stat cards */
+        .feature-visual {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .feature-stat-card {
+            background: var(--pure-white);
+            border: 1px solid var(--grey-003);
+            border-radius: 12px;
+            padding: 20px 24px;
+        }
+        .stat-label {
+            font-size: 13px;
+            color: var(--grey-001);
+            margin-bottom: 4px;
+        }
+        .stat-value {
+            font-family: var(--font-family-heading);
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--dark-001);
+            margin-bottom: 12px;
+        }
+        .stat-bar {
+            height: 6px;
+            background: var(--grey-003);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        .stat-bar-fill {
+            height: 100%;
+            background: var(--brand-gold);
+            border-radius: 3px;
+            transition: width 0.6s ease;
+        }
+        .stat-bar-fill.olive { background: var(--brand-olive); }
+        .stat-bar-fill.oak { background: var(--brand-oak); }
+
+        /* ===== RULES SECTION ===== */
+        .rules-section {
+            padding: 80px 0;
+            background: var(--grey-004);
+        }
+        .rules-section .section-header {
+            text-align: center;
+            margin-bottom: 56px;
+        }
+        .rules-section .section-header h2 {
+            font-family: var(--font-family-heading);
+            font-size: var(--h2-font-size);
+            line-height: var(--h2-line-height);
+            color: var(--color-heading);
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            margin-bottom: 16px;
+        }
+        .rules-section .section-header p {
+            font-size: var(--text-large-font-size);
+            line-height: var(--text-large-line-height);
+            color: var(--grey-001);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .rules-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+        }
+        .rule-card {
+            background: var(--pure-white);
+            border-radius: 16px;
+            padding: 32px;
+            border: 1px solid var(--grey-003);
+        }
+        .rule-card h3 {
+            font-family: var(--font-family-text);
+            font-size: var(--text-larger-font-size);
+            line-height: var(--text-larger-line-height);
+            font-weight: 600;
+            color: var(--color-heading);
+            margin-bottom: 8px;
+        }
+        .rule-card p {
+            font-size: var(--text-regular-font-size);
+            line-height: var(--text-regular-line-height);
+            color: var(--grey-001);
+        }
+
+        /* ===== PREMIUM DATA ===== */
+        .premium-data {
+            padding: 80px 0;
+            background: var(--white);
+        }
+        .premium-data .feature-inner {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+        .premium-data h2 {
+            font-family: var(--font-family-heading);
+            font-size: var(--h3-font-size);
+            line-height: var(--h3-line-height);
+            color: var(--color-heading);
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            margin-bottom: 20px;
+        }
+        .premium-data p {
+            font-size: var(--text-large-font-size);
+            line-height: var(--text-large-line-height);
+            color: var(--grey-001);
+            margin-bottom: 28px;
+        }
+        /* Data visual: stock data card */
+        .data-visual {
+            background: var(--pure-white);
+            border: 1px solid var(--grey-003);
+            border-radius: 16px;
+            padding: 28px;
+        }
+        .data-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--grey-003);
+        }
+        .data-ticker {
+            font-family: var(--font-family-heading);
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--dark-001);
+        }
+        .data-price {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--dark-001);
+        }
+        .data-up { color: var(--brand-olive); font-size: 14px; }
+        .data-metrics {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+        .data-metric {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        .dm-label { font-size: 12px; color: var(--grey-001); }
+        .dm-value { font-size: 16px; font-weight: 600; color: var(--dark-001); }
+        .data-analyst-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding-top: 16px;
+            border-top: 1px solid var(--grey-003);
+        }
+        .analyst-badge {
+            font-size: 12px;
+            font-weight: 600;
+            padding: 4px 12px;
+            border-radius: 100px;
+        }
+        .analyst-badge.buy {
+            background: rgba(107, 127, 78, 0.12);
+            color: var(--brand-olive);
+        }
+        .analyst-count {
+            font-size: 13px;
+            color: var(--grey-001);
+        }
+
+        /* ===== DARK HERO SECTION ===== */
+        .dark-hero {
+            padding: 160px 0 140px;
+            background: linear-gradient(180deg, #1A1A14 0%, #2A2518 20%, #302A1C 40%, #252015 60%, #1A1810 80%, #0F0E0A 100%);
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+        }
+        .dark-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                radial-gradient(ellipse 120% 60% at 50% 80%, rgba(212, 168, 67, 0.08) 0%, transparent 60%),
+                radial-gradient(ellipse 80% 40% at 20% 60%, rgba(107, 127, 78, 0.06) 0%, transparent 50%),
+                radial-gradient(ellipse 80% 40% at 80% 60%, rgba(196, 168, 130, 0.05) 0%, transparent 50%),
+                radial-gradient(ellipse 50% 30% at 50% 100%, rgba(212, 168, 67, 0.06) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        .dark-hero::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 40%;
+            background:
+                radial-gradient(ellipse 100% 80% at 50% 100%, rgba(15, 14, 10, 0.6) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        .dark-hero .container { position: relative; z-index: 1; }
+        .dark-hero h2 {
+            font-family: var(--font-family-heading);
+            font-size: var(--h2-font-size);
+            line-height: var(--h2-line-height);
+            color: var(--white);
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            margin-bottom: 20px;
+        }
+        .dark-hero p {
+            font-size: var(--text-large-font-size);
+            line-height: var(--text-large-line-height);
+            color: rgba(255,255,255,0.6);
+            max-width: 600px;
+            margin: 0 auto 36px;
+        }
+        .btn-white {
+            display: inline-block;
+            font-size: var(--text-regular-font-size);
+            font-weight: 600;
+            color: var(--dark-003);
+            background: var(--brand-gold);
+            padding: 14px 32px;
+            border-radius: 100px;
+            transition: transform 0.15s ease, background 0.2s ease;
+        }
+        .btn-white:hover { background: var(--brand-gold-light); opacity: 1; }
+        .btn-white:active { transform: scale(0.97); }
+
+        /* ===== DARK TOOLS ===== */
+        .dark-tools {
+            padding: 100px 0;
+            background: linear-gradient(180deg, #0F0E0A 0%, #1A1814 30%, #201D16 70%, #161410 100%);
+            position: relative;
+        }
+        .dark-tools::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(ellipse 60% 40% at 50% 50%, rgba(212, 168, 67, 0.04) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        .dark-tools .section-header {
+            text-align: center;
+            margin-bottom: 56px;
+        }
+        .dark-tools .section-header h2 {
+            font-family: var(--font-family-heading);
+            font-size: var(--h2-font-size);
+            line-height: var(--h2-line-height);
+            color: var(--white);
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            margin-bottom: 16px;
+        }
+        .dark-tools .section-header p {
+            font-size: var(--text-large-font-size);
+            line-height: var(--text-large-line-height);
+            color: rgba(255,255,255,0.5);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .dark-tools-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+        .dark-tool-card {
+            background: rgba(255,255,255,0.04);
+            border-radius: 16px;
+            padding: 32px;
+            border: 1px solid rgba(255,255,255,0.08);
+            transition: transform 0.2s ease, background 0.2s ease;
+        }
+        .dark-tool-card:hover {
+            transform: translateY(-2px);
+            background: rgba(255,255,255,0.07);
+        }
+        .dark-tool-card .card-icon {
+            width: 48px;
+            height: 48px;
+            background: rgba(212, 168, 67, 0.12);
+            border-radius: 12px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .dark-tool-card .card-icon svg {
+            width: 24px;
+            height: 24px;
+            color: var(--brand-gold);
+        }
+        .dark-tool-card h3 {
+            font-family: var(--font-family-text);
+            font-size: var(--text-larger-font-size);
+            line-height: var(--text-larger-line-height);
+            font-weight: 600;
+            color: var(--white);
+            margin-bottom: 8px;
+        }
+        .dark-tool-card p {
+            font-size: var(--text-regular-font-size);
+            line-height: var(--text-regular-line-height);
+            color: rgba(255,255,255,0.5);
+        }
+
+        /* ===== SAFE & SECURE ===== */
+        .safe-secure {
+            padding: 80px 0;
+            background: var(--white);
+        }
+        .safe-secure .section-header {
+            text-align: center;
+            margin-bottom: 56px;
+        }
+        .safe-secure .section-header h2 {
+            font-family: var(--font-family-heading);
+            font-size: var(--h2-font-size);
+            line-height: var(--h2-line-height);
+            color: var(--color-heading);
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            margin-bottom: 16px;
+        }
+        .safe-secure .section-header h2 em {
+            font-style: italic;
+        }
+        .safe-secure .section-header p {
+            font-size: var(--text-large-font-size);
+            line-height: var(--text-large-line-height);
+            color: var(--grey-001);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .security-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+        .security-card {
+            text-align: center;
+            padding: 32px;
+        }
+        .security-icon {
+            width: 56px;
+            height: 56px;
+            background: var(--brand-gold-bg);
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .security-icon svg {
+            width: 24px;
+            height: 24px;
+            color: var(--brand-olive);
+        }
+        .security-card h3 {
+            font-family: var(--font-family-text);
+            font-size: var(--text-larger-font-size);
+            line-height: var(--text-larger-line-height);
+            font-weight: 600;
+            color: var(--color-heading);
+            margin-bottom: 8px;
+        }
+        .security-card p {
+            font-size: var(--text-regular-font-size);
+            line-height: var(--text-regular-line-height);
+            color: var(--grey-001);
+        }
+
+        /* ===== FAQ ===== */
+        .faq-section {
+            padding: 80px 0;
+            background: var(--grey-004);
+        }
+        .faq-section .section-header {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+        .faq-section .section-header h2 {
+            font-family: var(--font-family-heading);
+            font-size: var(--h2-font-size);
+            line-height: var(--h2-line-height);
+            color: var(--color-heading);
+            font-weight: 600;
+            letter-spacing: -0.02em;
+        }
+        .faq-list {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .faq-item {
+            background: var(--pure-white);
+            border-radius: 12px;
+            margin-bottom: 12px;
+            overflow: hidden;
+            border: 1px solid var(--grey-003);
+        }
+        .faq-question {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 24px;
+            font-size: var(--text-large-font-size);
+            font-weight: 500;
+            color: var(--color-heading);
+            cursor: pointer;
+            width: 100%;
+            text-align: left;
+            transition: background 0.2s ease;
+        }
+        .faq-question:hover { background: var(--grey-004); }
+        .faq-question:active { background: var(--grey-003); }
+        .faq-question svg {
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+            transition: transform 0.3s ease;
+            color: var(--grey-001);
+        }
+        .faq-item.open .faq-question svg { transform: rotate(180deg); }
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+        .faq-answer-inner {
+            padding: 0 24px 20px;
+            font-size: var(--text-regular-font-size);
+            line-height: var(--text-regular-line-height);
+            color: var(--grey-001);
+        }
+
+        /* ===== CTA BANNER ===== */
+        .cta-banner {
+            padding: 80px 0;
+            background: var(--white);
+            text-align: center;
+        }
+        .cta-banner h2 {
+            font-family: var(--font-family-heading);
+            font-size: var(--h3-font-size);
+            line-height: var(--h3-line-height);
+            color: var(--color-heading);
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            margin-bottom: 20px;
+        }
+        .cta-banner p {
+            font-size: var(--text-large-font-size);
+            line-height: var(--text-large-line-height);
+            color: var(--grey-001);
+            max-width: 500px;
+            margin: 0 auto 32px;
+        }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            padding: 64px 0 32px;
+            background: var(--dark-003);
+            color: rgba(255,255,255,0.5);
+        }
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr repeat(4, 1fr);
+            gap: 40px;
+            margin-bottom: 48px;
+        }
+        .footer-brand .logo {
+            color: var(--white);
+            margin-bottom: 16px;
+            display: inline-block;
+        }
+        .footer-brand p {
+            font-size: var(--text-small-font-size);
+            line-height: var(--text-small-line-height);
+            color: rgba(255,255,255,0.4);
+            max-width: 280px;
+        }
+        .footer-col h4 {
+            font-family: var(--font-family-text);
+            font-size: var(--text-small-font-size);
+            font-weight: 600;
+            color: var(--white);
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .footer-col ul {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .footer-col ul a {
+            font-size: var(--text-small-font-size);
+            color: rgba(255,255,255,0.5);
+            transition: color 0.2s ease;
+        }
+        .footer-col ul a:hover { color: var(--white); opacity: 1; }
+        .footer-logo-area {
+            display: flex;
+            justify-content: center;
+            padding: 32px 0;
+            border-top: 1px solid rgba(255,255,255,0.08);
+            margin-bottom: 24px;
+        }
+        .footer-bear-text {
+            font-family: var(--font-family-heading);
+            font-size: 24px;
+            font-weight: 600;
+            color: rgba(255,255,255,0.2);
+            letter-spacing: 0.08em;
+            text-transform: lowercase;
+        }
+        .footer-bottom {
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 24px;
+        }
+        .footer-legal {
+            font-size: var(--text-tiny-font-size);
+            line-height: var(--text-tiny-line-height);
+            color: rgba(255,255,255,0.3);
+            max-width: 100%;
+        }
+        .footer-legal p {
+            margin-bottom: 12px;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1024px) {
+            .hero h1 {
+                font-size: 56px;
+                line-height: 58px;
+            }
+            .tools-grid,
+            .dark-tools-grid,
+            .security-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .footer-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .hero h1 {
+                font-size: 40px;
+                line-height: 44px;
+            }
+            .hero-buttons { flex-direction: column; }
+            .app-preview-inner,
+            .feature-section .feature-inner,
+            .premium-data .feature-inner {
+                grid-template-columns: 1fr;
+            }
+            .tools-grid,
+            .dark-tools-grid,
+            .security-grid,
+            .rules-grid {
+                grid-template-columns: 1fr;
+            }
+            .footer-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .h2 { font-size: 36px; line-height: 40px; }
+        }
+    </style>
 </head>
+<body>
 
-<body class="font-sans text-gray-900 antialiased" x-data="insightsApp()" x-init="init()">
-
-<!-- ==================== DESKTOP TOP NAV ==================== -->
-<nav class="topnav" id="topnav">
-  <a href="index.html" class="topnav-logo">
-    <div class="logo-circle"><span>M</span></div>
-    <span class="logo-text">Macro Cockpit</span>
-  </a>
-  <div class="topnav-menu">
-    <a href="index.html" class="active" data-nav="insights">
-      <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-      인사이트
-    </a>
-    <a href="prices.html" data-nav="prices">
-      <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-      주식가격
-    </a>
-    <a href="portfolio.html" data-nav="portfolio">
-      <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/><path d="M9 12l2 2 4-4"/></svg>
-      포트폴리오
-    </a>
-    <a href="macro.html" data-nav="macro">
-      <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z"/></svg>
-      매크로
-    </a>
-  </div>
-  <div class="topnav-auth">
-    <template x-if="loggedIn">
-      <button class="btn-logout" @click="doSignOut()">
-        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
-        <span x-text="userEmail ? userEmail.split('@')[0] : '로그아웃'"></span>
-      </button>
-    </template>
-    <template x-if="!loggedIn">
-      <a href="portfolio.html" class="btn-login">
-        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/></svg>
-        로그인
-      </a>
-    </template>
-  </div>
-</nav>
-
-<!-- ==================== MOBILE BOTTOM NAV ==================== -->
-<nav class="bnav" id="bottom-nav">
-  <a href="index.html" class="active" data-nav="insights">
-    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-    인사이트<div class="dot"></div>
-  </a>
-  <a href="prices.html" data-nav="prices">
-    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-    주식가격<div class="dot"></div>
-  </a>
-  <a href="portfolio.html" data-nav="portfolio">
-    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/><path d="M9 12l2 2 4-4"/></svg>
-    포트폴리오<div class="dot"></div>
-  </a>
-  <a href="macro.html" data-nav="macro">
-    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z"/></svg>
-    매크로<div class="dot"></div>
-  </a>
-</nav>
-
-<!-- ==================== MAIN CONTENT ==================== -->
-<main class="page-main" style="max-width:1120px;">
-
-  <!-- Hero Section -->
-  <section class="mb-8 md:mb-12 animate-fadeUp">
-    <div class="mb-6">
-      <p class="text-xs font-semibold tracking-widest uppercase mb-3" style="color:#1A7A4C;">Macro Cockpit</p>
-      <h1 class="font-serif text-3xl md:text-[44px] leading-tight text-gray-900" style="letter-spacing:-0.02em;">
-        Insights for a<br class="hidden md:block"> Sustainable Portfolio
-      </h1>
-      <p class="text-sm text-gray-400 mt-3">투자 인사이트와 리서치를 공유합니다</p>
-    </div>
-
-    <!-- Macro Indicator Strip -->
-    <div class="flex gap-3 overflow-x-auto hide-scrollbar pb-1" x-show="macroBanner.length > 0">
-      <template x-for="m in macroBanner" :key="m.symbol">
-        <div class="bg-gray-50 rounded-xl px-4 py-2.5 shrink-0 border border-gray-100">
-          <div class="text-[10px] text-gray-400 font-medium" x-text="m.name"></div>
-          <div class="text-sm font-bold text-gray-900" x-text="m.display"></div>
-          <div class="text-[10px] mt-0.5 font-medium"
-               :class="m.chg >= 0 ? 'text-green-600' : 'text-red-500'"
-               x-text="(m.chg >= 0 ? '+' : '') + m.chg.toFixed(1) + '%'"></div>
+    <!-- HEADER -->
+    <header class="header">
+        <div class="header-inner">
+            <a href="#" class="logo"><span class="logo-text">slow bear</span></a>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="#">Stocks</a></li>
+                    <li><a href="#">Bonds</a></li>
+                    <li><a href="#">Treasuries</a></li>
+                    <li><a href="#">Options</a></li>
+                    <li><a href="#">Crypto</a></li>
+                    <li><a href="#">High-Yield Cash</a></li>
+                    <li><a href="#">Retirement</a></li>
+                    <li><a href="#">Premium</a></li>
+                </ul>
+            </nav>
+            <div class="nav-right">
+                <a href="#" class="btn-login">Log in</a>
+                <a href="#" class="btn-signup">Sign up</a>
+            </div>
         </div>
-      </template>
-    </div>
-  </section>
+    </header>
 
-  <!-- Two Column Layout -->
-  <div class="flex flex-col md:flex-row gap-8 md:gap-10">
+    <!-- HERO -->
+    <section class="hero">
+        <div class="container">
+            <h1>Investing for those who take&nbsp;it&nbsp;seriously</h1>
+            <p>A platform built for informed investors. Stocks, bonds, options, crypto, and more — all with the tools, data, and insights to invest with confidence.</p>
+            <div class="hero-buttons">
+                <a href="#" class="btn-primary">Get started</a>
+                <a href="#" class="btn-outline">See what we offer</a>
+            </div>
+            <div class="product-pills">
+                <span class="pill">Stocks</span>
+                <span class="pill">Bonds</span>
+                <span class="pill">Treasuries</span>
+                <span class="pill">Options</span>
+                <span class="pill">Crypto</span>
+                <span class="pill">ETFs</span>
+            </div>
+            <div class="product-sublinks">
+                <a href="#">High-Yield Cash Account</a>
+                <a href="#">Retirement</a>
+                <a href="#">Rewards</a>
+                <a href="#">Premium</a>
+            </div>
+        </div>
+    </section>
 
-    <!-- Left: Article List -->
-    <div class="flex-1 min-w-0">
-      <div class="flex items-center justify-between mb-5">
-        <h2 class="font-serif text-xl md:text-2xl">Our Trending Articles</h2>
-        <span class="text-xs text-gray-400" x-text="filteredReports.length + '개'"></span>
-      </div>
-
-      <!-- Filter Tags -->
-      <div class="flex items-center gap-2 mb-6 overflow-x-auto hide-scrollbar pb-1">
-        <button class="shrink-0 px-3.5 py-1.5 rounded-full text-xs font-medium transition-all border"
-                :class="activeFilter === 'all' ? 'text-white border-transparent' : 'bg-white text-gray-500 border-gray-200 hover:text-green-700 hover:border-green-300'"
-                :style="activeFilter === 'all' ? 'background:#1A7A4C' : ''"
-                @click="activeFilter = 'all'">
-          전체
-        </button>
-        <template x-for="tag in allTags" :key="tag">
-          <button class="shrink-0 px-3.5 py-1.5 rounded-full text-xs font-medium transition-all border"
-                  :class="activeFilter === tag ? 'text-white border-transparent' : 'bg-white text-gray-500 border-gray-200 hover:text-green-700 hover:border-green-300'"
-                  :style="activeFilter === tag ? 'background:#1A7A4C' : ''"
-                  @click="activeFilter = tag"
-                  x-text="tag">
-          </button>
-        </template>
-      </div>
-
-      <!-- Article List (Editorial Style) -->
-      <div class="divide-y divide-gray-100">
-        <template x-for="(r, idx) in filteredReports" :key="r.id">
-          <article class="py-5 cursor-pointer group" @click="openReport(r.file, r.title)">
-            <div class="flex items-start gap-4">
-              <span class="text-sm font-mono pt-0.5 shrink-0" style="color:rgba(26,122,76,.35);" x-text="String(idx+1).padStart(2,'0')"></span>
-              <div class="flex-1 min-w-0">
-                <div class="flex items-center gap-2 mb-1">
-                  <span class="text-[11px] text-gray-400" x-text="r.date"></span>
-                  <template x-if="r.source">
-                    <span class="text-[11px] text-gray-300">&middot;</span>
-                  </template>
-                  <span class="text-[11px] text-gray-400" x-text="r.source || ''"></span>
+    <!-- APP PREVIEW -->
+    <section class="app-preview">
+        <div class="app-preview-inner">
+            <div class="app-preview-text">
+                <h2>The most mapped out market</h2>
+                <p>Our app gives you a comprehensive view of the market. See stock performance, analyst ratings, financials, and news — all in one place.</p>
+                <a href="#" class="btn-primary">Explore the app</a>
+            </div>
+            <div class="phone-mockup">
+                <div class="phone-frame">
+                    <div class="phone-screen">
+                        <div class="phone-status-bar">9:41</div>
+                        <div class="phone-app-header">Portfolio</div>
+                        <div class="phone-balance">$24,831.50</div>
+                        <div class="phone-change positive">+$312.40 (1.27%) today</div>
+                        <div class="phone-chart-placeholder"></div>
+                        <div class="phone-holdings-label">Holdings</div>
+                        <div class="phone-holding-item">
+                            <div class="holding-info"><span class="holding-symbol">AAPL</span><span class="holding-name">Apple Inc.</span></div>
+                            <div class="holding-value">$4,280.00</div>
+                        </div>
+                        <div class="phone-holding-item">
+                            <div class="holding-info"><span class="holding-symbol">MSFT</span><span class="holding-name">Microsoft</span></div>
+                            <div class="holding-value">$3,950.00</div>
+                        </div>
+                        <div class="phone-holding-item">
+                            <div class="holding-info"><span class="holding-symbol">GOOGL</span><span class="holding-name">Alphabet</span></div>
+                            <div class="holding-value">$2,180.00</div>
+                        </div>
+                    </div>
                 </div>
-                <h3 class="font-serif text-lg md:text-xl leading-snug transition-colors mb-1.5 group-hover:text-green-700" x-text="r.title"></h3>
-                <p class="text-[13px] text-gray-500 leading-relaxed mb-2.5"
-                   style="display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;"
-                   x-text="r.description"></p>
-                <div class="flex flex-wrap gap-1.5">
-                  <template x-for="tag in (r.tags || [])" :key="tag">
-                    <span class="text-[10px] px-2 py-0.5 rounded-full font-medium"
-                          style="background:#F0FDF4;color:#1A7A4C;"
-                          x-text="tag"></span>
-                  </template>
+            </div>
+        </div>
+    </section>
+
+    <!-- HEADLINES -->
+    <section class="headlines">
+        <div class="container">
+            <h2>We've made headlines and&nbsp;then&nbsp;some.</h2>
+            <div class="press-logos">
+                <span class="press-logo">The New York Times</span>
+                <span class="press-logo">Bloomberg</span>
+                <span class="press-logo">Forbes</span>
+                <span class="press-logo">CNBC</span>
+                <span class="press-logo">Wall Street Journal</span>
+                <span class="press-logo">TechCrunch</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- PROFESSIONAL TOOLS -->
+    <section class="pro-tools">
+        <div class="container">
+            <div class="section-header">
+                <h2>We offer the tools of a&nbsp;professional.</h2>
+                <p>Advanced tools, data, and analytics that were once reserved for Wall Street — now available to everyone.</p>
+            </div>
+            <div class="tools-grid">
+                <div class="tool-card">
+                    <div class="tool-card-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" /></svg>
+                    </div>
+                    <h3>Advanced Charts</h3>
+                    <p>Professional-grade charting with technical indicators, drawing tools, and multiple timeframes.</p>
                 </div>
-              </div>
-              <div class="shrink-0 w-8 h-8 rounded-full bg-gray-50 group-hover:bg-green-50 flex items-center justify-center transition-colors mt-1">
-                <svg class="w-4 h-4 text-gray-300 group-hover:text-green-600 transition-colors" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg>
-              </div>
+                <div class="tool-card">
+                    <div class="tool-card-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" /></svg>
+                    </div>
+                    <h3>Research & Analysis</h3>
+                    <p>In-depth research reports, earnings analysis, and premium insights from leading analysts.</p>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-card-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" /></svg>
+                    </div>
+                    <h3>Real-time Alerts</h3>
+                    <p>Customizable price alerts, earnings notifications, and market movement alerts delivered instantly.</p>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-card-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75M15 10.5a3 3 0 11-6 0 3 3 0 016 0zm3 0h.008v.008H18V10.5zm-12 0h.008v.008H6V10.5z" /></svg>
+                    </div>
+                    <h3>Multi-asset Investing</h3>
+                    <p>Stocks, ETFs, options, crypto, bonds, and treasuries — all from a single platform.</p>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-card-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1 3m8.5-3l1 3m0 0l.5 1.5m-.5-1.5h-9.5m0 0l-.5 1.5M9 11.25v1.5M12 9v3.75m3-6v6" /></svg>
+                    </div>
+                    <h3>Portfolio Analytics</h3>
+                    <p>Track performance, analyze allocation, and understand your portfolio's risk exposure in real time.</p>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-card-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.455 2.456L21.75 6l-1.036.259a3.375 3.375 0 00-2.455 2.456z" /></svg>
+                    </div>
+                    <h3>Alpha Insights</h3>
+                    <p>AI-powered market insights, sentiment analysis, and predictive signals to stay ahead of the market.</p>
+                </div>
             </div>
-          </article>
-        </template>
-      </div>
-
-      <!-- Empty State -->
-      <template x-if="filteredReports.length === 0">
-        <div class="flex flex-col items-center justify-center py-16 text-gray-400">
-          <svg class="w-10 h-10 mb-3 opacity-30" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"/></svg>
-          <p class="text-sm">해당 테마의 리포트가 없습니다</p>
         </div>
-      </template>
-    </div>
+    </section>
 
-    <!-- Right: Sidebar -->
-    <aside class="w-full md:w-72 lg:w-80 shrink-0">
-
-      <!-- Featured Article -->
-      <template x-if="reports.length > 0">
-        <div class="rounded-2xl p-6 text-white mb-5 cursor-pointer group"
-             style="background:linear-gradient(145deg,#0D4A2D 0%,#1A7A4C 100%);"
-             @click="openReport(reports[0].file, reports[0].title)">
-          <div class="text-[10px] font-semibold tracking-widest uppercase opacity-60 mb-3">FEATURED</div>
-          <h3 class="font-serif text-xl leading-snug mb-2" x-text="reports[0]?.title"></h3>
-          <p class="text-sm opacity-75 leading-relaxed mb-4"
-             style="display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;"
-             x-text="reports[0]?.description"></p>
-          <div class="flex items-center gap-1.5 text-sm font-medium opacity-90 group-hover:opacity-100 group-hover:gap-2.5 transition-all">
-            Read More
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
-          </div>
+    <!-- FEATURE: After a generation -->
+    <section class="feature-section">
+        <div class="container">
+            <div class="feature-inner">
+                <div>
+                    <h2>After a generation of&nbsp;gamified investing, it's time to&nbsp;get&nbsp;serious.</h2>
+                    <p>Public was built for investors who want real tools, real data, and a real platform — not flashy gimmicks. We believe informed investors make better decisions.</p>
+                    <a href="#" class="btn-primary">Learn more</a>
+                </div>
+                <div class="feature-visual">
+                    <div class="feature-stat-card">
+                        <div class="stat-label">Avg. annual return</div>
+                        <div class="stat-value">+12.4%</div>
+                        <div class="stat-bar"><div class="stat-bar-fill" style="width: 72%;"></div></div>
+                    </div>
+                    <div class="feature-stat-card">
+                        <div class="stat-label">Portfolio diversification</div>
+                        <div class="stat-value">Excellent</div>
+                        <div class="stat-bar"><div class="stat-bar-fill olive" style="width: 88%;"></div></div>
+                    </div>
+                    <div class="feature-stat-card">
+                        <div class="stat-label">Risk score</div>
+                        <div class="stat-value">Moderate</div>
+                        <div class="stat-bar"><div class="stat-bar-fill oak" style="width: 55%;"></div></div>
+                    </div>
+                </div>
+            </div>
         </div>
-      </template>
+    </section>
 
-      <!-- Market Snapshot -->
-      <div class="rounded-2xl border border-gray-100 p-5 mb-5" x-show="macroBanner.length > 0">
-        <h4 class="text-xs font-semibold text-gray-900 uppercase tracking-wider mb-4">Market Snapshot</h4>
-        <div class="space-y-3">
-          <template x-for="m in macroBanner" :key="m.symbol">
-            <div class="flex items-center justify-between">
-              <span class="text-[13px] text-gray-500" x-text="m.name"></span>
-              <div class="flex items-center gap-2">
-                <span class="text-[13px] font-semibold" x-text="m.display"></span>
-                <span class="text-[11px] font-medium px-1.5 py-0.5 rounded"
-                      :class="m.chg >= 0 ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-600'"
-                      x-text="(m.chg >= 0 ? '+' : '') + m.chg.toFixed(1) + '%'"></span>
-              </div>
+    <!-- RULES SECTION -->
+    <section class="rules-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>You set the rules,<br>we'll execute.</h2>
+                <p>Automate your investment strategy with powerful tools designed for precision and control.</p>
             </div>
-          </template>
+            <div class="rules-grid">
+                <div class="rule-card">
+                    <h3>Recurring Investments</h3>
+                    <p>Automatically invest on a schedule. Set it and forget it — dollar-cost average into your favorite assets effortlessly.</p>
+                </div>
+                <div class="rule-card">
+                    <h3>Limit Orders</h3>
+                    <p>Set your target price and we'll execute when the market hits it. Full control over your entry and exit points.</p>
+                </div>
+                <div class="rule-card">
+                    <h3>Stop Loss & Take Profit</h3>
+                    <p>Protect your downside and lock in gains automatically. Define your risk parameters with precision.</p>
+                </div>
+                <div class="rule-card">
+                    <h3>Conditional Alerts</h3>
+                    <p>Get notified when specific conditions are met — price thresholds, volume spikes, or technical signals.</p>
+                </div>
+            </div>
         </div>
-      </div>
+    </section>
 
-      <!-- Quick Links -->
-      <div class="rounded-2xl border border-gray-100 p-5">
-        <h4 class="text-xs font-semibold text-gray-900 uppercase tracking-wider mb-4">Quick Links</h4>
-        <div class="space-y-2.5">
-          <a href="macro.html" class="flex items-center gap-3 text-[13px] text-gray-600 hover:text-green-700 transition-colors group">
-            <div class="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 transition-colors"
-                 style="background:#F0FDF4;" class="group-hover:bg-green-100">
-              <svg class="w-4 h-4" style="color:#1A7A4C;" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75z"/></svg>
+    <!-- PREMIUM DATA -->
+    <section class="premium-data">
+        <div class="container">
+            <div class="feature-inner">
+                <div class="data-visual">
+                    <div class="data-card-header">
+                        <span class="data-ticker">AAPL</span>
+                        <span class="data-price">$178.72 <span class="data-up">+1.32%</span></span>
+                    </div>
+                    <div class="data-metrics">
+                        <div class="data-metric"><span class="dm-label">P/E Ratio</span><span class="dm-value">28.5</span></div>
+                        <div class="data-metric"><span class="dm-label">Market Cap</span><span class="dm-value">$2.78T</span></div>
+                        <div class="data-metric"><span class="dm-label">Dividend</span><span class="dm-value">0.55%</span></div>
+                        <div class="data-metric"><span class="dm-label">52W High</span><span class="dm-value">$199.62</span></div>
+                    </div>
+                    <div class="data-analyst-row">
+                        <span class="analyst-badge buy">Strong Buy</span>
+                        <span class="analyst-count">24 analysts</span>
+                    </div>
+                </div>
+                <div>
+                    <h2>Access premium data and insights.</h2>
+                    <p>Morningstar research, analyst ratings, earnings transcripts, and more. The data you need to make informed investment decisions, all in one place.</p>
+                    <a href="#" class="btn-primary">Explore Premium</a>
+                </div>
             </div>
-            매크로 대시보드
-          </a>
-          <a href="prices.html" class="flex items-center gap-3 text-[13px] text-gray-600 hover:text-green-700 transition-colors group">
-            <div class="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 transition-colors"
-                 style="background:#F0FDF4;">
-              <svg class="w-4 h-4" style="color:#1A7A4C;" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-            </div>
-            실시간 주식가격
-          </a>
-          <a href="portfolio.html" class="flex items-center gap-3 text-[13px] text-gray-600 hover:text-green-700 transition-colors group">
-            <div class="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 transition-colors"
-                 style="background:#F0FDF4;">
-              <svg class="w-4 h-4" style="color:#1A7A4C;" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/><path d="M9 12l2 2 4-4"/></svg>
-            </div>
-            포트폴리오
-          </a>
         </div>
-      </div>
-    </aside>
+    </section>
 
-  </div>
+    <!-- DARK HERO -->
+    <section class="dark-hero">
+        <div class="container">
+            <h2>Ready to invest<br>like you mean it?</h2>
+            <p>Join millions of investors who've chosen a platform that takes investing as seriously as they do.</p>
+            <a href="#" class="btn-white">Get started</a>
+        </div>
+    </section>
 
-</main>
+    <!-- DARK TOOLS SECTION -->
+    <section class="dark-tools">
+        <div class="container">
+            <div class="section-header">
+                <h2>Tools built by traders,<br>for all investors.</h2>
+                <p>Institutional-grade tools made accessible. Everything you need to research, analyze, and execute.</p>
+            </div>
+            <div class="dark-tools-grid">
+                <div class="dark-tool-card">
+                    <div class="card-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M7.5 14.25v2.25m3-4.5v4.5m3-6.75v6.75m3-9v9M6 20.25h12A2.25 2.25 0 0020.25 18V6A2.25 2.25 0 0018 3.75H6A2.25 2.25 0 003.75 6v12A2.25 2.25 0 006 20.25z" /></svg>
+                    </div>
+                    <h3>Options Flow</h3>
+                    <p>Track institutional options activity in real time. See what the smart money is trading.</p>
+                </div>
+                <div class="dark-tool-card">
+                    <div class="card-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418" /></svg>
+                    </div>
+                    <h3>Global Markets</h3>
+                    <p>Access markets worldwide with real-time data, international equities, and cross-border analysis.</p>
+                </div>
+                <div class="dark-tool-card">
+                    <div class="card-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" /></svg>
+                    </div>
+                    <h3>Bond Account</h3>
+                    <p>Invest in corporate and government bonds with competitive yields and transparent pricing.</p>
+                </div>
+                <div class="dark-tool-card">
+                    <div class="card-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941" /></svg>
+                    </div>
+                    <h3>Earnings Hub</h3>
+                    <p>Earnings calendars, transcripts, revenue breakdowns, and analyst estimates — all in one place.</p>
+                </div>
+                <div class="dark-tool-card">
+                    <div class="card-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                    </div>
+                    <h3>High-Yield Cash</h3>
+                    <p>Earn a competitive yield on your uninvested cash. Your money works even when you're not trading.</p>
+                </div>
+                <div class="dark-tool-card">
+                    <div class="card-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" /></svg>
+                    </div>
+                    <h3>Treasury Bills</h3>
+                    <p>Invest directly in U.S. Treasury bills for a safe, government-backed yield on your savings.</p>
+                </div>
+            </div>
+        </div>
+    </section>
 
-<!-- ==================== REPORT OVERLAY ==================== -->
-<div id="report-overlay" x-show="showReport" x-transition.opacity
-     style="position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.5);backdrop-filter:blur(4px);display:flex;flex-direction:column;"
-     @keydown.escape.window="showReport=false" x-cloak>
-  <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:#0D4A2D;color:white;flex-shrink:0;">
-    <span style="font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" x-text="reportTitle"></span>
-    <div style="display:flex;gap:8px;flex-shrink:0;">
-      <a :href="'./reports/' + reportFile" target="_blank" style="background:rgba(255,255,255,.12);color:white;border:none;border-radius:8px;padding:6px 12px;font-size:11px;cursor:pointer;text-decoration:none;display:flex;align-items:center;gap:4px;">
-        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-        새 탭
-      </a>
-      <button @click="showReport=false" style="background:rgba(255,255,255,.12);color:white;border:none;border-radius:8px;width:32px;height:32px;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;">&times;</button>
-    </div>
-  </div>
-  <iframe :src="showReport ? './reports/' + reportFile : ''" style="flex:1;border:none;background:white;"></iframe>
-</div>
+    <!-- SAFE & SECURE -->
+    <section class="safe-secure">
+        <div class="container">
+            <div class="section-header">
+                <h2>Safe &amp; <em>secure.</em></h2>
+                <p>Your security is our top priority. We use industry-leading practices to keep your data and investments protected.</p>
+            </div>
+            <div class="security-grid">
+                <div class="security-card">
+                    <div class="security-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" /></svg>
+                    </div>
+                    <h3>SIPC Protected</h3>
+                    <p>Your securities are protected up to $500,000 (including $250,000 for cash claims) by SIPC.</p>
+                </div>
+                <div class="security-card">
+                    <div class="security-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" /></svg>
+                    </div>
+                    <h3>Bank-level Encryption</h3>
+                    <p>256-bit encryption protects your data in transit and at rest. The same standard used by leading banks.</p>
+                </div>
+                <div class="security-card">
+                    <div class="security-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M7.864 4.243A7.5 7.5 0 0119.5 10.5c0 2.92-.556 5.709-1.568 8.268M5.742 6.364A7.465 7.465 0 004.5 10.5a48.667 48.667 0 00-1.18 8.159M4.5 10.5a7.5 7.5 0 0112.548-5.546M19.5 10.5c0 3.089-.532 6.063-1.508 8.827M4.5 10.5c0 1.38.187 2.716.543 3.98M19.5 10.5c0 .66-.044 1.31-.128 1.95M15 10.5a3 3 0 11-6 0 3 3 0 016 0zm-3 12a4.488 4.488 0 00-1.592-3.42M12 22.5a4.488 4.488 0 001.592-3.42" /></svg>
+                    </div>
+                    <h3>Two-Factor Auth</h3>
+                    <p>Add an extra layer of security to your account with biometric and two-factor authentication.</p>
+                </div>
+            </div>
+        </div>
+    </section>
 
-<style>[x-cloak] { display: none !important; }</style>
+    <!-- FAQ -->
+    <section class="faq-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Got a question?</h2>
+            </div>
+            <div class="faq-list">
+                <div class="faq-item">
+                    <button class="faq-question" onclick="this.parentElement.classList.toggle('open'); const a = this.nextElementSibling; a.style.maxHeight = a.style.maxHeight ? null : a.scrollHeight + 'px';">
+                        What is Public?
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" /></svg>
+                    </button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-inner">Public is an investing platform that offers stocks, ETFs, bonds, treasuries, options, crypto, and a high-yield cash account — all in one place. Built for investors who want real tools and data to make informed decisions.</div>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question" onclick="this.parentElement.classList.toggle('open'); const a = this.nextElementSibling; a.style.maxHeight = a.style.maxHeight ? null : a.scrollHeight + 'px';">
+                        Is Public free to use?
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" /></svg>
+                    </button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-inner">Yes, you can create an account and start investing for free. Commission-free stock and ETF trading is available to all users. Premium features and advanced data are available through our subscription plans.</div>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question" onclick="this.parentElement.classList.toggle('open'); const a = this.nextElementSibling; a.style.maxHeight = a.style.maxHeight ? null : a.scrollHeight + 'px';">
+                        How does the High-Yield Cash Account work?
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" /></svg>
+                    </button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-inner">Your uninvested cash automatically earns a competitive APY. There's no lock-up period — you can withdraw or invest your cash at any time. Interest is accrued daily and paid monthly.</div>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question" onclick="this.parentElement.classList.toggle('open'); const a = this.nextElementSibling; a.style.maxHeight = a.style.maxHeight ? null : a.scrollHeight + 'px';">
+                        What types of bonds can I invest in?
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" /></svg>
+                    </button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-inner">You can invest in corporate bonds, U.S. Treasury bills, and other fixed-income securities. Each bond listing includes yield, maturity date, credit rating, and detailed issuer information.</div>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question" onclick="this.parentElement.classList.toggle('open'); const a = this.nextElementSibling; a.style.maxHeight = a.style.maxHeight ? null : a.scrollHeight + 'px';">
+                        Is my money safe with Public?
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" /></svg>
+                    </button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-inner">Yes. Public is a member of FINRA and SIPC. Securities in your account are protected up to $500,000. We use bank-level 256-bit encryption and offer two-factor authentication to protect your account.</div>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question" onclick="this.parentElement.classList.toggle('open'); const a = this.nextElementSibling; a.style.maxHeight = a.style.maxHeight ? null : a.scrollHeight + 'px';">
+                        How do I get started?
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" /></svg>
+                    </button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-inner">Simply sign up, verify your identity, and fund your account. You can start investing in minutes. There's no minimum deposit required to open an account.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-<script type="module">
-import { supabase, isLoggedIn, getCurrentUser, signOut } from './shared/supabase-client.js';
-window._supabaseAuth = { isLoggedIn, getCurrentUser, signOut };
-</script>
+    <!-- CTA BANNER -->
+    <section class="cta-banner">
+        <div class="container">
+            <h2>Start investing today.</h2>
+            <p>Join millions of investors on a platform built for those who take it seriously.</p>
+            <a href="#" class="btn-primary">Get started</a>
+        </div>
+    </section>
 
-<script>
-function insightsApp() {
-  return {
-    loggedIn: false,
-    userEmail: null,
-    reports: [],
-    macroBanner: [],
-    allTags: [],
-    activeFilter: 'all',
-    showReport: false,
-    reportFile: '',
-    reportTitle: '',
-
-    async init() {
-      try {
-        const loggedIn = await window._supabaseAuth.isLoggedIn();
-        if (loggedIn) {
-          const user = await window._supabaseAuth.getCurrentUser();
-          this.loggedIn = true;
-          this.userEmail = user?.email;
-        }
-      } catch (e) {}
-
-      const [reportsData, signalData] = await Promise.all([
-        this.fetchJSON('data/reports.json'),
-        this.fetchJSON('data/signal.json')
-      ]);
-
-      if (reportsData?.status === 'ok' && reportsData.data) {
-        this.reports = reportsData.data;
-        const tagSet = new Set();
-        this.reports.forEach(r => (r.tags || []).forEach(t => tagSet.add(t)));
-        this.allTags = Array.from(tagSet).sort();
-      }
-
-      if (signalData?.status === 'ok' && signalData.macro_data) {
-        const picks = ['^VIX', 'CL=F', 'BZ=F', 'USDKRW=X', 'DX-Y.NYB', 'GC=F'];
-        this.macroBanner = signalData.macro_data
-          .filter(m => picks.includes(m.symbol))
-          .map(m => ({
-            symbol: m.symbol,
-            name: m.name.length > 12 ? m.name.substring(0, 12) : m.name,
-            display: m.price.toLocaleString('en-US', { maximumFractionDigits: 2 }),
-            chg: m.chg_1d
-          }));
-      }
-    },
-
-    get filteredReports() {
-      if (this.activeFilter === 'all') return this.reports;
-      return this.reports.filter(r => (r.tags || []).includes(this.activeFilter));
-    },
-
-    openReport(file, title) {
-      this.reportFile = file;
-      this.reportTitle = title;
-      this.showReport = true;
-    },
-
-    async doSignOut() {
-      await window._supabaseAuth.signOut();
-      this.loggedIn = false;
-      this.userEmail = null;
-    },
-
-    async fetchJSON(url) {
-      try {
-        const r = await fetch(url);
-        if (!r.ok) return { status: 'empty' };
-        return await r.json();
-      } catch (e) {
-        return { status: 'error', message: e.message };
-      }
-    }
-  };
-}
-</script>
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <a href="#" class="logo"><span class="logo-text" style="color: #fff;">slow bear</span></a>
+                    <p>Do not hurry :) — Invest with patience. Stocks, bonds, options, crypto, and more.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Products</h4>
+                    <ul>
+                        <li><a href="#">Stocks</a></li>
+                        <li><a href="#">Bonds</a></li>
+                        <li><a href="#">Treasuries</a></li>
+                        <li><a href="#">Options</a></li>
+                        <li><a href="#">Crypto</a></li>
+                        <li><a href="#">ETFs</a></li>
+                        <li><a href="#">High-Yield Cash</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Resources</h4>
+                    <ul>
+                        <li><a href="#">Learn</a></li>
+                        <li><a href="#">Blog</a></li>
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">Contact</a></li>
+                        <li><a href="#">Careers</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Legal</h4>
+                    <ul>
+                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Disclosures</a></li>
+                        <li><a href="#">Accessibility</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Social</h4>
+                    <ul>
+                        <li><a href="#">Twitter</a></li>
+                        <li><a href="#">Instagram</a></li>
+                        <li><a href="#">LinkedIn</a></li>
+                        <li><a href="#">TikTok</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-logo-area">
+                <span class="footer-bear-text">slow bear</span>
+            </div>
+            <div class="footer-bottom">
+                <div class="footer-legal">
+                    <p>All investments involve the risk of loss and the past performance of a security or a financial product does not guarantee future results or returns. There is always the potential of losing money when you invest in securities or other financial products.</p>
+                    <p>Brokerage services for US-listed securities, options, and crypto are offered through Public Investing, Inc., a registered broker-dealer, member FINRA &amp; SIPC.</p>
+                    <p>&copy; 2024 Slow Bear, Inc. All rights reserved.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
 
 </body>
 </html>

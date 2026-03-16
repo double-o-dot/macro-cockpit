@@ -156,5 +156,93 @@ CREATE TRIGGER trigger_holdings_updated_at
     EXECUTE FUNCTION update_updated_at_column();
 
 -- =============================================================
--- Done. 4 tables, RLS policies, indexes, and triggers created.
+-- 7. watchlist - 관심 종목
+-- =============================================================
+CREATE TABLE IF NOT EXISTS watchlist (
+    id          UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id     UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+    ticker      TEXT NOT NULL,
+    added_at    TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE INDEX IF NOT EXISTS idx_watchlist_user_id ON watchlist(user_id);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_watchlist_user_ticker ON watchlist(user_id, ticker);
+
+-- ---- watchlist RLS ----
+ALTER TABLE watchlist ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY watchlist_select ON watchlist
+    FOR SELECT USING (auth.uid() = user_id);
+CREATE POLICY watchlist_insert ON watchlist
+    FOR INSERT WITH CHECK (auth.uid() = user_id);
+CREATE POLICY watchlist_delete ON watchlist
+    FOR DELETE USING (auth.uid() = user_id);
+
+-- =============================================================
+-- 8. transactions - 거래 내역
+-- =============================================================
+CREATE TABLE IF NOT EXISTS transactions (
+    id          UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id     UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+    ticker      TEXT NOT NULL,
+    name        TEXT,
+    type        TEXT NOT NULL DEFAULT 'BUY' CHECK (type IN ('BUY', 'SELL')),
+    shares      NUMERIC NOT NULL DEFAULT 0,
+    price       NUMERIC NOT NULL DEFAULT 0,
+    total       NUMERIC NOT NULL DEFAULT 0,
+    currency    TEXT NOT NULL DEFAULT 'USD',
+    status      TEXT NOT NULL DEFAULT 'Completed',
+    created_at  TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE INDEX IF NOT EXISTS idx_transactions_user_id ON transactions(user_id);
+CREATE INDEX IF NOT EXISTS idx_transactions_created_at ON transactions(user_id, created_at DESC);
+
+-- ---- transactions RLS ----
+ALTER TABLE transactions ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY transactions_select ON transactions
+    FOR SELECT USING (auth.uid() = user_id);
+CREATE POLICY transactions_insert ON transactions
+    FOR INSERT WITH CHECK (auth.uid() = user_id);
+CREATE POLICY transactions_delete ON transactions
+    FOR DELETE USING (auth.uid() = user_id);
+
+-- =============================================================
+-- 9. user_settings - 사용자 설정
+-- =============================================================
+CREATE TABLE IF NOT EXISTS user_settings (
+    id          UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id     UUID UNIQUE NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+    name        TEXT DEFAULT 'Investor',
+    email       TEXT,
+    currency    TEXT DEFAULT 'USD',
+    language    TEXT DEFAULT 'en',
+    alerts      BOOLEAN DEFAULT false,
+    portfolio_updates BOOLEAN DEFAULT false,
+    market_news BOOLEAN DEFAULT false,
+    updated_at  TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE INDEX IF NOT EXISTS idx_user_settings_user_id ON user_settings(user_id);
+
+-- ---- user_settings RLS ----
+ALTER TABLE user_settings ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY user_settings_select ON user_settings
+    FOR SELECT USING (auth.uid() = user_id);
+CREATE POLICY user_settings_insert ON user_settings
+    FOR INSERT WITH CHECK (auth.uid() = user_id);
+CREATE POLICY user_settings_update ON user_settings
+    FOR UPDATE USING (auth.uid() = user_id)
+    WITH CHECK (auth.uid() = user_id);
+
+-- Trigger for user_settings updated_at
+CREATE TRIGGER trigger_user_settings_updated_at
+    BEFORE UPDATE ON user_settings
+    FOR EACH ROW
+    EXECUTE FUNCTION update_updated_at_column();
+
+-- =============================================================
+-- Done. 7 tables, RLS policies, indexes, and triggers created.
 -- =============================================================
