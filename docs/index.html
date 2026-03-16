@@ -1121,19 +1121,12 @@
             <a href="#" class="logo"><span class="logo-text">slow bear</span></a>
             <nav>
                 <ul class="nav-links">
-                    <li><a href="#">Stocks</a></li>
-                    <li><a href="#">Bonds</a></li>
-                    <li><a href="#">Treasuries</a></li>
-                    <li><a href="#">Options</a></li>
-                    <li><a href="#">Crypto</a></li>
-                    <li><a href="#">High-Yield Cash</a></li>
-                    <li><a href="#">Retirement</a></li>
-                    <li><a href="#">Premium</a></li>
+                    <li><a href="portfolio.html">Portfolio</a></li>
                 </ul>
             </nav>
             <div class="nav-right">
-                <a href="#" class="btn-login">Log in</a>
-                <a href="#" class="btn-signup">Sign up</a>
+                <a href="#" class="btn-login" id="navLoginBtn" onclick="handleNavAuth(event)">Log in</a>
+                <a href="portfolio.html" class="btn-signup">Get Started</a>
             </div>
         </div>
     </header>
@@ -1148,18 +1141,16 @@
                 <a href="#" class="btn-outline">See what we offer</a>
             </div>
             <div class="product-pills">
-                <span class="pill">Stocks</span>
-                <span class="pill">Bonds</span>
-                <span class="pill">Treasuries</span>
-                <span class="pill">Options</span>
-                <span class="pill">Crypto</span>
-                <span class="pill">ETFs</span>
+                <span class="pill">Portfolio Tracker</span>
+                <span class="pill">Watchlist</span>
+                <span class="pill">Analytics</span>
+                <span class="pill">Transactions</span>
             </div>
             <div class="product-sublinks">
-                <a href="#">High-Yield Cash Account</a>
-                <a href="#">Retirement</a>
-                <a href="#">Rewards</a>
-                <a href="#">Premium</a>
+                <a href="portfolio.html">Dashboard</a>
+                <a href="analytics.html">Analytics</a>
+                <a href="watchlist.html">Watchlist</a>
+                <a href="settings.html">Settings</a>
             </div>
         </div>
     </section>
@@ -1247,8 +1238,8 @@
                     <div class="tool-card-icon">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75M15 10.5a3 3 0 11-6 0 3 3 0 016 0zm3 0h.008v.008H18V10.5zm-12 0h.008v.008H6V10.5z" /></svg>
                     </div>
-                    <h3>Multi-asset Investing</h3>
-                    <p>Stocks, ETFs, options, crypto, bonds, and treasuries — all from a single platform.</p>
+                    <h3>Smart Portfolio</h3>
+                    <p>Track holdings, monitor performance, and manage your investments — all from a single dashboard.</p>
                 </div>
                 <div class="tool-card">
                     <div class="tool-card-icon">
@@ -1347,9 +1338,9 @@
                     </div>
                 </div>
                 <div>
-                    <h2>Access premium data and insights.</h2>
-                    <p>Morningstar research, analyst ratings, earnings transcripts, and more. The data you need to make informed investment decisions, all in one place.</p>
-                    <a href="#" class="btn-primary">Explore Premium</a>
+                    <h2>Deep portfolio analytics at your fingertips.</h2>
+                    <p>Performance charts, sector allocation, top/worst performers, and risk metrics. Everything you need to understand your investments, all in one place.</p>
+                    <a href="analytics.html" class="btn-primary">View Analytics</a>
                 </div>
             </div>
         </div>
@@ -1376,8 +1367,8 @@
                     <div class="card-icon">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M7.5 14.25v2.25m3-4.5v4.5m3-6.75v6.75m3-9v9M6 20.25h12A2.25 2.25 0 0020.25 18V6A2.25 2.25 0 0018 3.75H6A2.25 2.25 0 003.75 6v12A2.25 2.25 0 006 20.25z" /></svg>
                     </div>
-                    <h3>Options Flow</h3>
-                    <p>Track institutional options activity in real time. See what the smart money is trading.</p>
+                    <h3>Portfolio Tracking</h3>
+                    <p>Add your holdings, track performance, and monitor your portfolio in real time.</p>
                 </div>
                 <div class="dark-tool-card">
                     <div class="card-icon">
@@ -1390,8 +1381,8 @@
                     <div class="card-icon">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" /></svg>
                     </div>
-                    <h3>Bond Account</h3>
-                    <p>Invest in corporate and government bonds with competitive yields and transparent pricing.</p>
+                    <h3>Risk Analytics</h3>
+                    <p>Understand your portfolio's risk exposure, sector allocation, and performance metrics.</p>
                 </div>
                 <div class="dark-tool-card">
                     <div class="card-icon">
@@ -1404,15 +1395,15 @@
                     <div class="card-icon">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                     </div>
-                    <h3>High-Yield Cash</h3>
-                    <p>Earn a competitive yield on your uninvested cash. Your money works even when you're not trading.</p>
+                    <h3>Cloud Sync</h3>
+                    <p>Sign in once and access your portfolio from anywhere. Data syncs across all your devices.</p>
                 </div>
                 <div class="dark-tool-card">
                     <div class="card-icon">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" /></svg>
                     </div>
-                    <h3>Treasury Bills</h3>
-                    <p>Invest directly in U.S. Treasury bills for a safe, government-backed yield on your savings.</p>
+                    <h3>Transaction History</h3>
+                    <p>Track every buy and sell with detailed history, filters, and export capabilities.</p>
                 </div>
             </div>
         </div>
@@ -1460,47 +1451,47 @@
             <div class="faq-list">
                 <div class="faq-item">
                     <button class="faq-question" onclick="this.parentElement.classList.toggle('open'); const a = this.nextElementSibling; a.style.maxHeight = a.style.maxHeight ? null : a.scrollHeight + 'px';">
-                        What is Public?
+                        What is Slow Bear?
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" /></svg>
                     </button>
                     <div class="faq-answer">
-                        <div class="faq-answer-inner">Public is an investing platform that offers stocks, ETFs, bonds, treasuries, options, crypto, and a high-yield cash account — all in one place. Built for investors who want real tools and data to make informed decisions.</div>
+                        <div class="faq-answer-inner">Slow Bear is a portfolio tracking platform that helps you manage holdings, monitor performance, and analyze your investments. Built for patient investors who believe in long-term value.</div>
                     </div>
                 </div>
                 <div class="faq-item">
                     <button class="faq-question" onclick="this.parentElement.classList.toggle('open'); const a = this.nextElementSibling; a.style.maxHeight = a.style.maxHeight ? null : a.scrollHeight + 'px';">
-                        Is Public free to use?
+                        Is Slow Bear free to use?
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" /></svg>
                     </button>
                     <div class="faq-answer">
-                        <div class="faq-answer-inner">Yes, you can create an account and start investing for free. Commission-free stock and ETF trading is available to all users. Premium features and advanced data are available through our subscription plans.</div>
+                        <div class="faq-answer-inner">Yes! Slow Bear is completely free to use. Sign up with Google or email, and start tracking your portfolio instantly with cloud sync across all devices.</div>
                     </div>
                 </div>
                 <div class="faq-item">
                     <button class="faq-question" onclick="this.parentElement.classList.toggle('open'); const a = this.nextElementSibling; a.style.maxHeight = a.style.maxHeight ? null : a.scrollHeight + 'px';">
-                        How does the High-Yield Cash Account work?
+                        How does cloud sync work?
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" /></svg>
                     </button>
                     <div class="faq-answer">
-                        <div class="faq-answer-inner">Your uninvested cash automatically earns a competitive APY. There's no lock-up period — you can withdraw or invest your cash at any time. Interest is accrued daily and paid monthly.</div>
+                        <div class="faq-answer-inner">Sign in with Google or email, and your portfolio, watchlist, and settings are automatically saved to the cloud via Supabase. Access your data from any device, anytime.</div>
                     </div>
                 </div>
                 <div class="faq-item">
                     <button class="faq-question" onclick="this.parentElement.classList.toggle('open'); const a = this.nextElementSibling; a.style.maxHeight = a.style.maxHeight ? null : a.scrollHeight + 'px';">
-                        What types of bonds can I invest in?
+                        Can I export my portfolio data?
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" /></svg>
                     </button>
                     <div class="faq-answer">
-                        <div class="faq-answer-inner">You can invest in corporate bonds, U.S. Treasury bills, and other fixed-income securities. Each bond listing includes yield, maturity date, credit rating, and detailed issuer information.</div>
+                        <div class="faq-answer-inner">Yes! Go to Settings and use the Export Portfolio feature to download all your data as JSON. You can also import data from a previous export to restore your portfolio.</div>
                     </div>
                 </div>
                 <div class="faq-item">
                     <button class="faq-question" onclick="this.parentElement.classList.toggle('open'); const a = this.nextElementSibling; a.style.maxHeight = a.style.maxHeight ? null : a.scrollHeight + 'px';">
-                        Is my money safe with Public?
+                        Is my data safe with Slow Bear?
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" /></svg>
                     </button>
                     <div class="faq-answer">
-                        <div class="faq-answer-inner">Yes. Public is a member of FINRA and SIPC. Securities in your account are protected up to $500,000. We use bank-level 256-bit encryption and offer two-factor authentication to protect your account.</div>
+                        <div class="faq-answer-inner">Yes. Your data is stored securely on Supabase with Row Level Security (RLS) — only you can access your own portfolio. All connections are encrypted with TLS, and we support Google OAuth for secure authentication.</div>
                     </div>
                 </div>
                 <div class="faq-item">
@@ -1531,18 +1522,17 @@
             <div class="footer-grid">
                 <div class="footer-brand">
                     <a href="#" class="logo"><span class="logo-text" style="color: #fff;">slow bear</span></a>
-                    <p>Do not hurry :) — Invest with patience. Stocks, bonds, options, crypto, and more.</p>
+                    <p>Do not hurry :) — Invest with patience. Track your portfolio with confidence.</p>
                 </div>
                 <div class="footer-col">
-                    <h4>Products</h4>
+                    <h4>Features</h4>
                     <ul>
-                        <li><a href="#">Stocks</a></li>
-                        <li><a href="#">Bonds</a></li>
-                        <li><a href="#">Treasuries</a></li>
-                        <li><a href="#">Options</a></li>
-                        <li><a href="#">Crypto</a></li>
-                        <li><a href="#">ETFs</a></li>
-                        <li><a href="#">High-Yield Cash</a></li>
+                        <li><a href="portfolio.html">Dashboard</a></li>
+                        <li><a href="portfolio-view.html">Portfolio</a></li>
+                        <li><a href="watchlist.html">Watchlist</a></li>
+                        <li><a href="analytics.html">Analytics</a></li>
+                        <li><a href="transactions.html">Transactions</a></li>
+                        <li><a href="settings.html">Settings</a></li>
                     </ul>
                 </div>
                 <div class="footer-col">
@@ -1579,13 +1569,79 @@
             </div>
             <div class="footer-bottom">
                 <div class="footer-legal">
-                    <p>All investments involve the risk of loss and the past performance of a security or a financial product does not guarantee future results or returns. There is always the potential of losing money when you invest in securities or other financial products.</p>
-                    <p>Brokerage services for US-listed securities, options, and crypto are offered through Public Investing, Inc., a registered broker-dealer, member FINRA &amp; SIPC.</p>
-                    <p>&copy; 2024 Slow Bear, Inc. All rights reserved.</p>
+                    <p>Slow Bear is a portfolio tracking tool for informational purposes only. It does not provide investment advice, brokerage, or trading services.</p>
+                    <p>&copy; 2026 Slow Bear. All rights reserved. Do not hurry :)</p>
                 </div>
             </div>
         </div>
     </footer>
+
+<!-- Login Modal -->
+<div id="loginModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:2000;align-items:center;justify-content:center;">
+  <div style="background:#fff;border-radius:16px;padding:32px;max-width:400px;width:90%;text-align:center;">
+    <h3 style="font-family:'Poppins',sans-serif;margin-bottom:8px;">Sign In to Slow Bear</h3>
+    <p style="color:#888;font-size:14px;margin-bottom:24px;">Cloud sync your portfolio</p>
+    <button onclick="googleLogin()" style="width:100%;padding:12px;border-radius:10px;border:1px solid #ddd;background:#fff;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:12px;">
+      <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844a4.14 4.14 0 01-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615z"/><path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 009 18z"/><path fill="#FBBC05" d="M3.964 10.71A5.41 5.41 0 013.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.997 8.997 0 000 9c0 1.452.348 2.827.957 4.042l3.007-2.332z"/><path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 00.957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"/></svg>
+      Sign in with Google
+    </button>
+    <div style="display:flex;align-items:center;gap:12px;margin:16px 0;"><div style="flex:1;height:1px;background:#eee;"></div><span style="color:#aaa;font-size:12px;">or</span><div style="flex:1;height:1px;background:#eee;"></div></div>
+    <input id="loginEmail" type="email" placeholder="Email" style="width:100%;padding:10px 14px;border:1px solid #EDE9E0;border-radius:10px;font-size:14px;margin-bottom:8px;box-sizing:border-box;">
+    <input id="loginPassword" type="password" placeholder="Password" style="width:100%;padding:10px 14px;border:1px solid #EDE9E0;border-radius:10px;font-size:14px;margin-bottom:16px;box-sizing:border-box;">
+    <button onclick="emailLogin()" style="width:100%;padding:12px;border-radius:10px;border:none;background:#D4A843;color:#fff;font-weight:600;font-size:14px;cursor:pointer;margin-bottom:8px;">Sign In</button>
+    <button onclick="emailSignUp()" style="width:100%;padding:12px;border-radius:10px;border:1px solid #D4A843;background:#fff;color:#D4A843;font-weight:600;font-size:14px;cursor:pointer;">Create Account</button>
+    <button onclick="closeLoginModal()" style="margin-top:16px;background:none;border:none;color:#888;cursor:pointer;font-size:13px;">Cancel</button>
+  </div>
+</div>
+
+<script>
+function handleNavAuth(e) {
+  e.preventDefault();
+  if (window.sbAuth && window.sbAuth.getAuth().loggedIn) {
+    window.sbAuth.doSignOut().then(() => {
+      document.getElementById('navLoginBtn').textContent = 'Log in';
+    });
+  } else {
+    showLoginModal();
+  }
+}
+function showLoginModal() { const m = document.getElementById('loginModal'); if (m) m.style.display = 'flex'; }
+function closeLoginModal() { const m = document.getElementById('loginModal'); if (m) m.style.display = 'none'; }
+async function googleLogin() { if (window.sbAuth) await window.sbAuth.signInWithGoogle(); }
+async function emailLogin() {
+  const email = document.getElementById('loginEmail').value;
+  const pw = document.getElementById('loginPassword').value;
+  if (!email || !pw || !window.sbAuth) return;
+  const { user, error } = await window.sbAuth.signIn(email, pw);
+  if (error) { alert('Login failed: ' + error.message); return; }
+  closeLoginModal();
+  document.getElementById('navLoginBtn').textContent = 'Sign Out';
+}
+async function emailSignUp() {
+  const email = document.getElementById('loginEmail').value;
+  const pw = document.getElementById('loginPassword').value;
+  if (!email || !pw || !window.sbAuth) return;
+  const { user, error } = await window.sbAuth.signUp(email, pw);
+  if (error) { alert('Signup failed: ' + error.message); return; }
+  alert('Account created! Check your email to confirm.');
+}
+</script>
+
+<script type="module">
+import { initAuth, getAuth, doSignOut, signInWithGoogle, signIn, signUp } from './shared/sb-data.js';
+window.sbAuth = { initAuth, getAuth, doSignOut, signInWithGoogle, signIn, signUp };
+(async () => {
+  const auth = await initAuth();
+  const loginBtn = document.getElementById('navLoginBtn');
+  if (auth.loggedIn && loginBtn) {
+    loginBtn.textContent = 'Sign Out';
+  }
+  window.addEventListener('sb-auth-change', (e) => {
+    const a = e.detail;
+    if (loginBtn) loginBtn.textContent = a.loggedIn ? 'Sign Out' : 'Log in';
+  });
+})();
+</script>
 
 </body>
 </html>
