@@ -575,6 +575,28 @@
         }
         .toast.show { transform: translateY(0); opacity: 1; }
 
+        /* Hamburger button — hidden by default */
+        .hamburger {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 4px;
+            color: var(--dark-2, #2C2C2C);
+        }
+
+        /* Sidebar overlay */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.4);
+            z-index: 99;
+        }
+        .sidebar-overlay.show {
+            display: block;
+        }
+
         /* ===== RESPONSIVE ===== */
         @media (max-width: 1100px) {
             .stock-cards-grid {
@@ -582,18 +604,86 @@
             }
         }
         @media (max-width: 768px) {
-            .sidebar { display: none; }
-            .main { margin-left: 0; }
-            .content { padding: 20px 16px; }
-            .topbar { padding: 12px 16px; }
-            .summary-bar {
-                flex-direction: column;
-                gap: 16px;
+            .hamburger { display: block; }
+
+            .sidebar {
+                position: fixed;
+                left: 0;
+                top: 0;
+                bottom: 0;
+                z-index: 100;
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .main {
+                margin-left: 0 !important;
+                width: 100% !important;
+            }
+
+            .topbar {
+                padding: 10px 12px !important;
+                gap: 8px;
+            }
+            .topbar .search-box {
+                display: none;
+            }
+            .topbar-right { gap: 4px; }
+            .topbar-right .btn-export { font-size: 12px; padding: 6px 10px; }
+            .topbar-right .status-dot-text { display: none; }
+
+            .content {
+                padding: 16px !important;
+            }
+
+            /* Page title */
+            .content > h1,
+            .content > div > h1 { font-size: 22px !important; }
+
+            /* Stats grid — 2 columns on mobile */
+            .stats-grid, .summary-cards, .stat-cards {
+                grid-template-columns: 1fr 1fr !important;
+                gap: 10px !important;
+            }
+            .stat-card, .summary-card {
+                padding: 14px !important;
+            }
+            .stat-card h2, .stat-value, .summary-card h2 {
+                font-size: 18px !important;
+            }
+
+            /* Charts — full width, reduce height */
+            .charts-grid, .chart-grid {
+                grid-template-columns: 1fr !important;
+            }
+
+            /* Table — horizontal scroll */
+            .table-wrapper, .holdings-table-wrapper, table {
+                overflow-x: auto !important;
+                -webkit-overflow-scrolling: touch;
+            }
+            table { min-width: 600px; }
+
+            /* Portfolio cards grid — single column */
+            .cards-grid, .portfolio-grid, .stock-cards-grid {
+                grid-template-columns: 1fr !important;
+            }
+
+            /* Summary bar — stack */
+            .summary-bar, .portfolio-summary {
+                flex-direction: column !important;
+                gap: 8px !important;
                 align-items: flex-start;
             }
-            .summary-bar-divider {
-                width: 100%;
-                height: 1px;
+            .summary-bar-divider, .summary-divider { display: none; }
+        }
+
+        @media (max-width: 480px) {
+            .stats-grid, .summary-cards, .stat-cards {
+                grid-template-columns: 1fr !important;
             }
         }
     </style>
@@ -657,10 +747,15 @@
     </div>
 </aside>
 
+<div class="sidebar-overlay" onclick="document.querySelector('.sidebar').classList.remove('open');this.classList.remove('show')"></div>
+
 <!-- MAIN -->
 <div class="main">
     <!-- TOP BAR -->
     <div class="topbar">
+        <button class="hamburger" onclick="document.querySelector('.sidebar').classList.toggle('open');document.querySelector('.sidebar-overlay').classList.toggle('show')">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"/></svg>
+        </button>
         <div class="search-box">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/></svg>
             <input type="text" placeholder="Search stocks... (e.g. AAPL, TSLA)">

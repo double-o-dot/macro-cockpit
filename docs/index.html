@@ -1089,27 +1089,162 @@
             }
         }
         @media (max-width: 768px) {
+            /* Prevent horizontal overflow */
+            html, body { overflow-x: hidden; }
+
+            /* Header */
+            .header-inner { padding: 12px 16px; }
             .nav-links { display: none; }
-            .hero h1 {
-                font-size: 40px;
-                line-height: 44px;
-            }
+            .nav-right .btn-login { font-size: 13px; padding: 6px 12px; }
+            .nav-right .btn-signup { font-size: 13px; padding: 8px 16px; }
+
+            /* Hero */
+            .hero { padding: 80px 0 40px; }
+            .hero h1 { font-size: 36px; line-height: 40px; }
+            .hero p { font-size: 16px; line-height: 24px; }
+            .hero .subtitle { font-size: 16px; line-height: 24px; }
             .hero-buttons { flex-direction: column; }
-            .app-preview-inner,
-            .feature-section .feature-inner,
-            .premium-data .feature-inner {
-                grid-template-columns: 1fr;
-            }
-            .tools-grid,
-            .dark-tools-grid,
-            .security-grid,
-            .rules-grid {
-                grid-template-columns: 1fr;
-            }
-            .footer-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            .h2 { font-size: 36px; line-height: 40px; }
+            .product-pills { gap: 8px; }
+            .product-pills .pill { font-size: 12px; padding: 6px 12px; }
+            .product-sublinks { flex-wrap: wrap; gap: 12px; justify-content: center; }
+            .product-sublinks a { font-size: 13px; }
+
+            /* Container */
+            .container { padding: 0 16px; }
+
+            /* App Preview */
+            .app-preview { padding: 40px 0; }
+            .app-preview-inner { grid-template-columns: 1fr; gap: 32px; padding: 0 16px; }
+            .phone-mockup { max-width: 280px; }
+
+            /* Headlines */
+            .headlines { padding: 40px 0; }
+            .headlines h2 { font-size: 28px; line-height: 34px; }
+            .press-logos { gap: 24px; }
+            .press-logo { font-size: 16px; }
+
+            /* Pro Tools */
+            .pro-tools { padding: 40px 0; }
+            .pro-tools .section-header h2 { font-size: 28px; line-height: 34px; }
+            .pro-tools .section-header p { font-size: 14px; }
+            .tools-grid { grid-template-columns: 1fr; gap: 16px; }
+            .tool-card { padding: 24px; }
+
+            /* Feature Section */
+            .feature-section { padding: 40px 0; }
+            .feature-section .feature-inner { grid-template-columns: 1fr; gap: 32px; }
+            .feature-section h2 { font-size: 28px; line-height: 34px; }
+
+            /* Rules Section */
+            .rules-section { padding: 40px 0; }
+            .rules-section .section-header h2 { font-size: 28px; line-height: 34px; }
+            .rules-grid { grid-template-columns: 1fr; gap: 16px; }
+            .rule-card { padding: 24px; }
+
+            /* Premium Data Section */
+            .premium-data { padding: 40px 0; }
+            .premium-data .feature-inner { grid-template-columns: 1fr; gap: 32px; }
+            .premium-data h2 { font-size: 28px; line-height: 34px; }
+
+            /* Data Section (if present) */
+            .data-section { padding: 40px 0; }
+            .data-section .data-layout { grid-template-columns: 1fr; gap: 24px; }
+            .data-section h2 { font-size: 28px; line-height: 34px; }
+
+            /* Dark Hero */
+            .dark-hero { padding: 80px 0 60px; }
+            .dark-hero h2 { font-size: 28px; line-height: 34px; }
+
+            /* Dark Tools */
+            .dark-tools { padding: 40px 0; }
+            .dark-tools .section-header h2 { font-size: 28px; line-height: 34px; }
+            .dark-tools-grid { grid-template-columns: 1fr; gap: 16px; }
+            .dark-tool-card { padding: 24px; }
+
+            /* Safe Secure */
+            .safe-secure { padding: 40px 0; }
+            .safe-secure .section-header h2 { font-size: 28px; line-height: 34px; }
+            .security-grid { grid-template-columns: 1fr; gap: 16px; }
+            .security-card { padding: 24px; }
+
+            /* FAQ */
+            .faq-section { padding: 40px 0; }
+            .faq-section .section-header h2 { font-size: 28px; line-height: 34px; }
+            .faq-question { font-size: 15px; padding: 16px; }
+            .faq-answer-inner { padding: 0 16px 16px; }
+
+            /* CTA Banner */
+            .cta-banner { padding: 40px 0; }
+            .cta-banner h2 { font-size: 28px; line-height: 34px; }
+
+            /* CTA Section (if present) */
+            .cta-section { padding: 40px 0; }
+            .cta-section h2 { font-size: 28px; line-height: 34px; }
+
+            /* Footer */
+            .footer { padding: 32px 0 24px; }
+            .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+            .footer-col h4 { margin-bottom: 8px; }
+            .footer-legal { font-size: 11px; }
+            .footer-legal p { margin-bottom: 8px; }
+
+            /* General heading override */
+            .h2 { font-size: 28px; line-height: 34px; }
+        }
+
+        @media (max-width: 480px) {
+            /* Extra small screen refinements */
+            .header-inner { padding: 10px 12px; }
+            .nav-right { gap: 8px; }
+            .nav-right .btn-signup { padding: 6px 12px; font-size: 12px; }
+            .nav-right .btn-login { font-size: 12px; }
+
+            .hero { padding: 64px 0 32px; }
+            .hero h1 { font-size: 28px; line-height: 32px; }
+            .hero p { font-size: 14px; line-height: 22px; }
+            .hero-buttons { gap: 12px; }
+            .hero-buttons .btn-primary,
+            .hero-buttons .btn-outline { font-size: 14px; padding: 12px 24px; width: 100%; text-align: center; }
+            .product-pills .pill { font-size: 11px; padding: 5px 10px; }
+            .product-sublinks a { font-size: 12px; }
+
+            .container { padding: 0 12px; }
+
+            .app-preview-inner { padding: 0 12px; }
+            .phone-mockup { max-width: 240px; }
+
+            .headlines h2 { font-size: 24px; line-height: 30px; }
+            .press-logos { gap: 16px; }
+            .press-logo { font-size: 14px; }
+
+            .pro-tools .section-header h2,
+            .rules-section .section-header h2,
+            .dark-tools .section-header h2,
+            .safe-secure .section-header h2,
+            .faq-section .section-header h2,
+            .dark-hero h2,
+            .feature-section h2,
+            .premium-data h2,
+            .cta-banner h2 { font-size: 24px; line-height: 30px; }
+
+            .tool-card,
+            .dark-tool-card,
+            .rule-card,
+            .security-card { padding: 20px; }
+
+            .faq-question { font-size: 14px; padding: 14px; }
+            .faq-answer-inner { padding: 0 14px 14px; font-size: 14px; }
+
+            .footer-grid { gap: 20px; }
+            .footer-bear-text { font-size: 18px; }
+            .footer-legal { font-size: 10px; }
+
+            .data-visual { padding: 20px; }
+            .data-ticker { font-size: 22px; }
+
+            .btn-primary { font-size: 14px; padding: 12px 24px; }
+            .btn-outline { font-size: 14px; padding: 12px 24px; }
+            .btn-white { font-size: 14px; padding: 12px 24px; }
         }
     </style>
 </head>

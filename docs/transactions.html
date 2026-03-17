@@ -477,6 +477,38 @@
             font-weight: 600;
         }
         .page-btn svg { width: 16px; height: 16px; }
+
+        /* Mobile responsive */
+        .hamburger { display: none; background: none; border: none; cursor: pointer; padding: 4px; color: var(--dark); }
+        .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 99; }
+        .sidebar-overlay.show { display: block; }
+
+        @media (max-width: 768px) {
+            .hamburger { display: block; }
+            .sidebar { position: fixed; left: 0; top: 0; bottom: 0; z-index: 100; transform: translateX(-100%); transition: transform 0.3s ease; }
+            .sidebar.open { transform: translateX(0); }
+            .main { margin-left: 0 !important; width: 100% !important; }
+            .topbar { padding: 10px 12px !important; gap: 8px; }
+            .topbar .search-box { display: none; }
+            .topbar-right { gap: 4px; }
+            .topbar-right .btn-export { font-size: 12px; padding: 6px 10px; }
+            .topbar-label { font-size: 11px; }
+            .content { padding: 16px !important; }
+            .content h1 { font-size: 22px !important; }
+            .summary-cards { grid-template-columns: 1fr 1fr !important; gap: 10px !important; }
+            .summary-card { padding: 14px !important; }
+            .summary-card h2 { font-size: 18px !important; }
+            .filter-bar { flex-direction: column !important; gap: 8px !important; align-items: stretch !important; }
+            .filter-buttons { display: flex; width: 100%; }
+            .filter-buttons button { flex: 1; font-size: 12px !important; }
+            .table-scroll-wrapper { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+            .table-scroll-wrapper table { min-width: 700px; }
+            .pagination { flex-wrap: wrap; gap: 4px; justify-content: center; }
+            .pagination button, .page-btn { min-width: 32px; font-size: 12px; }
+        }
+        @media (max-width: 480px) {
+            .summary-cards { grid-template-columns: 1fr !important; }
+        }
     </style>
 </head>
 <body>
@@ -536,11 +568,15 @@
       <button id="authBtn" onclick="handleAuthClick()" style="width:100%;padding:10px;border-radius:10px;border:none;background:var(--brand-gold);color:#fff;font-weight:600;cursor:pointer;font-size:13px;">Sign In</button>
     </div>
 </aside>
+<div class="sidebar-overlay" onclick="document.querySelector('.sidebar').classList.remove('open');this.classList.remove('show')"></div>
 
 <!-- MAIN -->
 <div class="main">
     <!-- TOP BAR -->
     <div class="topbar">
+        <button class="hamburger" onclick="document.querySelector('.sidebar').classList.toggle('open');document.querySelector('.sidebar-overlay').classList.toggle('show')">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"/></svg>
+        </button>
         <div class="search-box">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/></svg>
             <input type="text" placeholder="Search transactions...">
@@ -606,7 +642,7 @@
         <!-- TRANSACTION TABLE -->
         <div class="table-card">
             <div id="tableContent">
-                <table>
+                <div class="table-scroll-wrapper"><table>
                     <thead>
                         <tr>
                             <th>Date</th>
@@ -619,7 +655,7 @@
                         </tr>
                     </thead>
                     <tbody id="transactionsBody"></tbody>
-                </table>
+                </table></div>
             </div>
 
             <!-- PAGINATION -->
